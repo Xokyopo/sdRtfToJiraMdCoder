@@ -1,10 +1,10 @@
-package ru.itsm365.vita;
+package ru.itsm365.vita.nodes;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Node implements Iterable<Node> {
+public abstract class Node implements Iterable<Node> {
 
     public final Node parent;
     private final Collection<Node> children = new LinkedList<>();

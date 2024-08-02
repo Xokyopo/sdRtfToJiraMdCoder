@@ -1,6 +1,6 @@
 package ru.itsm365.vita.rules;
 
-import ru.itsm365.vita.Node;
+import ru.itsm365.vita.nodes.Node;
 
 import java.util.Collection;
 
