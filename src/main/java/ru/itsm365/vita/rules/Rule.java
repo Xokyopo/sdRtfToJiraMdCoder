@@ -1,24 +1,36 @@
 package ru.itsm365.vita.rules;
 
 import ru.itsm365.vita.Node;
-import ru.itsm365.vita.NodeType;
 
 import java.util.Collection;
 
-public interface Rule<T extends Node> {
-    NodeType getNodeType();
+public interface Rule<T extends Node> extends NodeRule, NodeAttributeRule, NodeChildrenRule, NodeConvertRule<T> {
+    T getNodeType();
+}
 
+interface NodeRule {
     boolean isNodeStart(String text);
-
     boolean isNodeEnd(String test);
+}
 
-    T createNode(Node parent, String value);
+interface NodeAttributeRule {
+    boolean isNodeAttributeStart(String text);
 
-    T createNode(Node parent, Collection<Node> children);
+    boolean isNodeAttributeEnd(String test);
+}
 
-    String getNodeSuffix(T node);
+interface NodeChildrenRule {
+    Collection<Class<Node>> availableChildren();
+}
 
-    String getNodePostfix(T node);
+interface NodeConvertRule<T extends Node> {
+    T createNode(Node parent);
 
-    String getNodeValue(T node);
+    void saveNodeAttributeStart(String text, T target);
+
+    String getPrefix(Node node);
+
+    String getValue(Node node);
+
+    String getPostfix(Node node);
 }
