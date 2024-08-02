@@ -1,15 +1,14 @@
-package ru.itsm365.vita.rules;
+package ru.itsm365.vita.rules
 
 import ru.itsm365.vita.nodes.Node;
 
-import java.util.Collection;
-
-public interface Rule<T extends Node> extends NodeRule, NodeAttributeRule, NodeChildrenRule, NodeConvertRule<T> {
+interface Rule<T extends Node> extends NodeRule, NodeAttributeRule, NodeChildrenRule, NodeConvertRule<T> {
     T getNodeType();
 }
 
 interface NodeRule {
     boolean isNodeStart(String text);
+
     boolean isNodeEnd(String test);
 }
 
