@@ -16,11 +16,16 @@ class ItalicTextCoder implements Coder {
         Integer resultCursor = 0;
         Integer startCursor = current.indexOf(MD_TOKEN);
         Integer endCursor = current.indexOf(MD_TOKEN, startCursor + MD_TOKEN.length());
-        while (endCursor > startCursor) {
-            if (startCursor != resultCursor) {
-                result.append(current.substring(resultCursor, startCursor));
-                resultCursor = startCursor;
-            }
+
+        if (startCursor > 0) {
+            result.append(current.substring(resultCursor, startCursor));
+            resultCursor = startCursor;
+        }
+
+        while (startCursor >= 0 && endCursor > startCursor) {
+            println("startCursor = " + startCursor);
+            println("endCursor = " + endCursor);
+            println();
 
             String targetString = current.substring(startCursor, endCursor);
             if (targetString.contains(MD_EMPTY_LINE_TOKEN)) {
@@ -28,7 +33,7 @@ class ItalicTextCoder implements Coder {
             } else {
                 targetString = targetString.replaceAll("\n", "");
                 result.append(RTF_OPEN_TAG);
-                result.append(targetString.substring(1, targetString.length() - 1));
+                result.append(targetString.substring(1, targetString.length()));
                 result.append(RTF_CLOSE_TAG);
             }
 
@@ -37,6 +42,9 @@ class ItalicTextCoder implements Coder {
             endCursor = current.indexOf(MD_TOKEN, startCursor + MD_TOKEN.length());
         }
 
+        if (resultCursor + 1 < current.length()) {
+            result.append(current.substring(resultCursor + 1));
+        }
 
         return result.toString();
     }
