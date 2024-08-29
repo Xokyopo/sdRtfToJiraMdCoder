@@ -35,4 +35,20 @@ class LineBreakCoderTest {
         String actual = lineBreakCoder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void testToMd_ShouldReturnTrue_WhenTagIsUpperCase() {
+        String rtfText = "dffdgfd<BR/>dfgfdgdgffd<Br/>dfsdfsdfsd <bR/>sdfsdfsdfdf";
+        String expected = "dffdgfd\ndfgfdgdgffd\ndfsdfsdfsd \nsdfsdfsdfdf";
+        String actual = lineBreakCoder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testToMd_ShouldReturnTrue_WhenInsideAOtherTag() {
+        String rtfText = "<p>dffdgfd<BR/></p><p>dfgfdgdgffd<Br/></p>dfsdfsdfsd <p><bR/></p>sdfsdfsdfdf";
+        String expected = "<p>dffdgfd\n</p><p>dfgfdgdgffd\n</p>dfsdfsdfsd <p>\n</p>sdfsdfsdfdf";
+        String actual = lineBreakCoder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
 }
