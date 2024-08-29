@@ -176,4 +176,21 @@ class ItalicTextCoderTest {
 
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnTrue_WhenOnlyTokenizeStringPresent() {
+        String mdText = "*test*";
+        String expected = "<i>test</i>";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnUnmodifiedText_WhenOnlyTokenizeStringPresent() {
+        String rtfText = "<i>test</i>";
+        String expected = "*test*";
+        String actual = this.coder.toMd(rtfText);
+
+        Assert.assertEquals(expected, actual);
+    }
 }
