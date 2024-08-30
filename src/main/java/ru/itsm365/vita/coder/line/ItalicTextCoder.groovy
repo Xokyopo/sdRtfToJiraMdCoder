@@ -23,10 +23,6 @@ class ItalicTextCoder implements Coder {
         }
 
         while (startCursor >= 0 && endCursor > startCursor) {
-            println("startCursor = " + startCursor);
-            println("endCursor = " + endCursor);
-            println();
-
             String targetString = current.substring(startCursor, endCursor);
             if (targetString.contains(MD_EMPTY_LINE_TOKEN)) {
                 result.append(targetString);
