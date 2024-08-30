@@ -106,7 +106,7 @@ class ItalicTextCoderTest {
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideInvalidItalicToken() {
         String mdText = "simple *te * st* string";
-        String expected = "simple <i>te * st<i> string";
+        String expected = "simple <i>te * st</i> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
