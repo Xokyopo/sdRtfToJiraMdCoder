@@ -114,7 +114,7 @@ class ItalicTextCoderTest {
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideInvalidBoldToken() {
         String mdText = "simple *te **ff st* string";
-        String expected = "simple <i>te **ff st<i> string";
+        String expected = "simple <i>te **ff st</i> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
