@@ -98,7 +98,7 @@ class ItalicTextCoderTest {
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideLink() {
         String mdText = "simple *te [ссылка в никуда](/root/file) st* string";
-        String expected = "simple <i>te [ссылка в никуда](/root/file) st<i> string";
+        String expected = "simple <i>te [ссылка в никуда](/root/file) st</i> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
