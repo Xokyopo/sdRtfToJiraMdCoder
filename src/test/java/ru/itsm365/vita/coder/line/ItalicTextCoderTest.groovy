@@ -90,7 +90,7 @@ class ItalicTextCoderTest {
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveOutsideEmptyLine() {
         String mdText = "simple *test*\n\nstring";
-        String expected = "simple <i>test<i>\n\nstring";
+        String expected = "simple <i>test</i>\n\nstring";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
@@ -122,7 +122,7 @@ class ItalicTextCoderTest {
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideBoldToken() {
         String mdText = "simple *te **bold** st* string";
-        String expected = "simple <i>te **bold** st<i> string";
+        String expected = "simple <i>te **bold** st</i> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
