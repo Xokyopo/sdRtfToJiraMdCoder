@@ -18,7 +18,7 @@ class NumberedListCoder implements Coder {
 
     @Override
     String toRtf(String s) {
-        StringBuilder result = new StringBuilder(s);
+        StringBuilder result = new StringBuilder();
         List<String> blocks = s.split(MD_EMPTY_LINE);
 
         for (String block in blocks) {
