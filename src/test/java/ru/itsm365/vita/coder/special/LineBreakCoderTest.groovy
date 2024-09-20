@@ -21,7 +21,7 @@ class LineBreakCoderTest {
     }
 
     @Test
-    void testToRtf_ShouldReturnTrue_WhenRun() {
+    void toRtf_ShouldReturnTrue_WhenRun() {
         String mdText = "dffdgfd\ndfgfdgdgffd\ndfsdfsdfsd \nsdfsdfsdfdf";
         String expected = "dffdgfd<br/>dfgfdgdgffd<br/>dfsdfsdfsd <br/>sdfsdfsdfdf";
         String actual = lineBreakCoder.toRtf(mdText);
@@ -29,7 +29,7 @@ class LineBreakCoderTest {
     }
 
     @Test
-    void testToMd_ShouldReturnTrue_WhenRun() {
+    void toMd_ShouldReturnTrue_WhenRun() {
         String rtfText = "dffdgfd<br/>dfgfdgdgffd<br/>dfsdfsdfsd <br/>sdfsdfsdfdf";
         String expected = "dffdgfd\ndfgfdgdgffd\ndfsdfsdfsd \nsdfsdfsdfdf";
         String actual = lineBreakCoder.toMd(rtfText);
@@ -37,7 +37,7 @@ class LineBreakCoderTest {
     }
 
     @Test
-    void testToMd_ShouldReturnTrue_WhenTagIsUpperCase() {
+    void toMd_ShouldReturnTrue_WhenTagIsUpperCase() {
         String rtfText = "dffdgfd<BR/>dfgfdgdgffd<Br/>dfsdfsdfsd <bR/>sdfsdfsdfdf";
         String expected = "dffdgfd\ndfgfdgdgffd\ndfsdfsdfsd \nsdfsdfsdfdf";
         String actual = lineBreakCoder.toMd(rtfText);
@@ -45,7 +45,7 @@ class LineBreakCoderTest {
     }
 
     @Test
-    void testToMd_ShouldReturnTrue_WhenInsideAOtherTag() {
+    void toMd_ShouldReturnTrue_WhenInsideAOtherTag() {
         String rtfText = "<p>dffdgfd<BR/></p><p>dfgfdgdgffd<Br/></p>dfsdfsdfsd <p><bR/></p>sdfsdfsdfdf";
         String expected = "<p>dffdgfd\n</p><p>dfgfdgdgffd\n</p>dfsdfsdfsd <p>\n</p>sdfsdfsdfdf";
         String actual = lineBreakCoder.toMd(rtfText);
