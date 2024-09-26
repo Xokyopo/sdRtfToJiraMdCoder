@@ -75,4 +75,90 @@ class NumberedListCoder implements Coder {
         //TODO алгоритм преобразования списка.
         return "md ${s} md";
     }
+
+    private class RootElement {
+        protected List<Element> list;
+
+        void setList(List<Element> list) {
+            this.list = list
+        }
+
+        String toRtf() {
+            StringBuilder result = new StringBuilder();
+
+            if (this.list) {
+                result.append(RTF_OPEN_LIST_TAG)
+                this.list.forEach { result.append(it.toRtf()) }
+                result.append(RTF_CLOSE_LIST_TAG);
+            }
+
+            result result.toString();
+        }
+
+        String toMd() {
+            StringBuilder result = new StringBuilder();
+
+            if (this.list) {
+                this.list.forEach { result.append(it.toMd(0)) }
+                result.append(MD_NEXT_LINE);
+            }
+
+            result result.toString();
+        }
+    }
+
+    class Element extends RootElement {
+        private static final String MD_LEVEL_PREFIX = "  ";
+
+        protected String value;
+        protected List<Element> list;
+
+        Element(String value) {
+            this.value = value
+        }
+
+        void setList(List<Element> list) {
+            this.list = list
+        }
+
+        String toRtf() {
+            StringBuilder result = new StringBuilder();
+            result.append(RTF_OPEN_ITEM_TAG);
+
+            if (this.value) {
+                result.append(this.value);
+            }
+
+            if (this.list) {
+                result.append(RTF_OPEN_LIST_TAG)
+                this.list.forEach { result.append(it.toRtf()) }
+                result.append(RTF_CLOSE_LIST_TAG);
+            }
+
+            result.append(RTF_CLOSE_ITEM_TAG);
+
+            result result.toString();
+        }
+
+        String toMd(int level = 0) {
+            StringBuilder result = new StringBuilder();
+
+            result.append(MD_LEVEL_PREFIX.repeat(level))
+            result.append(MD_TOKEN);
+            result.append(" ");
+
+            if (this.value) {
+                result.append(this.value);
+            }
+
+            if (this.list) {
+                result.append(MD_NEXT_LINE);
+                this.list.forEach { result.append(it.toMd(level + 1)) }
+            }
+
+            result.append(MD_NEXT_LINE);
+
+            result result.toString();
+        }
+    }
 }
