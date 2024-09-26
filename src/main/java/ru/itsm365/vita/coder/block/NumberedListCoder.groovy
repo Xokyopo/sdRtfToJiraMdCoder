@@ -67,20 +67,30 @@ class NumberedListCoder implements Coder {
     }
 
     private String convertListToRtf(String s) {
-        //TODO алгоритм преобразования списка.
-        return "rtf ${s} rtf";
+        List<Element> currentListItems = new LinkedList<>();
+        RootElement resultList = new RootElement(currentListItems);
+
+        //TODO алгоритм  заполнения структуры элементов.
+        currentListItems.add(new Element(s));
+
+        return resultList.toRtf();
     }
 
     private String convertListToMD(String s) {
-        //TODO алгоритм преобразования списка.
-        return "md ${s} md";
+        List<Element> currentListItems = new LinkedList<>();
+        RootElement resultList = new RootElement(currentListItems);
+
+        //TODO алгоритм заполнения структуры элементов.
+        currentListItems.add(new Element(s));
+
+        return resultList.toMd();
     }
 
     private class RootElement {
         protected List<Element> childs;
 
-        void setList(List<Element> list) {
-            this.childs = list
+        RootElement(List<Element> childs) {
+            this.childs = childs
         }
 
         String toRtf() {
