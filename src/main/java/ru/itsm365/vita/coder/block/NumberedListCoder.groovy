@@ -77,18 +77,18 @@ class NumberedListCoder implements Coder {
     }
 
     private class RootElement {
-        protected List<Element> list;
+        protected List<Element> childs;
 
         void setList(List<Element> list) {
-            this.list = list
+            this.childs = list
         }
 
         String toRtf() {
             StringBuilder result = new StringBuilder();
 
-            if (this.list) {
+            if (this.childs) {
                 result.append(RTF_OPEN_LIST_TAG)
-                this.list.forEach { result.append(it.toRtf()) }
+                this.childs.forEach { result.append(it.toRtf()) }
                 result.append(RTF_CLOSE_LIST_TAG);
             }
 
@@ -98,8 +98,8 @@ class NumberedListCoder implements Coder {
         String toMd() {
             StringBuilder result = new StringBuilder();
 
-            if (this.list) {
-                this.list.forEach { result.append(it.toMd(0)) }
+            if (this.childs) {
+                this.childs.forEach { result.append(it.toMd(0)) }
                 result.append(MD_NEXT_LINE);
             }
 
@@ -107,19 +107,30 @@ class NumberedListCoder implements Coder {
         }
     }
 
-    class Element extends RootElement {
+    class Element {
         private static final String MD_LEVEL_PREFIX = "  ";
 
         protected String value;
-        protected List<Element> list;
+        protected Element parent;
+        protected List<Element> childs = new LinkedList<>();
 
         Element(String value) {
             this.value = value
         }
 
-        void setList(List<Element> list) {
-            this.list = list
+        void addChild(Element child) {
+            this.childs.add(child)
+            child.setParent(this);
         }
+
+        Element getParent() {
+            return parent
+        }
+
+        protected void setParent(Element parent) {
+            this.parent = parent;
+        }
+
 
         String toRtf() {
             StringBuilder result = new StringBuilder();
@@ -129,9 +140,9 @@ class NumberedListCoder implements Coder {
                 result.append(this.value);
             }
 
-            if (this.list) {
+            if (this.childs) {
                 result.append(RTF_OPEN_LIST_TAG)
-                this.list.forEach { result.append(it.toRtf()) }
+                this.childs.forEach { result.append(it.toRtf()) }
                 result.append(RTF_CLOSE_LIST_TAG);
             }
 
@@ -151,9 +162,9 @@ class NumberedListCoder implements Coder {
                 result.append(this.value);
             }
 
-            if (this.list) {
+            if (this.childs) {
                 result.append(MD_NEXT_LINE);
-                this.list.forEach { result.append(it.toMd(level + 1)) }
+                this.childs.forEach { result.append(it.toMd(level + 1)) }
             }
 
             result.append(MD_NEXT_LINE);
