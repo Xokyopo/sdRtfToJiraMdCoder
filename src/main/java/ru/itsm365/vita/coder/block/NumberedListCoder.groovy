@@ -21,7 +21,9 @@ class NumberedListCoder implements Coder {
         StringBuilder result = new StringBuilder();
         List<String> blocks = s.split(MD_EMPTY_LINE);
 
+        def count = 0;
         for (String block in blocks) {
+            count++;
             String list = block.find(MD_FULL_LIST_REGEXP_PATTERN);
 
             if (list) {
@@ -30,9 +32,12 @@ class NumberedListCoder implements Coder {
                     result.append(block.substring(0, startAt));
                 }
                 result.append(convertListToRtf(block.substring(startAt, block.length())));
-                result.append(MD_NEXT_LINE);
             } else {
                 result.append(block);
+
+            }
+
+            if (count < blocks.size()) {
                 result.append(MD_EMPTY_LINE);
             }
         }
@@ -67,45 +72,58 @@ class NumberedListCoder implements Coder {
     }
 
     private String convertListToRtf(String s) {
-        List<Element> currentListItems = new LinkedList<>();
-        RootElement resultList = new RootElement(currentListItems);
+        Element rootElement = new RootElement();
 
-        //TODO алгоритм  заполнения структуры элементов.
-        currentListItems.add(new Element(s));
+        String startPrefix = "^\\s*\\d*\\.\\s";
+        Stack<Integer> levels = [];
+        Element parent = rootElement;
+        Element lastElement = parent;
+        List<String> lines = s.split("\n");
 
-        return resultList.toRtf();
+        for (String line in lines) {
+            String currentValue = line.replaceFirst(startPrefix, "");
+            Integer currentLevel = line.length() - currentValue.length();
+            if (currentLevel > 0) {
+                if (levels.size() > 0 && levels.last() != currentLevel) {
+                    if (levels.last() < currentLevel) {
+                        levels.push(currentLevel);
+                        parent = lastElement;
+                    } else {
+                        while (!levels.isEmpty() && levels.last() > currentLevel) {
+                            levels.pop();
+                            lastElement = parent;
+                            parent = lastElement.parent;
+                        }
+
+                    }
+                }
+                lastElement = new Element(currentValue);
+                parent.addChild(lastElement);
+            } else if (lastElement) {
+                lastElement.value += currentValue;
+            }
+        }
+
+        return rootElement.toRtf();
     }
 
     private String convertListToMD(String s) {
-        List<Element> currentListItems = new LinkedList<>();
-        RootElement resultList = new RootElement(currentListItems);
+        Element rootElement = new RootElement();
 
         //TODO алгоритм заполнения структуры элементов.
-        currentListItems.add(new Element(s));
+        rootElement.addChild(new Element(s));
 
-        return resultList.toMd();
+        return rootElement.toMd();
     }
 
-    private class RootElement {
-        protected List<Element> childs;
+    private class RootElement extends Element {
 
-        RootElement(List<Element> childs) {
-            this.childs = childs
+        RootElement() {
+            super(null)
         }
 
-        String toRtf() {
-            StringBuilder result = new StringBuilder();
-
-            if (this.childs) {
-                result.append(RTF_OPEN_LIST_TAG)
-                this.childs.forEach { result.append(it.toRtf()) }
-                result.append(RTF_CLOSE_LIST_TAG);
-            }
-
-            result result.toString();
-        }
-
-        String toMd() {
+        @Override
+        String toMd(int level = 0) {
             StringBuilder result = new StringBuilder();
 
             if (this.childs) {
@@ -115,6 +133,20 @@ class NumberedListCoder implements Coder {
 
             result result.toString();
         }
+
+        @Override
+        String toRtf() {
+            StringBuilder result = new StringBuilder();
+
+            if (this.childs) {
+                result.append(RTF_OPEN_LIST_TAG)
+                this.childs.forEach { result.append(it.toRtf()) }
+                result.append(RTF_CLOSE_LIST_TAG);
+            }
+
+            return result.toString();
+        }
+
     }
 
     class Element {
@@ -141,6 +173,9 @@ class NumberedListCoder implements Coder {
             this.parent = parent;
         }
 
+        boolean haveParent() {
+            return this.parent != null;
+        }
 
         String toRtf() {
             StringBuilder result = new StringBuilder();
@@ -158,7 +193,7 @@ class NumberedListCoder implements Coder {
 
             result.append(RTF_CLOSE_ITEM_TAG);
 
-            result result.toString();
+            return result.toString();
         }
 
         String toMd(int level = 0) {
@@ -179,7 +214,7 @@ class NumberedListCoder implements Coder {
 
             result.append(MD_NEXT_LINE);
 
-            result result.toString();
+            return result.toString();
         }
     }
 }
