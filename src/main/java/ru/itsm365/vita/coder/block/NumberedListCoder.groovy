@@ -34,11 +34,9 @@ class NumberedListCoder implements Coder {
                 result.append(convertListToRtf(block.substring(startAt, block.length())));
             } else {
                 result.append(block);
-
-            }
-
-            if (count < blocks.size()) {
-                result.append(MD_EMPTY_LINE);
+                if (count < blocks.size()) {
+                    result.append(MD_EMPTY_LINE);
+                }
             }
         }
 
