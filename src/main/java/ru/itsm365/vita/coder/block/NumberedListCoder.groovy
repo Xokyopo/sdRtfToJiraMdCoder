@@ -82,7 +82,9 @@ class NumberedListCoder implements Coder {
             String currentValue = line.replaceFirst(startPrefix, "");
             Integer currentLevel = line.length() - currentValue.length();
             if (currentLevel > 0) {
-                if (levels.size() > 0 && levels.last() != currentLevel) {
+                if (levels.isEmpty()) {
+                    levels.push(currentLevel);
+                } else {
                     if (levels.last() < currentLevel) {
                         levels.push(currentLevel);
                         parent = lastElement;
