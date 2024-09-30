@@ -131,7 +131,7 @@ class NumberedListCoder implements Coder {
                 result.append(MD_NEXT_LINE);
             }
 
-            result result.toString();
+            return result.toString();
         }
 
         @Override
