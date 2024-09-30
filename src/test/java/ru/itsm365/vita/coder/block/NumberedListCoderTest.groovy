@@ -44,6 +44,14 @@ class NumberedListCoderTest {
     }
 
     @Test
+    void toMd_ShouldNotAddNexLineBefore_WhenElementIsAlone() {
+        String rtfText = "<ol><li>первый элемент</li></ol>";
+        String expected = "1. первый элемент";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     void toRtf_ShouldNotAddedEmptyLine_WhenElementIsLast() {
         String mdText = "1. первый элемент";
         String expected = "<ol><li>первый элемент</li></ol>";
@@ -60,10 +68,26 @@ class NumberedListCoderTest {
     }
 
     @Test
+    void toMd_ShouldReturnTwoElement_WhenRun() {
+        String rtfText = "<ol><li>первый элемент</li><li>второй элемент</li></ol>";
+        String expected = "1. первый элемент\n2. второй элемент\n\n";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     void toRtf_ShouldReturnNestedListInListItem_WhenRun() {
         String mdText = "1. первый элемент\n   1. вложенный элемент\n2. второй элемент";
         String expected = "<ol><li>первый элемент<ol><li>вложенный элемент</li></ol></li><li>второй элемент</li></ol>";
         String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnNestedListInListItem_WhenRun() {
+        String rtfText = "<ol><li>первый элемент<ol><li>вложенный элемент</li></ol></li><li>второй элемент</li></ol>";
+        String expected = "1. первый элемент\n   1. вложенный элемент\n2. второй элемент\n\n";
+        String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
@@ -76,10 +100,26 @@ class NumberedListCoderTest {
     }
 
     @Test
+    void toMd_ShouldReturnNestedListInNestedListItem_WhenRun() {
+        String rtfText = "<ol><li>первый элемент<ol><li>вложенный элемент<ol><li>вложенный во вложенный элемент</li></ol></li></ol></li><li>второй элемент</li></ol>";
+        String expected = "1. первый элемент\n   1. вложенный элемент\n      2. вложенный во вложенный элемент\n2. второй элемент\n\n";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     void toRtf_ShouldReturnTowList_WhenHaveTwoList() {
         String mdText = "1. первый список\n\n   1. второй список";
         String expected = "<ol><li>первый список</li></ol><ol><li>второй список</li></ol>";
         String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnTowList_WhenHaveTwoList() {
+        String rtfText = "<ol><li>первый список</li></ol><ol><li>второй список</li></ol>";
+        String expected = "1. первый список\n\n   1. второй список";
+        String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 }
