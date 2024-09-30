@@ -111,13 +111,57 @@ class NumberedListCoder implements Coder {
         return rootElement.toRtf();
     }
 
-    private String convertListToMD(String s) {
+    private String convertListToMD(String notFixedXml) {
+        String s = "<root>${notFixedXml}</root>";
+        Node xmlList = new XmlParser().parseText(s);
+        NodeList ols = xmlList.ol;
+        Node ol = ols.find { it instanceof Node };
+        Stack<Iterator<Node>> iteratorsStack = [];
+        iteratorsStack.push(ol.iterator());
+
         Element rootElement = new RootElement();
 
-        //TODO алгоритм заполнения структуры элементов.
-        rootElement.addChild(new Element(s));
+        while (!iteratorsStack.isEmpty()) {
+            Iterator<Node> lastIterator = iteratorsStack.pop();
+            while (lastIterator.hasNext()) {
+                Object element = lastIterator.next();
+                if (element instanceof Node && element.name() == "li") {
+                    String nodeName = getNodeName(element);
+                    Element currentElement = new Element(nodeName);
+                    rootElement.addChild(currentElement);
+                    if (element.children().size() > 1) {
+                        iteratorsStack.push(lastIterator);
+                        lastIterator = element.iterator();
+                        rootElement = currentElement;
+                    }
+                } else if (element instanceof Node && element.name() == "ol") {
+                    iteratorsStack.push(lastIterator);
+                    lastIterator = element.iterator();
+                }
+            }
+            if (rootElement.haveParent()) {
+                rootElement = rootElement.parent;
+            }
+        }
 
         return rootElement.toMd();
+    }
+
+    private String getNodeName(Node node) {
+        Object nodeValue = node.value();
+        if (nodeValue instanceof String) {
+            return nodeValue;
+        }
+
+        if (nodeValue instanceof Collection) {
+            Collection c = nodeValue;
+            Object firstValue = c[0];
+            if (firstValue instanceof String) {
+                return firstValue;
+            }
+        }
+
+        return "";
     }
 
     private class RootElement extends Element {
