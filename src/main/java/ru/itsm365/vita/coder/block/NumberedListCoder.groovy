@@ -56,10 +56,14 @@ class NumberedListCoder implements Coder {
                 result.append(s.substring(cursor, matcher.start()));
             }
 
-            result.append(MD_NEXT_LINE);
+            if (result.size() > 0) {
+                result.append(MD_NEXT_LINE);
+            }
             result.append(convertListToMD(s.substring(matcher.start(), matcher.end())));
-            result.append(MD_EMPTY_LINE);
             cursor = matcher.end();
+            if (cursor < s.length()) {
+                result.append(MD_NEXT_LINE);
+            }
         }
 
         if (cursor < s.length()) {
