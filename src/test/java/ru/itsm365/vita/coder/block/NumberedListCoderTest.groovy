@@ -86,7 +86,7 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnNestedListInListItem_WhenRun() {
         String rtfText = "<ol><li>первый элемент<ol><li>вложенный элемент</li></ol></li><li>второй элемент</li></ol>";
-        String expected = "1. первый элемент\n   1. вложенный элемент\n2. второй элемент\n\n";
+        String expected = "1. первый элемент\n   1. вложенный элемент\n2. второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
