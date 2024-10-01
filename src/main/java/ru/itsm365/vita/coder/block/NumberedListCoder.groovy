@@ -176,7 +176,6 @@ class NumberedListCoder implements Coder {
             if (this.childs) {
                 int count = 1;
                 this.childs.forEach { result.append(it.toMd(0, count++)) }
-                result.append(MD_NEXT_LINE);
             }
 
             return result.toString();
