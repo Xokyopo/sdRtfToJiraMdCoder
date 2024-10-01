@@ -118,7 +118,7 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnTowList_WhenHaveTwoList() {
         String rtfText = "<ol><li>первый список</li></ol><ol><li>второй список</li></ol>";
-        String expected = "1. первый список\n\n   1. второй список";
+        String expected = "1. первый список\n\n1. второй список";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
