@@ -175,7 +175,8 @@ class NumberedListCoder implements Coder {
             StringBuilder result = new StringBuilder();
 
             if (this.childs) {
-                this.childs.forEach { result.append(it.toMd(0)) }
+                int count = 1;
+                this.childs.forEach { result.append(it.toMd(0, count++)) }
                 result.append(MD_NEXT_LINE);
             }
 
@@ -244,12 +245,12 @@ class NumberedListCoder implements Coder {
             return result.toString();
         }
 
-        String toMd(int level = 0) {
+        String toMd(int level = 0, int number = 1) {
             StringBuilder result = new StringBuilder();
 
             result.append(MD_LEVEL_PREFIX.repeat(level))
-            result.append(MD_TOKEN);
-            result.append(" ");
+            result.append(number);
+            result.append(". ");
 
             if (this.value) {
                 result.append(this.value);
@@ -257,10 +258,11 @@ class NumberedListCoder implements Coder {
 
             if (this.childs) {
                 result.append(MD_NEXT_LINE);
-                this.childs.forEach { result.append(it.toMd(level + 1)) }
+                int count = 1;
+                this.childs.forEach { result.append(it.toMd(level + 1, count++)) }
+            } else {
+                result.append(MD_NEXT_LINE);
             }
-
-            result.append(MD_NEXT_LINE);
 
             return result.toString();
         }
