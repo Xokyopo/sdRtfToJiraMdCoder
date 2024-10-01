@@ -109,7 +109,7 @@ class NumberedListCoderTest {
 
     @Test
     void toRtf_ShouldReturnTowList_WhenHaveTwoList() {
-        String mdText = "1. первый список\n\n   1. второй список";
+        String mdText = "1. первый список\n\n1. второй список";
         String expected = "<ol><li>первый список</li></ol><ol><li>второй список</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
