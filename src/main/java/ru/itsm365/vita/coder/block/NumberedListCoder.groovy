@@ -6,7 +6,6 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class NumberedListCoder implements Coder {
-    private static final String MD_TOKEN = "*";
     private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?!\\n)^\\s*\\d\\.\\s[^\$]*";
     private static final String MD_EMPTY_LINE = "\n\n";
     private static final String MD_NEXT_LINE = "\n";
@@ -199,7 +198,7 @@ class NumberedListCoder implements Coder {
     }
 
     class Element {
-        private static final String MD_LEVEL_PREFIX = "  ";
+        private static final String MD_LEVEL_PREFIX = " ".repeat(3);
 
         protected String value;
         protected Element parent;
