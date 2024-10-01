@@ -178,6 +178,8 @@ class NumberedListCoder implements Coder {
                 this.childs.forEach { result.append(it.toMd(0, count++)) }
             }
 
+            //Удаляем последний перенос строки, так как это выгодней чем проверка в циклах.
+            result.setLength(result.size() - MD_NEXT_LINE.size());
             return result.toString();
         }
 
