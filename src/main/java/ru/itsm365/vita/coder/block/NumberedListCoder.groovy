@@ -9,7 +9,7 @@ class NumberedListCoder implements Coder {
     private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?!\\n)^\\s*\\d\\.\\s[^\$]*";
     private static final String MD_EMPTY_LINE = "\n\n";
     private static final String MD_NEXT_LINE = "\n";
-    private static final String RTF_FULL_LIST_REGEXP_PATTERN = "<ol>(?:.|\\n)*</ol>";
+    private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ol|li)>)|(</(?:ol|li)>)";
     private static final String RTF_OPEN_LIST_TAG = "<ol>";
     private static final String RTF_CLOSE_LIST_TAG = "</ol>";
     private static final String RTF_OPEN_ITEM_TAG = "<li>";
@@ -47,21 +47,50 @@ class NumberedListCoder implements Coder {
         StringBuilder result = new StringBuilder();
 
         Integer cursor = 0;
-        Pattern pattern = Pattern.compile(RTF_FULL_LIST_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
+
+        Pattern pattern = Pattern.compile(RTF_LIST_TAG_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(s);
 
         while (matcher.find()) {
-            if (cursor < matcher.start()) {
-                result.append(s.substring(cursor, matcher.start()));
-            }
+            Integer firstGroupCursor = matcher.start();
+            String group = matcher.group().toLowerCase();
+            if (group == RTF_OPEN_LIST_TAG) {
+                Stack<String> stack = [];
+                stack.push(group);
+                while (!stack.isEmpty() && matcher.find()) {
+                    String currentTag = matcher.group().toLowerCase();
+                    if (currentTag == RTF_OPEN_LIST_TAG || currentTag == RTF_OPEN_ITEM_TAG) {
+                        stack.push(currentTag);
+                    } else if (currentTag == RTF_CLOSE_LIST_TAG) {
+                        if (stack.last() == RTF_OPEN_LIST_TAG) {
+                            stack.pop();
+                        } else {
+                            break;
+                        }
+                    } else if (currentTag == RTF_CLOSE_ITEM_TAG) {
+                        if (stack.last() == RTF_OPEN_ITEM_TAG) {
+                            stack.pop();
+                        } else {
+                            break;
+                        }
+                    }
+                }
 
-            if (result.size() > 0) {
-                result.append(MD_NEXT_LINE);
-            }
-            result.append(convertListToMD(s.substring(matcher.start(), matcher.end())));
-            cursor = matcher.end();
-            if (cursor < s.length()) {
-                result.append(MD_NEXT_LINE);
+                if (stack.isEmpty()) {
+                    if (cursor < firstGroupCursor) {
+                        result.append(s.substring(cursor, matcher.start()));
+                    }
+
+                    if (result.size() > 0) {
+                        result.append(MD_NEXT_LINE);
+                    }
+
+                    result.append(convertListToMD(s.substring(firstGroupCursor, matcher.end())));
+                    cursor = matcher.end();
+                    if (cursor < s.length()) {
+                        result.append(MD_NEXT_LINE);
+                    }
+                }
             }
         }
 
