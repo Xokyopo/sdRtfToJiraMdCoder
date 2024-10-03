@@ -108,14 +108,13 @@ class MarkedListCoder implements Coder {
     private String convertListToRtf(String s) {
         Element rootElement = new RootElement();
 
-        String startPrefix = MD_START_LIST_ITEM_REGEXP_PATTERN;
         Stack<Integer> levels = [];
         Element parent = rootElement;
         Element lastElement = parent;
         List<String> lines = s.split("\n");
 
         for (String line in lines) {
-            String currentValue = line.replaceFirst(startPrefix, "");
+            String currentValue = line.replaceFirst(MD_START_LIST_ITEM_REGEXP_PATTERN, "");
             Integer currentLevel = line.length() - currentValue.length();
             if (currentLevel > 0) {
                 if (levels.isEmpty()) {
