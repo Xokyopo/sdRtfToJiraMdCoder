@@ -126,7 +126,7 @@ class NumberedListCoderTest {
     @Test
     void toRtf_ShouldReturnTowListWithText_WhenHaveTextBetweenLists() {
         String mdText = "1. первый список\n\nТекст между списками\n1. второй список";
-        String expected = "<ol><li>первый список</li></ol>Текст между списками<ol><li>второй список</li></ol>";
+        String expected = "<ol><li>первый список</li></ol>Текст между списками\n<ol><li>второй список</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
