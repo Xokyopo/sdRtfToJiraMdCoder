@@ -122,4 +122,20 @@ class NumberedListCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnTowListWithText_WhenHaveTextBetweenLists() {
+        String mdText = "1. первый список\n\nТекст между списками\n1. второй список";
+        String expected = "<ol><li>первый список</li></ol>Текст между списками<ol><li>второй список</li></ol>";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnTowListWithText_WhenHaveTextBetweenLists() {
+        String rtfText = "<ol><li>первый список</li></ol>Текст между списками<ol><li>второй список</li></ol>";
+        String expected = "1. первый список\n\nТекст между списками\n1. второй список";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
 }
