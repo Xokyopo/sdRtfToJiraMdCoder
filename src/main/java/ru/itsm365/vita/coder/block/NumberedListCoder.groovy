@@ -79,9 +79,6 @@ class NumberedListCoder implements Coder {
                 if (stack.isEmpty()) {
                     if (cursor < firstGroupCursor) {
                         result.append(s.substring(cursor, firstGroupCursor));
-                    }
-
-                    if (result.size() > 0) {
                         result.append(MD_NEXT_LINE);
                     }
 
