@@ -6,7 +6,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class MarkedListCoder implements Coder {
-    private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?!\\n)\\s*\\d\\.\\s[^\$]*";
+    private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?<!.)(?!\\n)\\s*\\*\\s[^\$]*";
     private static final String MD_MARKED_LIST_TOKEN = "*";
     private static final String MD_EMPTY_LINE = "\n\n";
     private static final String MD_NEXT_LINE = "\n";
