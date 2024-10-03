@@ -14,7 +14,7 @@ class NumberedListCoderTest {
 
     @Test
     void reversTest() {
-        String expected = "1. первый элемент";
+        String expected = "текст до списка\n1. первый список\n\nтекст между списками\n1. второй список";
         String actual = this.coder.toMd(this.coder.toRtf(expected));
         Assert.assertEquals(expected, actual);
     }
