@@ -7,6 +7,7 @@ import java.util.regex.Pattern
 
 class MarkedListCoder implements Coder {
     private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?<!.)(?!\\n)\\s*\\*\\s[^\$]*";
+    private static final String MD_START_LIST_ITEM_REGEXP_PATTERN = "^\\s*\\*\\s";
     private static final String MD_MARKED_LIST_TOKEN = "*";
     private static final String MD_EMPTY_LINE = "\n\n";
     private static final String MD_NEXT_LINE = "\n";
@@ -105,7 +106,7 @@ class MarkedListCoder implements Coder {
     private String convertListToRtf(String s) {
         Element rootElement = new RootElement();
 
-        String startPrefix = "^\\s*\\d*\\.\\s";
+        String startPrefix = MD_START_LIST_ITEM_REGEXP_PATTERN;
         Stack<Integer> levels = [];
         Element parent = rootElement;
         Element lastElement = parent;
