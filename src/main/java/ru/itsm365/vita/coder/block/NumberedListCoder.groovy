@@ -6,8 +6,9 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class NumberedListCoder implements Coder {
-    private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?!\\n)\\s*\\d\\.\\s[^\$]*";
-    private static final String MD_START_LIST_ITEM_REGEXP_PATTERN = "^\\s*\\d*\\.\\s";
+    private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?<!.)(?!\\n)\\s*#\\s[^\$]*";
+    private static final String MD_START_LIST_ITEM_REGEXP_PATTERN = "^\\s*#\\s";
+    private static final String MD_MARKED_LIST_TOKEN = "#";
     private static final String MD_EMPTY_LINE = "\n\n";
     private static final String MD_NEXT_LINE = "\n";
     private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ol|li)>)|(</(?:ol|li)>)";
@@ -208,8 +209,7 @@ class NumberedListCoder implements Coder {
             StringBuilder result = new StringBuilder();
 
             if (this.childs) {
-                int count = 1;
-                this.childs.forEach { result.append(it.toMd(0, count++)) }
+                this.childs.forEach { result.append(it.toMd(0)) }
             }
 
             //Удаляем последний перенос строки, так как это выгодней чем проверка в циклах.
@@ -279,12 +279,12 @@ class NumberedListCoder implements Coder {
             return result.toString();
         }
 
-        String toMd(int level = 0, int number = 1) {
+        String toMd(int level = 0) {
             StringBuilder result = new StringBuilder();
 
             result.append(MD_LEVEL_PREFIX.repeat(level))
-            result.append(number);
-            result.append(". ");
+            result.append(MD_MARKED_LIST_TOKEN);
+            result.append(" ");
 
             if (this.value) {
                 result.append(this.value);
@@ -292,8 +292,7 @@ class NumberedListCoder implements Coder {
 
             if (this.childs) {
                 result.append(MD_NEXT_LINE);
-                int count = 1;
-                this.childs.forEach { result.append(it.toMd(level + 1, count++)) }
+                this.childs.forEach { result.append(it.toMd(level + 1)) }
             } else {
                 result.append(MD_NEXT_LINE);
             }
