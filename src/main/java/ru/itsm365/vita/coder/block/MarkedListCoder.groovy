@@ -12,6 +12,8 @@ class MarkedListCoder implements Coder {
     private static final String MD_EMPTY_LINE = "\n\n";
     private static final String MD_NEXT_LINE = "\n";
     private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ul|li)>)|(</(?:ul|li)>)";
+    private static final String RTF_LIST_ITEM_TAG_NAME = "li";
+    private static final String RTF_LIST_TAG_NAME = "ul";
     private static final String RTF_OPEN_LIST_TAG = "<ul>";
     private static final String RTF_CLOSE_LIST_TAG = "</ul>";
     private static final String RTF_OPEN_ITEM_TAG = "<li>";
@@ -155,7 +157,7 @@ class MarkedListCoder implements Coder {
             Iterator<Node> lastIterator = iteratorsStack.pop();
             while (lastIterator.hasNext()) {
                 Object element = lastIterator.next();
-                if (element instanceof Node && element.name() == "li") {
+                if (element instanceof Node && element.name() == RTF_LIST_ITEM_TAG_NAME) {
                     String nodeName = getNodeName(element);
                     Element currentElement = new Element(nodeName);
                     rootElement.addChild(currentElement);
@@ -164,7 +166,7 @@ class MarkedListCoder implements Coder {
                         lastIterator = element.iterator();
                         rootElement = currentElement;
                     }
-                } else if (element instanceof Node && element.name() == "ol") {
+                } else if (element instanceof Node && element.name() == RTF_LIST_TAG_NAME) {
                     iteratorsStack.push(lastIterator);
                     lastIterator = element.iterator();
                 }
