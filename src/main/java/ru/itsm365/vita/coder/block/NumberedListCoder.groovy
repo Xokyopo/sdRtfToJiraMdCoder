@@ -78,7 +78,7 @@ class NumberedListCoder implements Coder {
 
                 if (stack.isEmpty()) {
                     if (cursor < firstGroupCursor) {
-                        result.append(s.substring(cursor, matcher.start()));
+                        result.append(s.substring(cursor, firstGroupCursor));
                     }
 
                     if (result.size() > 0) {
@@ -88,7 +88,7 @@ class NumberedListCoder implements Coder {
                     result.append(convertListToMD(s.substring(firstGroupCursor, matcher.end())));
                     cursor = matcher.end();
                     if (cursor < s.length()) {
-                        result.append(MD_NEXT_LINE);
+                        result.append(MD_EMPTY_LINE);
                     }
                 }
             }
