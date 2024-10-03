@@ -138,4 +138,20 @@ class MarkedListCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnConverterList_WhenHaveItalicTextBeforeList() {
+        String mdText = "*курсив который должен выжить*\n* первый элемент";
+        String expected = "*курсив который должен выжить*\n<ul><li>первый элемент</li></ul>";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnConverterList_WhenHaveCamelCaseTag() {
+        String rtfText = "<UL><LI>первый элемент</LI></UL>";
+        String expected = "* первый элемент";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
 }
