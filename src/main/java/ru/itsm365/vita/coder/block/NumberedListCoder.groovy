@@ -6,7 +6,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class NumberedListCoder implements Coder {
-    private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?!\\n)^\\s*\\d\\.\\s[^\$]*";
+    private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?!\\n)\\s*\\d\\.\\s[^\$]*";
     private static final String MD_EMPTY_LINE = "\n\n";
     private static final String MD_NEXT_LINE = "\n";
     private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ol|li)>)|(</(?:ol|li)>)";
