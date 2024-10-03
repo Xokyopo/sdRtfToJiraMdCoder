@@ -146,10 +146,10 @@ class MarkedListCoder implements Coder {
     private String convertListToMD(String notFixedXml) {
         String s = "<root>${notFixedXml}</root>";
         Node xmlList = new XmlParser().parseText(s);
-        NodeList ols = xmlList.ol;
-        Node ol = ols.find { it instanceof Node };
+        NodeList rtfList = xmlList[RTF_LIST_TAG_NAME];
+        Node firstList = rtfList.find { it instanceof Node };
         Stack<Iterator<Node>> iteratorsStack = [];
-        iteratorsStack.push(ol.iterator());
+        iteratorsStack.push(firstList.iterator());
 
         Element rootElement = new RootElement();
 
