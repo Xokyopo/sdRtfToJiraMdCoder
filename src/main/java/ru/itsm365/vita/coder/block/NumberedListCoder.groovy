@@ -7,9 +7,12 @@ import java.util.regex.Pattern
 
 class NumberedListCoder implements Coder {
     private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?!\\n)\\s*\\d\\.\\s[^\$]*";
+    private static final String MD_START_LIST_ITEM_REGEXP_PATTERN = "^\\s*\\d*\\.\\s";
     private static final String MD_EMPTY_LINE = "\n\n";
     private static final String MD_NEXT_LINE = "\n";
     private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ol|li)>)|(</(?:ol|li)>)";
+    private static final String RTF_LIST_ITEM_TAG_NAME = "li";
+    private static final String RTF_LIST_TAG_NAME = "ol";
     private static final String RTF_OPEN_LIST_TAG = "<ol>";
     private static final String RTF_CLOSE_LIST_TAG = "</ol>";
     private static final String RTF_OPEN_ITEM_TAG = "<li>";
@@ -104,14 +107,13 @@ class NumberedListCoder implements Coder {
     private String convertListToRtf(String s) {
         Element rootElement = new RootElement();
 
-        String startPrefix = "^\\s*\\d*\\.\\s";
         Stack<Integer> levels = [];
         Element parent = rootElement;
         Element lastElement = parent;
         List<String> lines = s.split("\n");
 
         for (String line in lines) {
-            String currentValue = line.replaceFirst(startPrefix, "");
+            String currentValue = line.replaceFirst(MD_START_LIST_ITEM_REGEXP_PATTERN, "");
             Integer currentLevel = line.length() - currentValue.length();
             if (currentLevel > 0) {
                 if (levels.isEmpty()) {
@@ -142,10 +144,10 @@ class NumberedListCoder implements Coder {
     private String convertListToMD(String notFixedXml) {
         String s = "<root>${notFixedXml}</root>";
         Node xmlList = new XmlParser().parseText(s);
-        NodeList ols = xmlList.ol;
-        Node ol = ols.find { it instanceof Node };
+        NodeList rtfList = xmlList[RTF_LIST_TAG_NAME] ?: xmlList[RTF_LIST_TAG_NAME.toUpperCase()];
+        Node firstList = rtfList.find { it instanceof Node };
         Stack<Iterator<Node>> iteratorsStack = [];
-        iteratorsStack.push(ol.iterator());
+        iteratorsStack.push(firstList.iterator());
 
         Element rootElement = new RootElement();
 
@@ -153,18 +155,21 @@ class NumberedListCoder implements Coder {
             Iterator<Node> lastIterator = iteratorsStack.pop();
             while (lastIterator.hasNext()) {
                 Object element = lastIterator.next();
-                if (element instanceof Node && element.name() == "li") {
-                    String nodeName = getNodeName(element);
-                    Element currentElement = new Element(nodeName);
-                    rootElement.addChild(currentElement);
-                    if (element.children().size() > 1) {
+                if (element instanceof Node) {
+                    String tagName = element.name()?.toLowerCase();
+                    if (RTF_LIST_ITEM_TAG_NAME == tagName) {
+                        String nodeName = getNodeName(element);
+                        Element currentElement = new Element(nodeName);
+                        rootElement.addChild(currentElement);
+                        if (element.children().size() > 1) {
+                            iteratorsStack.push(lastIterator);
+                            lastIterator = element.iterator();
+                            rootElement = currentElement;
+                        }
+                    } else if (RTF_LIST_TAG_NAME == tagName) {
                         iteratorsStack.push(lastIterator);
                         lastIterator = element.iterator();
-                        rootElement = currentElement;
                     }
-                } else if (element instanceof Node && element.name() == "ol") {
-                    iteratorsStack.push(lastIterator);
-                    lastIterator = element.iterator();
                 }
             }
             if (rootElement.haveParent()) {

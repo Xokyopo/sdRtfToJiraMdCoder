@@ -138,4 +138,12 @@ class NumberedListCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toMd_ShouldReturnConverterList_WhenHaveCamelCaseTag() {
+        String rtfText = "<OL><LI>первый элемент</LI></OL>";
+        String expected = "1. первый элемент";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
 }
