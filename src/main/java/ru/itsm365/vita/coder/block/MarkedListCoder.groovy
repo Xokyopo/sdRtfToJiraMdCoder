@@ -146,7 +146,7 @@ class MarkedListCoder implements Coder {
     private String convertListToMD(String notFixedXml) {
         String s = "<root>${notFixedXml}</root>";
         Node xmlList = new XmlParser().parseText(s);
-        NodeList rtfList = xmlList[RTF_LIST_TAG_NAME];
+        NodeList rtfList = xmlList[RTF_LIST_TAG_NAME] ?: xmlList[RTF_LIST_TAG_NAME.toUpperCase()];
         Node firstList = rtfList.find { it instanceof Node };
         Stack<Iterator<Node>> iteratorsStack = [];
         iteratorsStack.push(firstList.iterator());
@@ -157,18 +157,21 @@ class MarkedListCoder implements Coder {
             Iterator<Node> lastIterator = iteratorsStack.pop();
             while (lastIterator.hasNext()) {
                 Object element = lastIterator.next();
-                if (element instanceof Node && element.name() == RTF_LIST_ITEM_TAG_NAME) {
-                    String nodeName = getNodeName(element);
-                    Element currentElement = new Element(nodeName);
-                    rootElement.addChild(currentElement);
-                    if (element.children().size() > 1) {
+                if (element instanceof Node) {
+                    String tagName = element.name()?.toLowerCase();
+                    if (RTF_LIST_ITEM_TAG_NAME == tagName) {
+                        String nodeName = getNodeName(element);
+                        Element currentElement = new Element(nodeName);
+                        rootElement.addChild(currentElement);
+                        if (element.children().size() > 1) {
+                            iteratorsStack.push(lastIterator);
+                            lastIterator = element.iterator();
+                            rootElement = currentElement;
+                        }
+                    } else if (RTF_LIST_TAG_NAME == tagName) {
                         iteratorsStack.push(lastIterator);
                         lastIterator = element.iterator();
-                        rootElement = currentElement;
                     }
-                } else if (element instanceof Node && element.name() == RTF_LIST_TAG_NAME) {
-                    iteratorsStack.push(lastIterator);
-                    lastIterator = element.iterator();
                 }
             }
             if (rootElement.haveParent()) {
