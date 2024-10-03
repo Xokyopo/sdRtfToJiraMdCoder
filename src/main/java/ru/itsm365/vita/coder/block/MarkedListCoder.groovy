@@ -9,9 +9,9 @@ class MarkedListCoder implements Coder {
     private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?!\\n)\\s*\\d\\.\\s[^\$]*";
     private static final String MD_EMPTY_LINE = "\n\n";
     private static final String MD_NEXT_LINE = "\n";
-    private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ol|li)>)|(</(?:ol|li)>)";
-    private static final String RTF_OPEN_LIST_TAG = "<ol>";
-    private static final String RTF_CLOSE_LIST_TAG = "</ol>";
+    private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ul|li)>)|(</(?:ul|li)>)";
+    private static final String RTF_OPEN_LIST_TAG = "<ul>";
+    private static final String RTF_CLOSE_LIST_TAG = "</ul>";
     private static final String RTF_OPEN_ITEM_TAG = "<li>";
     private static final String RTF_CLOSE_ITEM_TAG = "</li>";
 
