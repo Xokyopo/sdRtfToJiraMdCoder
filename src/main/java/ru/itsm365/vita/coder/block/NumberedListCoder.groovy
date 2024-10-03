@@ -78,8 +78,11 @@ class NumberedListCoder implements Coder {
 
                 if (stack.isEmpty()) {
                     if (cursor < firstGroupCursor) {
-                        result.append(s.substring(cursor, firstGroupCursor));
-                        result.append(MD_NEXT_LINE);
+                        String otherText = s.substring(cursor, firstGroupCursor);
+                        result.append(otherText);
+                        if (!otherText.endsWith(MD_NEXT_LINE)) {
+                            result.append(MD_NEXT_LINE);
+                        }
                     }
 
                     result.append(convertListToMD(s.substring(firstGroupCursor, matcher.end())));
