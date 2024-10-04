@@ -51,7 +51,7 @@ class ItalicTextCoder implements Coder {
 
         //Исправляем перевод строки в последней.
         if (result.size() > 0) {
-            result.setLength(result.size() - 1);
+            result.setLength(result.size() - MD_NEXT_LINE.length());
         }
 
         return result.toString();
