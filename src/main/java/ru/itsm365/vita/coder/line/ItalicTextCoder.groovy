@@ -4,42 +4,47 @@ import ru.itsm365.vita.coder.Coder
 
 class ItalicTextCoder implements Coder {
     private static final String MD_TOKEN = "_";
-    private static final String MD_EMPTY_LINE_TOKEN = "\n\n";
-    private static final String RTF_OPEN_TAG = "<i>";
-    private static final String RTF_CLOSE_TAG = "</i>";
+    private static final String MD_NEXT_LINE = "\n";
+    private static final String RTF_OPEN_TAG = "<em>";
+    private static final String RTF_CLOSE_TAG = "</em>";
 
     @Override
     String toRtf(String s) {
         StringBuilder result = new StringBuilder();
-        StringBuilder current = new StringBuilder(s);
+        List<String> lines = s.split(MD_NEXT_LINE);
 
-        Integer resultCursor = 0;
-        Integer startCursor = current.indexOf(MD_TOKEN);
-        Integer endCursor = current.indexOf(MD_TOKEN, startCursor + MD_TOKEN.length());
+        for (String line in lines) {
+            Integer lineCursor = 0;
+            boolean open = false;
 
-        if (startCursor > 0) {
-            result.append(current.substring(resultCursor, startCursor));
-            resultCursor = startCursor;
-        }
-
-        while (startCursor >= 0 && endCursor > startCursor) {
-            String targetString = current.substring(startCursor, endCursor);
-            if (targetString.contains(MD_EMPTY_LINE_TOKEN)) {
-                result.append(targetString);
-            } else {
-                targetString = targetString.replaceAll("\n", "");
-                result.append(RTF_OPEN_TAG);
-                result.append(targetString.substring(1, targetString.length()));
-                result.append(RTF_CLOSE_TAG);
+            Closure<Boolean> isCloseTag = { it > 0 && line[it - 1] != " " && line[it - 1] != "_" };
+            Closure<Boolean> isOpen = { it < line.length() && line[it + 1] != " " && line[it + 1] != "_" };
+            for (int cursor = line.indexOf(MD_TOKEN, lineCursor); cursor >= 0; cursor = line.indexOf(MD_TOKEN, cursor + 1)) {
+                if (open && cursor > lineCursor + 2 && isCloseTag(cursor)) {
+                    cursor += MD_TOKEN.length();
+                    open = false;
+                    result.append(RTF_OPEN_TAG);
+                    result.append(line.substring(lineCursor + MD_TOKEN.length(), cursor - MD_TOKEN.length()));
+                    result.append(RTF_CLOSE_TAG);
+                    lineCursor = cursor;
+                } else if (!open && isOpen(cursor)) {
+                    open = true;
+                    if (lineCursor < cursor) {
+                        result.append(line.substring(lineCursor, cursor));
+                        lineCursor = cursor;
+                    }
+                }
             }
 
-            resultCursor = endCursor;
-            startCursor = current.indexOf(MD_TOKEN, endCursor + MD_TOKEN.length());
-            endCursor = current.indexOf(MD_TOKEN, startCursor + MD_TOKEN.length());
+            if (lineCursor < line.length()) {
+                result.append(line.substring(lineCursor));
+            }
+            result.append(MD_NEXT_LINE);
         }
 
-        if (resultCursor + 1 < current.length()) {
-            result.append(current.substring(resultCursor + 1));
+        //Исправляем перевод строки в последней.
+        if (result.size() > 0) {
+            result.setLength(result.size() - 1);
         }
 
         return result.toString();
