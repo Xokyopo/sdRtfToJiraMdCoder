@@ -154,7 +154,7 @@ class ItalicTextCoderTest {
     @Test
     void toRtf_ShouldReturnUnmodifiedText_WhenHaveInvalidEndToken() {
         String mdText = "simple _test _ string";
-        String expected = "simple _test_ string";
+        String expected = "simple _test _ string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
