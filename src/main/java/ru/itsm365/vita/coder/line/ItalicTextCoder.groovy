@@ -18,17 +18,17 @@ class ItalicTextCoder implements Coder {
             Integer lineCursor = 0;
             boolean open = false;
 
-            Closure<Boolean> isCloseTag = { it > 0 && line[it - 1] != " " && line[it - 1] != "_" };
-            Closure<Boolean> isOpen = { it < line.length() && line[it + 1] != " " && line[it + 1] != "_" };
+            Closure<Boolean> isCloseToken = { it > 0 && line[it - 1] != " " && line[it - 1] != "_" };
+            Closure<Boolean> isOpenToken = { it < line.length() && line[it + 1] != " " && line[it + 1] != "_" };
             for (int cursor = line.indexOf(MD_TOKEN, lineCursor); cursor >= 0; cursor = line.indexOf(MD_TOKEN, cursor + 1)) {
-                if (open && cursor > lineCursor + 2 && isCloseTag(cursor)) {
+                if (open && cursor > lineCursor + 2 && isCloseToken(cursor)) {
                     cursor += MD_TOKEN.length();
                     open = false;
                     result.append(RTF_OPEN_TAG);
                     result.append(line.substring(lineCursor + MD_TOKEN.length(), cursor - MD_TOKEN.length()));
                     result.append(RTF_CLOSE_TAG);
                     lineCursor = cursor;
-                } else if (!open && isOpen(cursor)) {
+                } else if (!open && isOpenToken(cursor)) {
                     open = true;
                     if (lineCursor < cursor) {
                         result.append(line.substring(lineCursor, cursor));
