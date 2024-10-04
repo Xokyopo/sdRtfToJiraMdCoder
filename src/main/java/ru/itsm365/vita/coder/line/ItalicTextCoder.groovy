@@ -3,7 +3,7 @@ package ru.itsm365.vita.coder.line
 import ru.itsm365.vita.coder.Coder
 
 class ItalicTextCoder implements Coder {
-    private static final String MD_TOKEN = "*";
+    private static final String MD_TOKEN = "_";
     private static final String MD_EMPTY_LINE_TOKEN = "\n\n";
     private static final String RTF_OPEN_TAG = "<i>";
     private static final String RTF_CLOSE_TAG = "</i>";
