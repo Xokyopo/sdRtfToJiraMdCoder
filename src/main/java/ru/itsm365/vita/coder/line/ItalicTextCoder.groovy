@@ -15,31 +15,37 @@ class ItalicTextCoder implements Coder {
         List<String> lines = s.split(MD_NEXT_LINE);
 
         for (String line in lines) {
-            Integer lineCursor = 0;
+            Integer cursor = 0;
             boolean open = false;
 
             Closure<Boolean> isCloseToken = { it > 0 && line[it - 1] != " " && line[it - 1] != "_" };
             Closure<Boolean> isOpenToken = { it < line.length() && line[it + 1] != " " && line[it + 1] != "_" };
-            for (int cursor = line.indexOf(MD_TOKEN, lineCursor); cursor >= 0; cursor = line.indexOf(MD_TOKEN, cursor + 1)) {
-                if (open && cursor > lineCursor + 2 && isCloseToken(cursor)) {
-                    cursor += MD_TOKEN.length();
+            for (
+                    int tokenCursor = line.indexOf(MD_TOKEN, cursor);
+                    tokenCursor >= 0;
+                    tokenCursor = line.indexOf(MD_TOKEN, tokenCursor + MD_TOKEN.length())
+            ) {
+                if (open && isCloseToken(tokenCursor)) {
                     open = false;
                     result.append(RTF_OPEN_TAG);
-                    result.append(line.substring(lineCursor + MD_TOKEN.length(), cursor - MD_TOKEN.length()));
+                    if (cursor + MD_TOKEN.length() < tokenCursor) {
+                        result.append(line.substring(cursor + MD_TOKEN.length(), tokenCursor));
+                    }
                     result.append(RTF_CLOSE_TAG);
-                    lineCursor = cursor;
-                } else if (!open && isOpenToken(cursor)) {
+                    cursor = tokenCursor + MD_TOKEN.length();
+                } else if (!open && isOpenToken(tokenCursor)) {
                     open = true;
-                    if (lineCursor < cursor) {
-                        result.append(line.substring(lineCursor, cursor));
-                        lineCursor = cursor;
+                    if (cursor < tokenCursor) {
+                        result.append(line.substring(cursor, tokenCursor));
+                        cursor = tokenCursor;
                     }
                 }
             }
 
-            if (lineCursor < line.length()) {
-                result.append(line.substring(lineCursor));
+            if (cursor < line.length()) {
+                result.append(line.substring(cursor));
             }
+
             result.append(MD_NEXT_LINE);
         }
 
