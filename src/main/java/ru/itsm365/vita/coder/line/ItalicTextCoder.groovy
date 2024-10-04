@@ -1,5 +1,6 @@
 package ru.itsm365.vita.coder.line
 
+
 import ru.itsm365.vita.coder.Coder
 
 class ItalicTextCoder implements Coder {
@@ -52,28 +53,36 @@ class ItalicTextCoder implements Coder {
 
     @Override
     String toMd(String s) {
-        StringBuilder result = new StringBuilder(s);
-        StringBuilder current = new StringBuilder(s.toLowerCase());
+        StringBuilder result = new StringBuilder();
+        String lowerCaseInputText = s.toLowerCase();
 
-        Map<Integer, String> matches = [:];
-        String searchingTag = RTF_OPEN_TAG;
-        Integer cursor = current.indexOf(RTF_OPEN_TAG);
-
-        while (cursor >= 0) {
-            matches.put(cursor, searchingTag);
-            String nextTag = getNextTag(searchingTag);
-            cursor = current.indexOf(nextTag, cursor + searchingTag.length());
-            searchingTag = nextTag;
+        Integer cursor = 0;
+        Boolean open = false;
+        int tagCursor = lowerCaseInputText.indexOf(RTF_OPEN_TAG, cursor);
+        while (tagCursor >= 0) {
+            if (open) {
+                result.append(MD_TOKEN);
+                if (cursor < tagCursor) {
+                    result.append(s.substring(cursor + RTF_OPEN_TAG.length(), tagCursor));
+                }
+                result.append(MD_TOKEN);
+                cursor = tagCursor + RTF_CLOSE_TAG.length();
+                tagCursor = lowerCaseInputText.indexOf(RTF_OPEN_TAG, cursor);
+                open = false;
+            } else {
+                if (cursor < tagCursor) {
+                    result.append(s.substring(cursor, tagCursor));
+                }
+                cursor = tagCursor;
+                tagCursor = lowerCaseInputText.indexOf(RTF_CLOSE_TAG, cursor);
+                open = true
+            }
         }
 
-        matches.reverseEach { result.replace(it.key, it.key + it.value.length(), MD_TOKEN) };
+        if (cursor < s.length()) {
+            result.append(s.substring(cursor, s.length()));
+        }
 
         return result.toString();
-    }
-
-    private static String getNextTag(String tag) {
-        return RTF_OPEN_TAG == tag
-                ? RTF_CLOSE_TAG
-                : RTF_OPEN_TAG;
     }
 }
