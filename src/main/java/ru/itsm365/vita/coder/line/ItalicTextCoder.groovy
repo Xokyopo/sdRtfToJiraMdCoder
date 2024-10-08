@@ -3,8 +3,13 @@ package ru.itsm365.vita.coder.line
 
 import ru.itsm365.vita.coder.Coder
 
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 class ItalicTextCoder implements Coder {
     private static final String MD_TOKEN = "_";
+    private static final String MD_OPEN_TAG_REGEXP_PATTERN = "_(?!\\s)(?!_)(?=.)";
+    private static final String MD_CLOSE_TAG_REGEXP_PATTERN = "(?=.)(?<!\\s)(?<!_)_";
     private static final String MD_NEXT_LINE = "\n";
     private static final String RTF_OPEN_TAG = "<em>";
     private static final String RTF_CLOSE_TAG = "</em>";
@@ -14,31 +19,30 @@ class ItalicTextCoder implements Coder {
         StringBuilder result = new StringBuilder();
         List<String> lines = s.split(MD_NEXT_LINE);
 
+        Pattern openMDToken = Pattern.compile(MD_OPEN_TAG_REGEXP_PATTERN);
+        Pattern closeMDToken = Pattern.compile(MD_CLOSE_TAG_REGEXP_PATTERN);
+
         for (String line in lines) {
             Integer cursor = 0;
-            boolean open = false;
 
-            Closure<Boolean> isCloseToken = { it > 0 && line[it - 1] != " " && line[it - 1] != "_" };
-            Closure<Boolean> isOpenToken = { it < line.length() && line[it + 1] != " " && line[it + 1] != "_" };
-            for (
-                    int tokenCursor = line.indexOf(MD_TOKEN, cursor);
-                    tokenCursor >= 0;
-                    tokenCursor = line.indexOf(MD_TOKEN, tokenCursor + MD_TOKEN.length())
-            ) {
-                if (open && isCloseToken(tokenCursor)) {
-                    open = false;
+            Matcher openMatcher = openMDToken.matcher(line);
+            Matcher closeMatcher = closeMDToken.matcher(line)
+
+            while (openMatcher.find(cursor)) {
+                if (cursor < openMatcher.start()) {
+                    result.append(line.substring(cursor, openMatcher.start()));
+                    cursor = openMatcher.start();
+                }
+
+                if (closeMatcher.find(openMatcher.end())) {
                     result.append(RTF_OPEN_TAG);
-                    if (cursor + MD_TOKEN.length() < tokenCursor) {
-                        result.append(line.substring(cursor + MD_TOKEN.length(), tokenCursor));
+                    if (closeMatcher.start() > openMatcher.end()) {
+                        result.append(line.substring(openMatcher.end(), closeMatcher.start()));
                     }
                     result.append(RTF_CLOSE_TAG);
-                    cursor = tokenCursor + MD_TOKEN.length();
-                } else if (!open && isOpenToken(tokenCursor)) {
-                    open = true;
-                    if (cursor < tokenCursor) {
-                        result.append(line.substring(cursor, tokenCursor));
-                        cursor = tokenCursor;
-                    }
+                    cursor = closeMatcher.end();
+                } else {
+                    break;
                 }
             }
 
