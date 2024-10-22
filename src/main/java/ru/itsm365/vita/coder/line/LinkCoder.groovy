@@ -13,9 +13,10 @@ class LinkCoder implements Coder {
     private static final String MD_CLOSE_TAG = "]";
     private static final String MD_PART_DELIMITER_TAG = "|";
     private static final String RTF_TAG_NAME = "a";
-    private static final String RTF_LINK_REGEXP_PATTERN = "<a\\s[^><]*>.*<\\/a>";
-    private static final String RTF_BOTH_TAG_REGEXP_PATTERN = "(^<[aA]\\s[^><]*>)|(</[aA]>\$)";
-    private static final String RTF_HREF_REGEXP_PATTERN = '(?<=href=\\")[^\\"]+';
+    private static final String RTF_OPEN_LINK_TAG_REGEXP_TOKEN = "<[aA]\\s[^><]*>";
+    private static final String RTF_CLOSE_LINK_TAG_REGEXP_TOKEN = "</[aA]>";
+    private static final String RTF_BOTH_TAG_REGEXP_PATTERN = "(<[aA]\\s[^><]*>)|(</[aA]>)";
+    private static final String RTF_HREF_REGEXP_TOKEN = '(?<=href=\\")[^\\"]+';
 
     @Override
     String toRtf(String s) {
@@ -32,7 +33,6 @@ class LinkCoder implements Coder {
             while (matcher.find(cursor)) {
                 if (cursor < matcher.start()) {
                     result.append(line.substring(cursor, matcher.start()));
-                    cursor = matcher.start();
                 }
 
                 result.append(convertLinkMdToRtf(line.substring(matcher.start(), matcher.end())));
@@ -59,17 +59,25 @@ class LinkCoder implements Coder {
     String toMd(String s) {
         StringBuilder result = new StringBuilder();
 
-        Pattern pattern = Pattern.compile(RTF_LINK_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(RTF_BOTH_TAG_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(s);
 
         Integer cursor = 0;
+        Integer foundOpenTagCursor = null;
         while (matcher.find()) {
-            if (cursor < matcher.start()) {
-                result.append(s.substring(cursor, matcher.start()));
-            }
+            String tag = matcher.group();
 
-            result.append(convertLinkRtfToMd(s.substring(matcher.start(), matcher.end())));
-            cursor = matcher.end();
+            if (tag.matches(RTF_OPEN_LINK_TAG_REGEXP_TOKEN)) {
+                foundOpenTagCursor = matcher.start();
+            } else if (foundOpenTagCursor != null && tag.matches(RTF_CLOSE_LINK_TAG_REGEXP_TOKEN)) {
+                if (cursor < foundOpenTagCursor) {
+                    result.append(s.substring(cursor, foundOpenTagCursor));
+                }
+
+                result.append(convertLinkRtfToMd(s.substring(foundOpenTagCursor, matcher.end())));
+                cursor = matcher.end();
+                foundOpenTagCursor = null;
+            }
         }
 
         if (cursor < s.length()) {
@@ -90,7 +98,7 @@ class LinkCoder implements Coder {
         String text = link.replaceAll(RTF_BOTH_TAG_REGEXP_PATTERN, "");
         String href = "#";
 
-        Pattern hrefPattern = Pattern.compile(RTF_HREF_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
+        Pattern hrefPattern = Pattern.compile(RTF_HREF_REGEXP_TOKEN, Pattern.CASE_INSENSITIVE);
         Matcher hrefMatcher = hrefPattern.matcher(link);
         if (hrefMatcher.find()) {
             href = hrefMatcher.group();
