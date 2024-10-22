@@ -83,4 +83,12 @@ class LinkCoderTest {
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnLinkWithEndedEmptyLine_WhenHaveEmptyLineAfter() {
+        String mdText = '[*привязать заголовок*|http://example.com]\n';
+        String expected = '<a href="http://example.com">*привязать заголовок*</a>\n';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
 }
