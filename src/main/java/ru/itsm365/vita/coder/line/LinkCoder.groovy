@@ -48,7 +48,7 @@ class LinkCoder implements Coder {
         }
 
         //Исправляем перевод строки в последней.
-        if (result.size() > 0) {
+        if (result.size() > 0 && !s.endsWith(MD_NEXT_LINE)) {
             result.setLength(result.size() - MD_NEXT_LINE.length());
         }
 
