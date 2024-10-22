@@ -30,8 +30,16 @@ class LinkCoderTest {
 
     @Test
     void toMd() {
-        String rtfText = '<a href="http://example.com"><b>привязать заголовок</b></a>';
+        String rtfText = '<a href="http://example.com">привязать заголовок</a>';
         String expected = '[привязать заголовок|http://example.com]';
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnNotBrokenInnerTag_WhenRun() {
+        String rtfText = '<a href="http://example.com"><b>привязать заголовок</b></a>';
+        String expected = '[<b>привязать заголовок</b>|http://example.com]';
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
