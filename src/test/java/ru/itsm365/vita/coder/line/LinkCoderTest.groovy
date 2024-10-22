@@ -43,4 +43,12 @@ class LinkCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toMd_ShouldReturnTwoLink_WhenHaveTwoLink() {
+        String rtfText = '<a href="http://example.com">привязать заголовок</a><a href="http://example.com">привязать заголовок</a>';
+        String expected = '[привязать заголовок|http://example.com][привязать заголовок|http://example.com]';
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
 }
