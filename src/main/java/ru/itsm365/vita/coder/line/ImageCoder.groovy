@@ -15,6 +15,7 @@ class ImageCoder implements Coder {
     private static final String RTF_REGEXP_PATTERN = "<img\\s[^><]*>";
     private static final String RTF_SRC_REGEXP_TOKEN = '(?<=src=\\")[^\\"]+';
     private static final String SPACE = " ";
+    private static final String MD_NEW_LINE = "\n";
 
     @Override
     String toRtf(String s) {
@@ -50,15 +51,20 @@ class ImageCoder implements Coder {
 
         while (matcher.find()) {
             if (cursor < matcher.start()) {
-                result.append(s.substring(cursor, matcher.start()));
-                result.append(SPACE);
+                String prefix = s.substring(cursor, matcher.start());
+                result.append(prefix);
+                if (!(prefix.endsWith(SPACE) || prefix.endsWith(MD_NEW_LINE))) {
+                    result.append(SPACE);
+                }
             }
 
             result.append(convertImageRtfToMd(matcher.group()));
             cursor = matcher.end()
 
             if (cursor < s.length()) {
-                result.append(SPACE);
+                if (!(s.startsWith(SPACE, cursor) || s.startsWith(MD_NEW_LINE, cursor))) {
+                    result.append(SPACE);
+                }
             }
         }
 
