@@ -51,4 +51,20 @@ class ImageCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldSafeNewLine_WhenHaveTheLine() {
+        String mdText = 'до картики\n!screenshot-1.png|thumbnail!\nи после картинки';
+        String expected = 'до картики\n<img src="screenshot-1.png">\nи после картинки';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldSafeNewLine_WhenHaveTheLine() {
+        String rtfText = 'до картики\n<img src="screenshot-1.png">\nи после картинки';
+        String expected = 'до картики\n!screenshot-1.png|thumbnail!\nи после картинки';
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
 }
