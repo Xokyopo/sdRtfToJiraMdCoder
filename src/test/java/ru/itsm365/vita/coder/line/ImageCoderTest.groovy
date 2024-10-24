@@ -35,4 +35,20 @@ class ImageCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnImage_WhenSurroundedByText() {
+        String mdText = 'до картики !screenshot-1.png|thumbnail! и после картинки';
+        String expected = 'до картики<img src="screenshot-1.png">и после картинки';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnImage_WhenSurroundedByText() {
+        String rtfText = 'до картики<img src="screenshot-1.png">и после картинки';
+        String expected = 'до картики !screenshot-1.png|thumbnail! и после картинки';
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
 }
