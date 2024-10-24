@@ -6,30 +6,77 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class ImageCoder implements Coder {
-    private static final String MD_REGEXP_PATTERN = "![^\\|]*\\|thumbnail!";
+    private static final String MD_REGEXP_PATTERN = "(?<!^\\s) ?![^\\|]*\\|thumbnail! ?(?!^\\s)";
     private static final String MD_IMAGE_DIRECTIVE = "thumbnail";
-    private static final String MD_NEXT_LINE = "\n";
+    private static final String MD_SRC_REGEXP_TOKEN = '(?<=!)[^\\|]*(?=\\|thumbnail!)';
     private static final String MD_TAG = "!";
     private static final String MD_PART_DELIMITER_TAG = "|";
     private static final String RTF_TAG_NAME = "img";
-    private static final String RTF_IMG_TAG_REGEXP_PATTERN = "<img\\s[^><]*>";
+    private static final String RTF_REGEXP_PATTERN = "<img\\s[^><]*>";
     private static final String RTF_SRC_REGEXP_TOKEN = '(?<=src=\\")[^\\"]+';
+    private static final String SPACE = " ";
 
     @Override
     String toRtf(String s) {
-        return convertImageMdToRtf(s)
+        StringBuilder result = new StringBuilder();
+        Integer cursor = 0;
+
+        Pattern pattern = Pattern.compile(MD_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(s);
+
+        while (matcher.find()) {
+            if (cursor < matcher.start()) {
+                result.append(s.substring(cursor, matcher.start()));
+            }
+
+            result.append(convertImageMdToRtf(matcher.group()))
+            cursor = matcher.end();
+        }
+
+        if (cursor < s.length()) {
+            result.append(s.substring(cursor));
+        }
+
+        return result.toString();
     }
 
     @Override
     String toMd(String s) {
-        return convertImageRtfToMd(s);
+        StringBuilder result = new StringBuilder();
+        Integer cursor = 0;
+
+        Pattern pattern = Pattern.compile(RTF_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(s);
+
+        while (matcher.find()) {
+            if (cursor < matcher.start()) {
+                result.append(s.substring(cursor, matcher.start()));
+                result.append(SPACE);
+            }
+
+            result.append(convertImageRtfToMd(matcher.group()));
+            cursor = matcher.end()
+
+            if (cursor < s.length()) {
+                result.append(SPACE);
+            }
+        }
+
+        if (cursor < s.length()) {
+            result.append(s.substring(cursor));
+        }
+
+        return result.toString();
     }
 
     private static String convertImageMdToRtf(String mdImage) {
-        Integer mdImageTailSize = MD_TAG.size() + MD_PART_DELIMITER_TAG.size() + MD_IMAGE_DIRECTIVE.size();
-        if (mdImage.length() > mdImageTailSize) {
-            return createRtfImage(mdImage.substring(MD_TAG.size(), mdImage.length() - mdImageTailSize));
+        Pattern pattern = Pattern.compile(MD_SRC_REGEXP_TOKEN);
+        Matcher matcher = pattern.matcher(mdImage);
+
+        if (matcher.find()) {
+            return createRtfImage(matcher.group());
         }
+
         return mdImage
     }
 
