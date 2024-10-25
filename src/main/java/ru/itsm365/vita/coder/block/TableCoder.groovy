@@ -1,0 +1,118 @@
+package ru.itsm365.vita.coder.block
+
+import ru.itsm365.vita.coder.Coder
+import ru.itsm365.vita.coder.model.Table
+
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
+class TableCoder implements Coder {
+    final String TABLE_START = "<table style=\"border-collapse: collapse;\">"
+    final String TABLE_END = "</table>"
+    final String TR_START = "<tr>"
+    final String TR_END = "</tr>"
+    final String TH_START = "<th style=\"background: rgb(230, 230, 230);border: 1px solid rgb(221, 221, 221);\">"
+    final String TH_END = "</th>"
+    final String TD_START = "<td  style=\"border: 1px solid rgb(221, 221, 221);\">"
+    final String TD_END = "</td>"
+    final String LINK_PATTERN = "\\[.+\\|http(s)*:\\/\\/.+\\]";
+
+    @Override
+    String toRtf(String s) {
+
+        StringBuilder result = new StringBuilder(s);
+        Pattern link_pattern = Pattern.compile(LINK_PATTERN);
+        s = s.replaceAll("(\\\\\\|)", "Џ");
+        s = link_pattern.matcher(s).replaceAll({ it -> it.group(0).replaceAll("[|]", "˦") });
+
+        List<String> list = List.of(s.split("\\n"));
+        List<Table> tables = new ArrayList<>();
+        List<String> text = new ArrayList<>();
+        List<List<String>> data = new ArrayList<>();
+
+        int rows = 0;
+        int columns = 0;
+        int start = Integer.MAX_VALUE;
+        int end = 0;
+        int counterChars = 0;
+        int cccc = 0;
+        int cursor = 0;
+        Pattern pattern = Pattern.compile('^\\|.+\\|$');
+
+        boolean hasHeader = false;
+        for (String str : list) {
+            Matcher matcher = pattern.matcher(str.trim());
+            counterChars += (int) Arrays.stream(str.split("")).filter({ c -> Objects.equals(c, "Џ") }).count();
+            cursor += str.length() + 1;
+            if (matcher.find()) {
+                start = Math.min(cursor - str.length() - 1, start);
+                end = cursor - 1;
+                String check = matcher.group();
+                String[] items = null;
+                if (check.startsWith("||")) {
+                    hasHeader = true;
+                    items = check.split("\\|\\|");
+                } else {
+                    items = check.split("[|]");
+                    if (columns == 0) {
+                        columns = (int) Arrays.stream(check.split("")).filter({ ch -> Objects.equals(ch, "|") }).count() - 1;
+                    }
+                }
+                for (int i = 1; i < items.length; i++) {
+                    text.add(items[i]);
+                }
+                data.add(text);
+                text = new ArrayList<>();
+                rows++;
+            } else {
+                if (!data.isEmpty()) {
+                    tables.add(new Table(start + cccc, end + counterChars + cccc, rows, columns, hasHeader, data));
+                    start = Integer.MAX_VALUE;
+                    data = new ArrayList<>();
+                    rows = 0;
+                    columns = 0;
+                    hasHeader = false;
+                    cccc += counterChars;
+                    counterChars = 0;
+                }
+            }
+        }
+        if (!data.isEmpty()) {
+            tables.add(new Table(start, end + counterChars, rows, columns, hasHeader, data));
+        }
+
+        int shift = 0;
+        for (Table table : tables) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(TABLE_START);
+            for (List<String> row : table.getData()) {
+                stringBuilder.append(TR_START);
+                for (String cell : row) {
+                    if (table.isHasHeader()) {
+                        stringBuilder.append(TH_START);
+                    } else {
+                        stringBuilder.append(TD_START);
+                    }
+                    stringBuilder.append(cell);
+                    if (table.isHasHeader()) {
+                        stringBuilder.append(TH_END);
+                    } else {
+                        stringBuilder.append(TD_END);
+                    }
+                }
+                table.setHasHeader(false);
+                stringBuilder.append(TR_END);
+            }
+            stringBuilder.append(TABLE_END);
+            result.replace(table.getStart() + shift, table.getEnd() + shift, stringBuilder.toString());
+            shift += stringBuilder.length() - table.getEnd() + table.getStart();
+        }
+        return result.toString().replaceAll("[Џ˦]", "|");
+    }
+
+
+    @Override
+    String toMd(String s) {
+        return null
+    }
+}
