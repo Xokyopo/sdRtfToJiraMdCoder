@@ -6,298 +6,352 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class ListCoder implements Coder {
-    private static final String MD_FULL_LIST_REGEXP_PATTERN = "(?<!.)(?!\\n)\\s*\\*\\s[^\$]*";
-    private static final String MD_START_LIST_ITEM_REGEXP_PATTERN = "^\\s*\\*\\s";
-    private static final String MD_MARKED_LIST_TOKEN = "*";
-    private static final String MD_EMPTY_LINE = "\n\n";
-    private static final String MD_NEXT_LINE = "\n";
-    private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ul|li)>)|(</(?:ul|li)>)";
-    private static final String RTF_LIST_ITEM_TAG_NAME = "li";
-    private static final String RTF_LIST_TAG_NAME = "ul";
-    private static final String RTF_OPEN_LIST_TAG = "<ul>";
-    private static final String RTF_CLOSE_LIST_TAG = "</ul>";
-    private static final String RTF_OPEN_ITEM_TAG = "<li>";
-    private static final String RTF_CLOSE_ITEM_TAG = "</li>";
+    private final Coder numberedCoder;
+    private final Coder markedCoder;
+
+    {
+        this.numberedCoder = new AllListCoder(AllListCoderSetting.NUMBERED);
+        this.markedCoder = new AllListCoder(AllListCoderSetting.MARKED);
+    }
 
     @Override
     String toRtf(String s) {
-        StringBuilder result = new StringBuilder();
-        List<String> blocks = s.split(MD_EMPTY_LINE);
-
-        def count = 0;
-        for (String block in blocks) {
-            count++;
-            String list = block.find(MD_FULL_LIST_REGEXP_PATTERN);
-
-            if (list) {
-                Integer startAt = block.length() - list.length();
-                if (startAt > 0) {
-                    result.append(block.substring(0, startAt));
-                }
-                result.append(convertListToRtf(block.substring(startAt, block.length())));
-            } else {
-                result.append(block);
-                if (count < blocks.size()) {
-                    result.append(MD_EMPTY_LINE);
-                }
-            }
-        }
-
-        return result.toString();
+        String afterNumberedCoder = this.numberedCoder.toRtf(s);
+        return this.markedCoder.toRtf(afterNumberedCoder);
     }
 
     @Override
     String toMd(String s) {
-        StringBuilder result = new StringBuilder();
+        String afterNumberedCoder = this.numberedCoder.toMd(s);
+        return this.markedCoder.toMd(afterNumberedCoder);
+    }
 
-        Integer cursor = 0;
+    private enum AllListCoderSetting {
+        NUMBERED("ol", "#", "(?<!.)(?!\\n)\\s*#\\s[^\$]*", "^\\s*#\\s"),
+        MARKED("ul", "*", "(?<!.)(?!\\n)\\s*\\*\\s[^\$]*", "^\\s*\\*\\s");
 
-        Pattern pattern = Pattern.compile(RTF_LIST_TAG_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(s);
+        final String rtfListTagName;
+        final String mdListTag;
+        final String mdListRegexpPattern;
+        final String mdStartListItemRegexpPattern;
 
-        while (matcher.find()) {
-            Integer firstGroupCursor = matcher.start();
-            String group = matcher.group().toLowerCase();
-            if (group == RTF_OPEN_LIST_TAG) {
-                Stack<String> stack = [];
-                stack.push(group);
-                while (!stack.isEmpty() && matcher.find()) {
-                    String currentTag = matcher.group().toLowerCase();
-                    if (currentTag == RTF_OPEN_LIST_TAG || currentTag == RTF_OPEN_ITEM_TAG) {
-                        stack.push(currentTag);
-                    } else if (currentTag == RTF_CLOSE_LIST_TAG) {
-                        if (stack.last() == RTF_OPEN_LIST_TAG) {
-                            stack.pop();
-                        } else {
-                            break;
-                        }
-                    } else if (currentTag == RTF_CLOSE_ITEM_TAG) {
-                        if (stack.last() == RTF_OPEN_ITEM_TAG) {
-                            stack.pop();
-                        } else {
-                            break;
-                        }
+        AllListCoderSetting(
+                String rtfListTagName,
+                String mdListTag,
+                String mdListRegexpPattern,
+                String mdStartListItemRegexpPattern
+        ) {
+            this.rtfListTagName = rtfListTagName
+            this.mdListTag = mdListTag
+            this.mdListRegexpPattern = mdListRegexpPattern
+            this.mdStartListItemRegexpPattern = mdStartListItemRegexpPattern
+        }
+    }
+
+    private static class AllListCoder implements Coder {
+        private static final String MD_EMPTY_LINE = "\n\n";
+        private static final String MD_NEXT_LINE = "\n";
+        private static final String RTF_LIST_ITEM_TAG_NAME = "li";
+        private static final String RTF_OPEN_ITEM_TAG = "<${RTF_LIST_ITEM_TAG_NAME}>";
+        private static final String RTF_CLOSE_ITEM_TAG = "</${RTF_LIST_ITEM_TAG_NAME}>";
+        private final String rtfListTagName;
+        private final String rtfOpenListTag;
+        private final String rtfCloseListTag;
+        private final String rtfListTagRegexpPattern;
+        private final String mdListRegexpPattern;
+        private final String mdStartListItemRegexpPattern;
+        private final String mdListTag;
+
+        AllListCoder(AllListCoderSetting setting) {
+            this.mdListTag = setting.mdListTag;
+            this.mdStartListItemRegexpPattern = setting.mdStartListItemRegexpPattern;
+            this.mdListRegexpPattern = setting.mdListRegexpPattern;
+            this.rtfListTagName = setting.rtfListTagName;
+            this.rtfOpenListTag = "<${rtfListTagName}>";
+            this.rtfCloseListTag = "</${rtfListTagName}>";
+            this.rtfListTagRegexpPattern = "(<(?:${rtfListTagName}|li)>)|(</(?:${rtfListTagName}|li)>)";
+        }
+
+        @Override
+        String toRtf(String s) {
+            StringBuilder result = new StringBuilder();
+            List<String> blocks = s.split(MD_EMPTY_LINE);
+
+            def count = 0;
+            for (String block in blocks) {
+                count++;
+                String list = block.find(mdListRegexpPattern);
+
+                if (list) {
+                    Integer startAt = block.length() - list.length();
+                    if (startAt > 0) {
+                        result.append(block.substring(0, startAt));
                     }
-                }
-
-                if (stack.isEmpty()) {
-                    if (cursor < firstGroupCursor) {
-                        String otherText = s.substring(cursor, firstGroupCursor);
-                        result.append(otherText);
-                        if (!otherText.endsWith(MD_NEXT_LINE)) {
-                            result.append(MD_NEXT_LINE);
-                        }
-                    }
-
-                    result.append(convertListToMD(s.substring(firstGroupCursor, matcher.end())));
-                    cursor = matcher.end();
-                    if (cursor < s.length()) {
+                    result.append(convertListToRtf(block.substring(startAt, block.length())));
+                } else {
+                    result.append(block);
+                    if (count < blocks.size()) {
                         result.append(MD_EMPTY_LINE);
                     }
                 }
             }
+
+            return result.toString();
         }
 
-        if (cursor < s.length()) {
-            result.append(s.substring(cursor, s.length()));
-        }
+        @Override
+        String toMd(String s) {
+            StringBuilder result = new StringBuilder();
 
-        return result.toString();
-    }
+            Integer cursor = 0;
 
-    private String convertListToRtf(String s) {
-        Element rootElement = new RootElement();
+            Pattern pattern = Pattern.compile(rtfListTagRegexpPattern, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(s);
 
-        Stack<Integer> levels = [];
-        Element parent = rootElement;
-        Element lastElement = parent;
-        List<String> lines = s.split("\n");
+            while (matcher.find()) {
+                Integer firstGroupCursor = matcher.start();
+                String group = matcher.group().toLowerCase();
+                if (group == rtfOpenListTag) {
+                    Stack<String> stack = [];
+                    stack.push(group);
+                    while (!stack.isEmpty() && matcher.find()) {
+                        String currentTag = matcher.group().toLowerCase();
+                        if (currentTag == rtfOpenListTag || currentTag == RTF_OPEN_ITEM_TAG) {
+                            stack.push(currentTag);
+                        } else if (currentTag == rtfCloseListTag) {
+                            if (stack.last() == rtfOpenListTag) {
+                                stack.pop();
+                            } else {
+                                break;
+                            }
+                        } else if (currentTag == RTF_CLOSE_ITEM_TAG) {
+                            if (stack.last() == RTF_OPEN_ITEM_TAG) {
+                                stack.pop();
+                            } else {
+                                break;
+                            }
+                        }
+                    }
 
-        for (String line in lines) {
-            String currentValue = line.replaceFirst(MD_START_LIST_ITEM_REGEXP_PATTERN, "");
-            Integer currentLevel = line.length() - currentValue.length();
-            if (currentLevel > 0) {
-                if (levels.isEmpty()) {
-                    levels.push(currentLevel);
-                } else {
-                    if (levels.last() < currentLevel) {
-                        levels.push(currentLevel);
-                        parent = lastElement;
-                    } else {
-                        while (!levels.isEmpty() && levels.last() > currentLevel) {
-                            levels.pop();
-                            lastElement = parent;
-                            parent = lastElement.parent;
+                    if (stack.isEmpty()) {
+                        if (cursor < firstGroupCursor) {
+                            String otherText = s.substring(cursor, firstGroupCursor);
+                            result.append(otherText);
+                            if (!otherText.endsWith(MD_NEXT_LINE)) {
+                                result.append(MD_NEXT_LINE);
+                            }
                         }
 
+                        result.append(convertListToMD(s.substring(firstGroupCursor, matcher.end())));
+                        cursor = matcher.end();
+                        if (cursor < s.length()) {
+                            result.append(MD_EMPTY_LINE);
+                        }
                     }
                 }
-                lastElement = new Element(currentValue);
-                parent.addChild(lastElement);
-            } else if (lastElement) {
-                lastElement.value += currentValue;
             }
+
+            if (cursor < s.length()) {
+                result.append(s.substring(cursor, s.length()));
+            }
+
+            return result.toString();
         }
 
-        return rootElement.toRtf();
-    }
+        private String convertListToRtf(String s) {
+            Element rootElement = new RootElement();
 
-    private String convertListToMD(String notFixedXml) {
-        String s = "<root>${notFixedXml}</root>";
-        Node xmlList = new XmlParser().parseText(s);
-        NodeList rtfList = xmlList[RTF_LIST_TAG_NAME] ?: xmlList[RTF_LIST_TAG_NAME.toUpperCase()];
-        Node firstList = rtfList.find { it instanceof Node };
-        Stack<Iterator<Node>> iteratorsStack = [];
-        iteratorsStack.push(firstList.iterator());
+            Stack<Integer> levels = [];
+            Element parent = rootElement;
+            Element lastElement = parent;
+            List<String> lines = s.split("\n");
 
-        Element rootElement = new RootElement();
+            for (String line in lines) {
+                String currentValue = line.replaceFirst(mdStartListItemRegexpPattern, "");
+                Integer currentLevel = line.length() - currentValue.length();
+                if (currentLevel > 0) {
+                    if (levels.isEmpty()) {
+                        levels.push(currentLevel);
+                    } else {
+                        if (levels.last() < currentLevel) {
+                            levels.push(currentLevel);
+                            parent = lastElement;
+                        } else {
+                            while (!levels.isEmpty() && levels.last() > currentLevel) {
+                                levels.pop();
+                                lastElement = parent;
+                                parent = lastElement.parent;
+                            }
 
-        while (!iteratorsStack.isEmpty()) {
-            Iterator<Node> lastIterator = iteratorsStack.pop();
-            while (lastIterator.hasNext()) {
-                Object element = lastIterator.next();
-                if (element instanceof Node) {
-                    String tagName = element.name()?.toLowerCase();
-                    if (RTF_LIST_ITEM_TAG_NAME == tagName) {
-                        String nodeName = getNodeName(element);
-                        Element currentElement = new Element(nodeName);
-                        rootElement.addChild(currentElement);
-                        if (element.children().size() > 1) {
+                        }
+                    }
+                    lastElement = new Element(currentValue);
+                    parent.addChild(lastElement);
+                } else if (lastElement) {
+                    lastElement.value += currentValue;
+                }
+            }
+
+            return rootElement.toRtf();
+        }
+
+        private String convertListToMD(String notFixedXml) {
+            String s = "<root>${notFixedXml}</root>";
+            Node xmlList = new XmlParser().parseText(s);
+            NodeList rtfList = xmlList[rtfListTagName] ?: xmlList[rtfListTagName.toUpperCase()];
+            Node firstList = rtfList.find { it instanceof Node };
+            Stack<Iterator<Node>> iteratorsStack = [];
+            iteratorsStack.push(firstList.iterator());
+
+            Element rootElement = new RootElement();
+
+            while (!iteratorsStack.isEmpty()) {
+                Iterator<Node> lastIterator = iteratorsStack.pop();
+                while (lastIterator.hasNext()) {
+                    Object element = lastIterator.next();
+                    if (element instanceof Node) {
+                        String tagName = element.name()?.toLowerCase();
+                        if (RTF_LIST_ITEM_TAG_NAME == tagName) {
+                            String nodeName = getNodeName(element);
+                            Element currentElement = new Element(nodeName);
+                            rootElement.addChild(currentElement);
+                            if (element.children().size() > 1) {
+                                iteratorsStack.push(lastIterator);
+                                lastIterator = element.iterator();
+                                rootElement = currentElement;
+                            }
+                        } else if (rtfListTagName == tagName) {
                             iteratorsStack.push(lastIterator);
                             lastIterator = element.iterator();
-                            rootElement = currentElement;
                         }
-                    } else if (RTF_LIST_TAG_NAME == tagName) {
-                        iteratorsStack.push(lastIterator);
-                        lastIterator = element.iterator();
                     }
                 }
-            }
-            if (rootElement.haveParent()) {
-                rootElement = rootElement.parent;
-            }
-        }
-
-        return rootElement.toMd();
-    }
-
-    private String getNodeName(Node node) {
-        Object nodeValue = node.value();
-        if (nodeValue instanceof String) {
-            return nodeValue;
-        }
-
-        if (nodeValue instanceof Collection) {
-            Collection c = nodeValue;
-            Object firstValue = c[0];
-            if (firstValue instanceof String) {
-                return firstValue;
-            }
-        }
-
-        return "";
-    }
-
-    private class RootElement extends Element {
-
-        RootElement() {
-            super(null)
-        }
-
-        @Override
-        String toMd(int level = 0) {
-            StringBuilder result = new StringBuilder();
-
-            if (this.childs) {
-                this.childs.forEach { result.append(it.toMd(0)) }
+                if (rootElement.haveParent()) {
+                    rootElement = rootElement.parent;
+                }
             }
 
-            //Удаляем последний перенос строки, так как это выгодней чем проверка в циклах.
-            result.setLength(result.size() - MD_NEXT_LINE.size());
-            return result.toString();
+            return rootElement.toMd();
         }
 
-        @Override
-        String toRtf() {
-            StringBuilder result = new StringBuilder();
-
-            if (this.childs) {
-                result.append(RTF_OPEN_LIST_TAG)
-                this.childs.forEach { result.append(it.toRtf()) }
-                result.append(RTF_CLOSE_LIST_TAG);
+        private String getNodeName(Node node) {
+            Object nodeValue = node.value();
+            if (nodeValue instanceof String) {
+                return nodeValue;
             }
 
-            return result.toString();
-        }
-
-    }
-
-    class Element {
-        private static final String MD_LEVEL_PREFIX = " ".repeat(3);
-
-        protected String value;
-        protected Element parent;
-        protected List<Element> childs = new LinkedList<>();
-
-        Element(String value) {
-            this.value = value
-        }
-
-        void addChild(Element child) {
-            this.childs.add(child)
-            child.setParent(this);
-        }
-
-        Element getParent() {
-            return parent
-        }
-
-        protected void setParent(Element parent) {
-            this.parent = parent;
-        }
-
-        boolean haveParent() {
-            return this.parent != null;
-        }
-
-        String toRtf() {
-            StringBuilder result = new StringBuilder();
-            result.append(RTF_OPEN_ITEM_TAG);
-
-            if (this.value) {
-                result.append(this.value);
+            if (nodeValue instanceof Collection) {
+                Collection c = nodeValue;
+                Object firstValue = c[0];
+                if (firstValue instanceof String) {
+                    return firstValue;
+                }
             }
 
-            if (this.childs) {
-                result.append(RTF_OPEN_LIST_TAG)
-                this.childs.forEach { result.append(it.toRtf()) }
-                result.append(RTF_CLOSE_LIST_TAG);
-            }
-
-            result.append(RTF_CLOSE_ITEM_TAG);
-
-            return result.toString();
+            return "";
         }
 
-        String toMd(int level = 0) {
-            StringBuilder result = new StringBuilder();
+        private class RootElement extends Element {
 
-            result.append(MD_LEVEL_PREFIX.repeat(level))
-            result.append(MD_MARKED_LIST_TOKEN);
-            result.append(" ");
-
-            if (this.value) {
-                result.append(this.value);
+            RootElement() {
+                super(null)
             }
 
-            if (this.childs) {
-                result.append(MD_NEXT_LINE);
-                this.childs.forEach { result.append(it.toMd(level + 1)) }
-            } else {
-                result.append(MD_NEXT_LINE);
+            @Override
+            String toMd(int level = 0) {
+                StringBuilder result = new StringBuilder();
+
+                if (this.childs) {
+                    this.childs.forEach { result.append(it.toMd(0)) }
+                }
+
+                //Удаляем последний перенос строки, так как это выгодней чем проверка в циклах.
+                result.setLength(result.size() - MD_NEXT_LINE.size());
+                return result.toString();
             }
 
-            return result.toString();
+            @Override
+            String toRtf() {
+                StringBuilder result = new StringBuilder();
+
+                if (this.childs) {
+                    result.append(rtfOpenListTag)
+                    this.childs.forEach { result.append(it.toRtf()) }
+                    result.append(rtfCloseListTag);
+                }
+
+                return result.toString();
+            }
+
+        }
+
+        class Element {
+            private static final String MD_LEVEL_PREFIX = " ".repeat(3);
+
+            protected String value;
+            protected Element parent;
+            protected List<Element> childs = new LinkedList<>();
+
+            Element(String value) {
+                this.value = value
+            }
+
+            void addChild(Element child) {
+                this.childs.add(child)
+                child.setParent(this);
+            }
+
+            Element getParent() {
+                return parent
+            }
+
+            protected void setParent(Element parent) {
+                this.parent = parent;
+            }
+
+            boolean haveParent() {
+                return this.parent != null;
+            }
+
+            String toRtf() {
+                StringBuilder result = new StringBuilder();
+                result.append(RTF_OPEN_ITEM_TAG);
+
+                if (this.value) {
+                    result.append(this.value);
+                }
+
+                if (this.childs) {
+                    result.append(rtfOpenListTag)
+                    this.childs.forEach { result.append(it.toRtf()) }
+                    result.append(rtfCloseListTag);
+                }
+
+                result.append(RTF_CLOSE_ITEM_TAG);
+
+                return result.toString();
+            }
+
+            String toMd(int level = 0) {
+                StringBuilder result = new StringBuilder();
+
+                result.append(MD_LEVEL_PREFIX.repeat(level))
+                result.append(mdListTag);
+                result.append(" ");
+
+                if (this.value) {
+                    result.append(this.value);
+                }
+
+                if (this.childs) {
+                    result.append(MD_NEXT_LINE);
+                    this.childs.forEach { result.append(it.toMd(level + 1)) }
+                } else {
+                    result.append(MD_NEXT_LINE);
+                }
+
+                return result.toString();
+            }
         }
     }
 }
