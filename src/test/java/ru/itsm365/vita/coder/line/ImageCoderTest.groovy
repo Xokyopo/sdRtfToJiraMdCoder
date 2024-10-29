@@ -67,4 +67,28 @@ class ImageCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toMd_ShouldIgnoreOtherTagAttribute_WhenImageHaveAdditionalAttributes() {
+        String rtfText = '<img src="screenshot-1.png" data-size="height:20px">';
+        String expected = '!screenshot-1.png|thumbnail!';
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnTwoImage_WhenHaveTwoImage() {
+        String rtfText = '<img src="screenshot-1.png"><img src="screenshot-1.png">';
+        String expected = '!screenshot-1.png|thumbnail! !screenshot-1.png|thumbnail!';
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnTwoImage_WhenHaveTwoImage() {
+        String mdText = '!screenshot-1.png|thumbnail! !screenshot-1.png|thumbnail!';
+        String expected = '<img src="screenshot-1.png"><img src="screenshot-1.png">';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
 }
