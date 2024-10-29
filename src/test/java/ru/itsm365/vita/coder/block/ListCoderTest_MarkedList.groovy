@@ -78,7 +78,7 @@ class ListCoderTest_MarkedList {
 
     @Test
     void toRtf_ShouldReturnNestedListInListItem_WhenRun() {
-        String mdText = "* первый элемент\n   * вложенный элемент\n* второй элемент";
+        String mdText = "* первый элемент\n    * вложенный элемент\n* второй элемент";
         String expected = "<ul><li>первый элемент<ul><li>вложенный элемент</li></ul></li><li>второй элемент</li></ul>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
@@ -87,14 +87,14 @@ class ListCoderTest_MarkedList {
     @Test
     void toMd_ShouldReturnNestedListInListItem_WhenRun() {
         String rtfText = "<ul><li>первый элемент<ul><li>вложенный элемент</li></ul></li><li>второй элемент</li></ul>";
-        String expected = "* первый элемент\n   * вложенный элемент\n* второй элемент";
+        String expected = "* первый элемент\n    * вложенный элемент\n* второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnNestedListInNestedListItem_WhenRun() {
-        String mdText = "* первый элемент\n   * вложенный элемент\n      * вложенный во вложенный элемент\n* второй элемент";
+        String mdText = "* первый элемент\n    * вложенный элемент\n        * вложенный во вложенный элемент\n* второй элемент";
         String expected = "<ul><li>первый элемент<ul><li>вложенный элемент<ul><li>вложенный во вложенный элемент</li></ul></li></ul></li><li>второй элемент</li></ul>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
@@ -103,7 +103,7 @@ class ListCoderTest_MarkedList {
     @Test
     void toMd_ShouldReturnNestedListInNestedListItem_WhenRun() {
         String rtfText = "<ul><li>первый элемент<ul><li>вложенный элемент<ul><li>вложенный во вложенный элемент</li></ul></li></ul></li><li>второй элемент</li></ul>";
-        String expected = "* первый элемент\n   * вложенный элемент\n      * вложенный во вложенный элемент\n* второй элемент";
+        String expected = "* первый элемент\n    * вложенный элемент\n        * вложенный во вложенный элемент\n* второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }

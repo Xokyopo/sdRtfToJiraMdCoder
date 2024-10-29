@@ -286,7 +286,7 @@ class ListCoder implements Coder {
         }
 
         class Element {
-            private static final String MD_LEVEL_PREFIX = " ".repeat(3);
+            private static final String MD_LEVEL_PREFIX = " ".repeat(4);
 
             protected String value;
             protected Element parent;
