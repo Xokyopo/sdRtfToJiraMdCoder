@@ -9,23 +9,30 @@ import java.util.regex.Pattern
 class TableCoder implements Coder {
     final String TABLE_START = "<table style=\"border-collapse: collapse;\">"
     final String TABLE_END = "</table>"
+    final String THEAD_START = "<thead>"
+    final String THEAD_END = "</thead>"
+    final String TBODY_START = "<tbody>"
+    final String TBODY_END = "</tbody>"
     final String TR_START = "<tr>"
     final String TR_END = "</tr>"
     final String TH_START = "<th style=\"background: rgb(230, 230, 230);border: 1px solid rgb(221, 221, 221);\">"
     final String TH_END = "</th>"
-    final String TD_START = "<td  style=\"border: 1px solid rgb(221, 221, 221);\">"
+    final String TD_START = "<td style=\"border: 1px solid rgb(221, 221, 221);\">"
     final String TD_END = "</td>"
     final String LINK_PATTERN = "\\[.+\\|http(s)*:\\/\\/.+\\]";
+    final String FILE_PATTERN = "!.+?(\\|)thumbnail!";
 
     @Override
     String toRtf(String s) {
 
         StringBuilder result = new StringBuilder(s);
         Pattern link_pattern = Pattern.compile(LINK_PATTERN);
+        Pattern file_pattern = Pattern.compile(FILE_PATTERN);
         s = s.replaceAll("(\\\\\\|)", "Џ");
         s = link_pattern.matcher(s).replaceAll({ it -> it.group(0).replaceAll("[|]", "˦") });
+        s = file_pattern.matcher(s).replaceAll({ it -> it.group(0).replaceAll("[|]", "˦") });
 
-        List<String> list = List.of(s.split("\\n"));
+        List<String> list = List.of(s.split("(?<=\\|)\\n|\\n(?=\\|)"));
         List<Table> tables = new ArrayList<>();
         List<String> text = new ArrayList<>();
         List<List<String>> data = new ArrayList<>();
@@ -41,6 +48,7 @@ class TableCoder implements Coder {
 
         boolean hasHeader = false;
         for (String str : list) {
+            str = str.replaceAll("\\n", "њ")
             Matcher matcher = pattern.matcher(str.trim());
             counterChars += (int) Arrays.stream(str.split("")).filter({ c -> Objects.equals(c, "Џ") }).count();
             cursor += str.length() + 1;
@@ -85,29 +93,31 @@ class TableCoder implements Coder {
         for (Table table : tables) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(TABLE_START);
+            int counterBodyRows = 0;
             for (List<String> row : table.getData()) {
+                if (table.isHasHeader()) {
+                    stringBuilder.append(THEAD_START);
+                } else if (counterBodyRows == 0) {
+                    stringBuilder.append(TBODY_START);
+                    counterBodyRows++;
+                }
                 stringBuilder.append(TR_START);
                 for (String cell : row) {
-                    if (table.isHasHeader()) {
-                        stringBuilder.append(TH_START);
-                    } else {
-                        stringBuilder.append(TD_START);
-                    }
+                    table.isHasHeader() ? stringBuilder.append(TH_START) : stringBuilder.append(TD_START);
                     stringBuilder.append(cell);
-                    if (table.isHasHeader()) {
-                        stringBuilder.append(TH_END);
-                    } else {
-                        stringBuilder.append(TD_END);
-                    }
+                    table.isHasHeader() ? stringBuilder.append(TH_END) : stringBuilder.append(TD_END);
                 }
-                table.setHasHeader(false);
                 stringBuilder.append(TR_END);
+                table.isHasHeader() ? stringBuilder.append(THEAD_END) : "";
+                table.setHasHeader(false);
             }
+            stringBuilder.append(TBODY_END)
+            counterBodyRows = 0
             stringBuilder.append(TABLE_END);
             result.replace(table.getStart() + shift, table.getEnd() + shift, stringBuilder.toString());
             shift += stringBuilder.length() - table.getEnd() + table.getStart();
         }
-        return result.toString().replaceAll("[Џ˦]", "|");
+        return result.toString().replaceAll("[Џ˦]", "|").replaceAll("њ", "\n");
     }
 
 
