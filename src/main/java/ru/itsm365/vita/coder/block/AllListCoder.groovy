@@ -54,21 +54,21 @@ class AllListCoder implements Coder {
         while (matcher.find()) {
             Integer firstGroupCursor = matcher.start();
             String group = matcher.group().toLowerCase();
-            if (group == setting.rtfOpenListTag) {
+            if (group.startsWith(setting.rtfListTagName, 1) || group == setting.rtfCloseListTag) {
                 Stack<String> stack = [];
                 stack.push(group);
                 while (!stack.isEmpty() && matcher.find()) {
                     String currentTag = matcher.group().toLowerCase();
-                    if (currentTag == setting.rtfOpenListTag || currentTag == setting.RTF_OPEN_ITEM_TAG) {
+                    if (currentTag.startsWith(setting.rtfListTagName, 1) || currentTag.startsWith(setting.RTF_LIST_ITEM_TAG_NAME, 1)) {
                         stack.push(currentTag);
                     } else if (currentTag == setting.rtfCloseListTag) {
-                        if (stack.last() == setting.rtfOpenListTag) {
+                        if (stack.last().startsWith(setting.rtfListTagName, 1)) {
                             stack.pop();
                         } else {
                             break;
                         }
                     } else if (currentTag == setting.RTF_CLOSE_ITEM_TAG) {
-                        if (stack.last() == setting.RTF_OPEN_ITEM_TAG) {
+                        if (stack.last().startsWith(setting.RTF_LIST_ITEM_TAG_NAME, 1)) {
                             stack.pop();
                         } else {
                             break;
