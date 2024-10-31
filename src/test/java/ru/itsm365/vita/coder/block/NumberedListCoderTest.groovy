@@ -3,9 +3,10 @@ package ru.itsm365.vita.coder.block
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import ru.itsm365.vita.coder.Coder
 
 class NumberedListCoderTest {
-    private NumberedListCoder coder;
+    private Coder coder;
 
     @Before
     void setUp() {
@@ -77,7 +78,7 @@ class NumberedListCoderTest {
 
     @Test
     void toRtf_ShouldReturnNestedListInListItem_WhenRun() {
-        String mdText = "# первый элемент\n   # вложенный элемент\n# второй элемент";
+        String mdText = "# первый элемент\n    # вложенный элемент\n# второй элемент";
         String expected = "<ol><li>первый элемент<ol><li>вложенный элемент</li></ol></li><li>второй элемент</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
@@ -86,14 +87,14 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnNestedListInListItem_WhenRun() {
         String rtfText = "<ol><li>первый элемент<ol><li>вложенный элемент</li></ol></li><li>второй элемент</li></ol>";
-        String expected = "# первый элемент\n   # вложенный элемент\n# второй элемент";
+        String expected = "# первый элемент\n    # вложенный элемент\n# второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnNestedListInNestedListItem_WhenRun() {
-        String mdText = "# первый элемент\n   # вложенный элемент\n      # вложенный во вложенный элемент\n# второй элемент";
+        String mdText = "# первый элемент\n    # вложенный элемент\n        # вложенный во вложенный элемент\n# второй элемент";
         String expected = "<ol><li>первый элемент<ol><li>вложенный элемент<ol><li>вложенный во вложенный элемент</li></ol></li></ol></li><li>второй элемент</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
@@ -102,7 +103,7 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnNestedListInNestedListItem_WhenRun() {
         String rtfText = "<ol><li>первый элемент<ol><li>вложенный элемент<ol><li>вложенный во вложенный элемент</li></ol></li></ol></li><li>второй элемент</li></ol>";
-        String expected = "# первый элемент\n   # вложенный элемент\n      # вложенный во вложенный элемент\n# второй элемент";
+        String expected = "# первый элемент\n    # вложенный элемент\n        # вложенный во вложенный элемент\n# второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
@@ -142,6 +143,14 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnConverterList_WhenHaveCamelCaseTag() {
         String rtfText = "<OL><LI>первый элемент</LI></OL>";
+        String expected = "# первый элемент";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldIgnoreTagAttributes_WhenItHave() {
+        String rtfText = '<ol data-name="list"><li id="index_1">первый элемент</li></ol>';
         String expected = "# первый элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
