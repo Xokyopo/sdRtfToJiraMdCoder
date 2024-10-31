@@ -5,23 +5,23 @@ import org.junit.Before
 import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
-class ListCoderTest_MarkedList {
+class MarkedListCoderTest {
     private Coder coder;
 
     @Before
     void setUp() {
-        this.coder = new ListCoder();
+        this.coder = new MarkedListCoder();
     }
 
     @Test
-    void reversTest_MarkedList() {
+    void reversTest() {
         String expected = "текст до списка\n* первый список\n\nтекст между списками\n* второй список";
         String actual = this.coder.toMd(this.coder.toRtf(expected));
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    void toRtf_MarkedList() {
+    void toRtf() {
         String mdText = "* первый элемент";
         String expected = "<ul><li>первый элемент</li></ul>";
         String actual = this.coder.toRtf(mdText);
@@ -29,7 +29,7 @@ class ListCoderTest_MarkedList {
     }
 
     @Test
-    void toMd_MarkedList() {
+    void toMd() {
         String rtfText = "<ul><li>первый элемент</li></ul>";
         String expected = "* первый элемент";
         String actual = this.coder.toMd(rtfText);
