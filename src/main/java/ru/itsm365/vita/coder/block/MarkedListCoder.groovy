@@ -4,7 +4,7 @@ import ru.itsm365.vita.coder.Coder
 
 class MarkedListCoder implements Coder {
     private static final String RTF_LIST_TAG_NAME = "ul";
-    private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ul|li)>)|(</(?:ul|li)>)";
+    private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ul|li)[^><]*>)|(</(?:ul|li)>)";
     private static final String MD_LIST_TAG = "*";
     private static final String MD_LIST_REGEXP_PATTERN = "(?<!.)(?!\\n)\\s*\\*\\s[^\$]*";
     private static final String MD_START_LIST_ITEM_REGEXP_PATTERN = "^\\s*\\*\\s";
