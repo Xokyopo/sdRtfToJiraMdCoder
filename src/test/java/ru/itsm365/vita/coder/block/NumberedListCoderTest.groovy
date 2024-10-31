@@ -151,7 +151,7 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldIgnoreTagAttributes_WhenItHave() {
         String rtfText = '<ol data-name="list"><li id="index_1">первый элемент</li></ol>';
-        String expected = "* первый элемент";
+        String expected = "# первый элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
