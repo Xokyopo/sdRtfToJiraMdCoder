@@ -54,7 +54,7 @@ class AllListCoder implements Coder {
         while (matcher.find()) {
             Integer firstGroupCursor = matcher.start();
             String group = matcher.group().toLowerCase();
-            if (group.startsWith(setting.rtfListTagName, 1) || group == setting.rtfCloseListTag) {
+            if (group.startsWith(setting.rtfListTagName, 1)) {
                 Stack<String> stack = [];
                 stack.push(group);
                 while (!stack.isEmpty() && matcher.find()) {
