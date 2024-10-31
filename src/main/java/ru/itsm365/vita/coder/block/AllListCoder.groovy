@@ -154,7 +154,7 @@ class AllListCoder implements Coder {
                 Object element = lastIterator.next();
                 if (element instanceof Node) {
                     String tagName = element.name()?.toLowerCase();
-                    if (setting.rtfListTagName == tagName) {
+                    if (setting.RTF_LIST_ITEM_TAG_NAME == tagName) {
                         String nodeName = getNodeName(element);
                         Element currentElement = new Element(nodeName);
                         rootElement.addChild(currentElement);
