@@ -3,13 +3,14 @@ package ru.itsm365.vita.coder.line
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import ru.itsm365.vita.coder.Coder
 
-class ItalicTextCoderTest {
-    private ItalicTextCoder coder;
+class ItalicTextStyleCoderTest {
+    private Coder coder;
 
     @Before
     void setUp() throws Exception {
-        this.coder = new ItalicTextCoder();
+        this.coder = new ItalicTextStyleCoder();
     }
 
     @Test
