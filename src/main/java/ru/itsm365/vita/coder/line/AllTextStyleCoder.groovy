@@ -19,14 +19,11 @@ class AllTextStyleCoder implements Coder {
         StringBuilder result = new StringBuilder();
         List<String> lines = s.split(MD_NEXT_LINE);
 
-        Pattern openMDToken = Pattern.compile(settings.mdOpenTagRegexpPattern);
-        Pattern closeMDToken = Pattern.compile(settings.mdCloseTagRegexpPattern);
-
         for (String line in lines) {
             Integer cursor = 0;
 
-            Matcher openMatcher = openMDToken.matcher(line);
-            Matcher closeMatcher = closeMDToken.matcher(line)
+            Matcher openMatcher = settings.openMDToken.matcher(line);
+            Matcher closeMatcher = settings.closeMDToken.matcher(line)
 
             while (openMatcher.find(cursor)) {
                 if (cursor < openMatcher.start()) {
@@ -64,28 +61,27 @@ class AllTextStyleCoder implements Coder {
     @Override
     String toMd(String s) {
         StringBuilder result = new StringBuilder();
-        String lowerCaseInputText = s.toLowerCase();
 
         Integer cursor = 0;
-        Boolean open = false;
-        int tagCursor = lowerCaseInputText.indexOf(settings.rtfOpenTag, cursor);
-        while (tagCursor >= 0) {
-            if (open) {
+
+        Matcher openMatcher = settings.openRTFToken.matcher(s);
+        Matcher closeMatcher = settings.closeRTFToken.matcher(s)
+
+        while (openMatcher.find(cursor)) {
+            if (cursor < openMatcher.start()) {
+                result.append(s.substring(cursor, openMatcher.start()));
+                cursor = openMatcher.start();
+            }
+
+            if (closeMatcher.find(openMatcher.end())) {
                 result.append(settings.mdTag);
-                if (cursor < tagCursor) {
-                    result.append(s.substring(cursor + settings.rtfOpenTag.length(), tagCursor));
+                if (closeMatcher.start() > openMatcher.end()) {
+                    result.append(s.substring(openMatcher.end(), closeMatcher.start()));
                 }
                 result.append(settings.mdTag);
-                cursor = tagCursor + settings.rtfCloseTag.length();
-                tagCursor = lowerCaseInputText.indexOf(settings.rtfOpenTag, cursor);
-                open = false;
+                cursor = closeMatcher.end();
             } else {
-                if (cursor < tagCursor) {
-                    result.append(s.substring(cursor, tagCursor));
-                }
-                cursor = tagCursor;
-                tagCursor = lowerCaseInputText.indexOf(settings.rtfCloseTag, cursor);
-                open = true
+                break;
             }
         }
 
@@ -99,21 +95,25 @@ class AllTextStyleCoder implements Coder {
     protected static class Settings {
         final String rtfOpenTag;
         final String rtfCloseTag;
+        final Pattern openRTFToken;
+        final Pattern closeRTFToken;
         final String mdTag;
-        final String mdOpenTagRegexpPattern;
-        final String mdCloseTagRegexpPattern;
+        final Pattern openMDToken;
+        final Pattern closeMDToken;
 
         Settings(
                 String rtfTagName,
                 String mdTag,
-                String mdOpenTagRegexpPattern,
-                String mdCloseTagRegexpPattern
+                String mdOpenTagRegexpToken,
+                String mdCloseTagRegexpToken
         ) {
             this.rtfOpenTag = "<${rtfTagName}>"
             this.rtfCloseTag = "</${rtfTagName}>"
             this.mdTag = mdTag
-            this.mdOpenTagRegexpPattern = mdOpenTagRegexpPattern
-            this.mdCloseTagRegexpPattern = mdCloseTagRegexpPattern
+            this.openMDToken = Pattern.compile(mdOpenTagRegexpToken);
+            this.closeMDToken = Pattern.compile(mdCloseTagRegexpToken);
+            this.openRTFToken = Pattern.compile("<${rtfTagName}(?= |>)[^><]*>", Pattern.CASE_INSENSITIVE);
+            this.closeRTFToken = Pattern.compile(rtfCloseTag, Pattern.CASE_INSENSITIVE);
         }
     }
 }
