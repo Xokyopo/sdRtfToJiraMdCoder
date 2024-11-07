@@ -194,4 +194,13 @@ class ItalicTextStyleCoderTest {
 
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toMd_ShouldReturnConvertedText_WhenHaveTagAttributes() {
+        String rtfText = "<em fr-original-style=\"\" style=\"font-weight: 700;\">test</em>";
+        String expected = "_test_";
+        String actual = this.coder.toMd(rtfText);
+
+        Assert.assertEquals(expected, actual);
+    }
 }
