@@ -121,9 +121,9 @@ class BoldTextStyleCoderTest {
     }
 
     @Test
-    void toRtf_ShouldReturnTrue_WhenHaveInsideBoldToken() {
-        String mdText = "simple *te *bold* st* string";
-        String expected = "simple <strong>te *bold* st</strong> string";
+    void toRtf_ShouldReturnTrue_WhenHaveInsideItalicToken() {
+        String mdText = "simple *te _italic_ st* string";
+        String expected = "simple <strong>te _italic_ st</strong> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
