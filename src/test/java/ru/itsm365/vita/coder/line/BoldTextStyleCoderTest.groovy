@@ -106,16 +106,16 @@ class BoldTextStyleCoderTest {
 
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideInvalidItalicToken() {
-        String mdText = "simple *te * st* string";
-        String expected = "simple <strong>te * st</strong> string";
+        String mdText = "simple *te *f st* string";
+        String expected = "simple <strong>te *f st</strong> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideInvalidBoldToken() {
-        String mdText = "simple *te **ff st* string";
-        String expected = "simple <strong>te **ff st</strong> string";
+        String mdText = "simple *te *ff st* string";
+        String expected = "simple <strong>te *ff st</strong> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
