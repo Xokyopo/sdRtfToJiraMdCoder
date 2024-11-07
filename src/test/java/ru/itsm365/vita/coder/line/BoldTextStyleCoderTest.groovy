@@ -130,16 +130,8 @@ class BoldTextStyleCoderTest {
 
     @Test
     void toRtf_ShouldReturnUnmodifiedText_WhenHaveItalicBoldToken() {
-        String mdText = "simple **test** string";
-        String expected = "simple <strong>*test*</strong> string";
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtf_ShouldReturnUnmodifiedText_WhenHaveBoldToken() {
-        String mdText = "simple *test* string";
-        String expected = "simple *test* string";
+        String mdText = "simple *_test_* string";
+        String expected = "simple <strong>_test_</strong> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
@@ -189,6 +181,15 @@ class BoldTextStyleCoderTest {
     @Test
     void toMd_ShouldReturnUnmodifiedText_WhenOnlyTokenizeStringPresent() {
         String rtfText = "<strong>test</strong>";
+        String expected = "*test*";
+        String actual = this.coder.toMd(rtfText);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnConvertedText_WhenHaveTagAttributes() {
+        String rtfText = "<strong fr-original-style=\"\" style=\"font-weight: 700;\">test</strong>";
         String expected = "*test*";
         String actual = this.coder.toMd(rtfText);
 
