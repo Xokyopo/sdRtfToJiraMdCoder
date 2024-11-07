@@ -195,4 +195,13 @@ class BoldTextStyleCoderTest {
 
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toMd_ShouldReturnConvertedText_WhenHaveUppercaseTag() {
+        String rtfText = "<STRONG>test</STRONG>";
+        String expected = "*test*";
+        String actual = this.coder.toMd(rtfText);
+
+        Assert.assertEquals(expected, actual);
+    }
 }
