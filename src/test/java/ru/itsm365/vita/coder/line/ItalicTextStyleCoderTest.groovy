@@ -207,7 +207,7 @@ class ItalicTextStyleCoderTest {
     @Test
     void toMd_ShouldReturnConvertedText_WhenHaveUppercaseTag() {
         String rtfText = "<EM>test</EM>";
-        String expected = "*test*";
+        String expected = "_test_";
         String actual = this.coder.toMd(rtfText);
 
         Assert.assertEquals(expected, actual);
