@@ -5,7 +5,7 @@ import ru.itsm365.vita.coder.Coder
 class BoldTextStyleCoder implements Coder {
     private static final String RTF_TAG_NAME = "strong";
     private static final String MD_TAG = "*";
-    private static final String MD_OPEN_TAG_REGEXP_PATTERN = "\\*(?!\\s)(?!_)(?=.)";
+    private static final String MD_OPEN_TAG_REGEXP_PATTERN = "\\*(?!\\s)(?!\\*)(?=.)";
     private static final String MD_CLOSE_TAG_REGEXP_PATTERN = "(?=.)(?<!\\s)(?<!\\*)\\*";
     private final Coder coder;
 
