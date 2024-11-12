@@ -5,16 +5,12 @@ import java.util.List;
 public class Table {
     private int start;
     private int end;
-    private int row;
-    private int column;
     private boolean hasHeader;
     private List<List<String>> data;
 
-    public Table(int start, int end, int row, int column, boolean hasHeader, List<List<String>> data) {
+    public Table(int start, int end, boolean hasHeader, List<List<String>> data) {
         this.start = start;
         this.end = end;
-        this.row = row;
-        this.column = column;
         this.hasHeader = hasHeader;
         this.data = data;
     }

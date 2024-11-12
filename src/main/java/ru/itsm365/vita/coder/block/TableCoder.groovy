@@ -37,8 +37,6 @@ class TableCoder implements Coder {
         List<String> text = new ArrayList<>();
         List<List<String>> data = new ArrayList<>();
 
-        int rows = 0;
-        int columns = 0;
         int start = Integer.MAX_VALUE;
         int end = 0;
         int counterChars = 0;
@@ -62,23 +60,17 @@ class TableCoder implements Coder {
                     items = check.split("\\|\\|");
                 } else {
                     items = check.split("[|]");
-                    if (columns == 0) {
-                        columns = (int) Arrays.stream(check.split("")).filter({ ch -> Objects.equals(ch, "|") }).count() - 1;
-                    }
                 }
                 for (int i = 1; i < items.length; i++) {
                     text.add(items[i]);
                 }
                 data.add(text);
                 text = new ArrayList<>();
-                rows++;
             } else {
                 if (!data.isEmpty()) {
-                    tables.add(new Table(start + cccc, end + counterChars + cccc, rows, columns, hasHeader, data));
+                    tables.add(new Table(start + cccc, end + counterChars + cccc, hasHeader, data));
                     start = Integer.MAX_VALUE;
                     data = new ArrayList<>();
-                    rows = 0;
-                    columns = 0;
                     hasHeader = false;
                     cccc += counterChars;
                     counterChars = 0;
@@ -86,7 +78,7 @@ class TableCoder implements Coder {
             }
         }
         if (!data.isEmpty()) {
-            tables.add(new Table(start, end + counterChars, rows, columns, hasHeader, data));
+            tables.add(new Table(start, end + counterChars, hasHeader, data));
         }
 
         int shift = 0;
