@@ -5,12 +5,12 @@ import org.junit.Before
 import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
-class SubscriptTextStyleCoderTest {
+class SubScriptTextStyleCoderTest {
     private Coder coder;
 
     @Before
     void setUp() throws Exception {
-        this.coder = new SubscriptTextStyleCoder();
+        this.coder = new SubScriptTextStyleCoder();
     }
 
     @Test

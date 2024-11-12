@@ -2,7 +2,7 @@ package ru.itsm365.vita.coder.line
 
 import ru.itsm365.vita.coder.Coder
 
-class SubscriptTextStyleCoder implements Coder {
+class SubScriptTextStyleCoder implements Coder {
     private static final String RTF_TAG_NAME = "sub";
     private static final String MD_TAG = "~";
     private static final String MD_OPEN_TAG_REGEXP_PATTERN = "~(?!\\s)(?!~)(?=.)";
