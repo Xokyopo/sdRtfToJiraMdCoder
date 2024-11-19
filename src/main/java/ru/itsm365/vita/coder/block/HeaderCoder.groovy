@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 
 class HeaderCoder implements Coder {
     private static final String MD_TAG_NAME = "h";
-    private static final Pattern MD_PATTERN = Pattern.compile("(?m)^\\s*h\\d\\.\\s*.*\$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MD_PATTERN = Pattern.compile("(?m)^(\\t| )*h\\d\\.\\s*.*\$", Pattern.CASE_INSENSITIVE);
     private static final Pattern MD_HEADER_LEVEL_TOKEN = Pattern.compile("(?<=h)\\d", Pattern.CASE_INSENSITIVE);
     private static final Pattern MD_HEADER_VALUE_TOKEN = Pattern.compile("(?<=h\\d.).*", Pattern.CASE_INSENSITIVE);
     private static final int MD_HEADER_LEVEL_MAX = 6;
@@ -27,7 +27,7 @@ class HeaderCoder implements Coder {
         Matcher matcher = MD_PATTERN.matcher(s);
         while (matcher.find(cursor)) {
             if (cursor < matcher.start()) {
-                result.append(s.substring(cursor, matcher.end()));
+                result.append(s.substring(cursor, matcher.start()));
             }
             result.append(convertMdToRtfHeader(matcher.group()));
             cursor = matcher.end();
