@@ -9,7 +9,7 @@ import java.util.regex.Pattern
 class HeaderCoder implements Coder {
     private static final String MD_TAG_NAME = "h";
     private static final Pattern MD_PATTERN = Pattern.compile("(?m)^\\s*h\\d\\.\\s*.*\$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern MD_HEADER_LEVEL_TOKEN = Pattern.compile("h\\d.", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MD_HEADER_LEVEL_TOKEN = Pattern.compile("(?<=h)\\d", Pattern.CASE_INSENSITIVE);
     private static final Pattern MD_HEADER_VALUE_TOKEN = Pattern.compile("(?<=h\\d.).*", Pattern.CASE_INSENSITIVE);
     private static final int MD_HEADER_LEVEL_MAX = 6;
 
