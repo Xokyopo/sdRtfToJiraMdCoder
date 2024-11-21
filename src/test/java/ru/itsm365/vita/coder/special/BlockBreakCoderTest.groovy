@@ -1,12 +1,14 @@
 package ru.itsm365.vita.coder.special
 
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
 class BlockBreakCoderTest {
     private Coder coder;
 
+    @Before
     void setUp() {
         coder = new BlockBreakCoder();
     }
