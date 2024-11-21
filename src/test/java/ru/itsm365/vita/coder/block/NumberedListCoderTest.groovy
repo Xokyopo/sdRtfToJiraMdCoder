@@ -111,14 +111,14 @@ class NumberedListCoderTest {
     @Test
     void toRtf_ShouldReturnTowList_WhenHaveTwoList() {
         String mdText = "# первый список\n\n# второй список";
-        String expected = "<ol><li>первый список</li></ol><ol><li>второй список</li></ol>";
+        String expected = "<ol><li>первый список</li></ol>\n\n<ol><li>второй список</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldReturnTowList_WhenHaveTwoList() {
-        String rtfText = "<ol><li>первый список</li></ol><ol><li>второй список</li></ol>";
+        String rtfText = "<ol><li>первый список</li></ol>\n\n<ol><li>второй список</li></ol>";
         String expected = "# первый список\n\n# второй список";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
@@ -127,14 +127,14 @@ class NumberedListCoderTest {
     @Test
     void toRtf_ShouldReturnTowListWithText_WhenHaveTextBetweenLists() {
         String mdText = "# первый список\n\nТекст между списками\n# второй список";
-        String expected = "<ol><li>первый список</li></ol>Текст между списками\n<ol><li>второй список</li></ol>";
+        String expected = "<ol><li>первый список</li></ol>\n\nТекст между списками\n<ol><li>второй список</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldReturnTowListWithText_WhenHaveTextBetweenLists() {
-        String rtfText = "<ol><li>первый список</li></ol>Текст между списками<ol><li>второй список</li></ol>";
+        String rtfText = "<ol><li>первый список</li></ol>\n\nТекст между списками\n<ol><li>второй список</li></ol>";
         String expected = "# первый список\n\nТекст между списками\n# второй список";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
@@ -152,6 +152,38 @@ class NumberedListCoderTest {
     void toMd_ShouldIgnoreTagAttributes_WhenItHave() {
         String rtfText = '<ol data-name="list"><li id="index_1">первый элемент</li></ol>';
         String expected = "# первый элемент";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldConvertWithSavingEmptyLineBefore() {
+        String mdText = "\n# первый элемент";
+        String expected = "\n<ol><li>первый элемент</li></ol>";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldConvertWithSavingEmptyLineBefore() {
+        String rtfText = "\n<ol><li>первый элемент</li></ol>";
+        String expected = "\n# первый элемент";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldConvertWithSavingEmptyLineAfter() {
+        String mdText = "# первый элемент\n";
+        String expected = "<ol><li>первый элемент</li></ol>\n";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldConvertWithSavingEmptyLineAfter() {
+        String rtfText = "<ol><li>первый элемент</li></ol>\n";
+        String expected = "# первый элемент\n";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
