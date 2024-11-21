@@ -21,7 +21,8 @@ class AllListCoder implements Coder {
         List<String> blocks = s.split(MD_EMPTY_LINE);
 
         def count = 0;
-        for (String block in blocks) {
+        for (int i = 0; i < blocks.size(); i++) {
+            String block = blocks.get(i);
             count++;
             String list = block.find(setting.mdListRegexpPattern);
 
@@ -30,12 +31,18 @@ class AllListCoder implements Coder {
                 if (startAt > 0) {
                     result.append(block.substring(0, startAt));
                 }
-                result.append(convertListToRtf(block.substring(startAt, block.length())));
-            } else {
-                result.append(block);
-                if (count < blocks.size()) {
-                    result.append(MD_EMPTY_LINE);
-                }
+                println("block = [${block}]")
+                String b = convertListToRtf(block.substring(startAt, block.length()));
+                println("b = [${b}]")
+                result.append(b);
+            }
+
+            if (block.endsWith(MD_NEXT_LINE) && !block.endsWith(MD_EMPTY_LINE)) {
+                result.append(MD_NEXT_LINE);
+            }
+
+            if (i < blocks.size() - 1 || block.endsWith(MD_EMPTY_LINE)) {
+                result.append(MD_EMPTY_LINE);
             }
         }
 
@@ -80,16 +87,10 @@ class AllListCoder implements Coder {
                     if (cursor < firstGroupCursor) {
                         String otherText = s.substring(cursor, firstGroupCursor);
                         result.append(otherText);
-                        if (!otherText.endsWith(MD_NEXT_LINE)) {
-                            result.append(MD_NEXT_LINE);
-                        }
                     }
 
                     result.append(convertListToMD(s.substring(firstGroupCursor, matcher.end())));
                     cursor = matcher.end();
-                    if (cursor < s.length()) {
-                        result.append(MD_EMPTY_LINE);
-                    }
                 }
             }
         }
