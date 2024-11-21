@@ -113,4 +113,20 @@ class BlockBreakCoderTest {
         String actual = coder.toMd(textRtf);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldRemoveEmptyLineBetweenNumberedList_WhenHaveManyTag() {
+        String textRtf = "<ol><li>элемент1</ol></ul>\n\n<ol><li>элемент2</li></ol>"
+        String expected = "<ol><li>элемент1</ol></ul><ol><li>элемент2</li></ol>";
+        String actual = coder.toRtf(textRtf);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldAddEmptyLineBetweenNumberedList_WhenHaveManyTag() {
+        String textRtf = "<ol><li>элемент1</li></ol><ol><li>элемент2</li></ol>"
+        String expected = "<ol><li>элемент1</li></ol>\n\n<ol><li>элемент2</li></ol>";
+        String actual = coder.toMd(textRtf);
+        Assert.assertEquals(expected, actual);
+    }
 }
