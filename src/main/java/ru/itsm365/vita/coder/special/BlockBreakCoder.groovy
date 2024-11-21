@@ -15,9 +15,9 @@ class BlockBreakCoder implements Coder {
     private static final List<String> BLOCK_TAG_NAME = [
             "ou", "ul", "table", "h1", "h2", "h3", "h4"
     ]
-    private static final Pattern EMPTY_LINES_TOKEN = Pattern.compile("(?<=/(h\\d|ul|li|table)>)\\s+", Pattern.CASE_INSENSITIVE);
-    private static final Pattern ANY_BLOCK_TAG_PATTERN = Pattern.compile("</?(?:h\\d|ul|li|table)(?:>| [^><]*>)", Pattern.CASE_INSENSITIVE);
-    private static final Pattern TAG_NAME_TOKEN = Pattern.compile("(?<=</?)h\\d|ul|li|table(?=>| )", Pattern.CASE_INSENSITIVE);
+    private static final Pattern EMPTY_LINES_TOKEN = Pattern.compile("(?<=/(h\\d|ul|ol|table)>)\\s+", Pattern.CASE_INSENSITIVE);
+    private static final Pattern ANY_BLOCK_TAG_PATTERN = Pattern.compile("</?(?:h\\d|ul|ol|table)(?:>| [^><]*>)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern TAG_NAME_TOKEN = Pattern.compile("(?<=</?)h\\d|ul|ol|table(?=>| )", Pattern.CASE_INSENSITIVE);
     private static final String END_BLOCK_TAG_PREFIX = "</";
 
     @Override
