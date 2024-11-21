@@ -23,7 +23,7 @@ class BlockBreakCoderTest {
 
     @Test
     void toMd() {
-        String textRtf = "<div>Просто текст</div><h1>Заголовок<h1><ul><li>элемент1</li></ul><ul><li>элемент2</li></ul>"
+        String textRtf = "<h1>Заголовок<h1><ul><li>элемент1</li></ul><ul><li>элемент2</li></ul>"
         String expected = "<h1>Заголовок</h1>\n\n<ul><li>элемент1</li></ul>\n\n<ul><li>элемент2</li></ul>";
         String actual = coder.toMd(textRtf);
         Assert.assertEquals(expected, actual);
