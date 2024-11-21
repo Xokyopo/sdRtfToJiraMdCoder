@@ -31,10 +31,17 @@ class AllListCoder implements Coder {
                 if (startAt > 0) {
                     result.append(block.substring(0, startAt));
                 }
-                result.append(convertListToRtf(block.substring(startAt, block.length())));
+                println("block = [${block}]")
+                String b = convertListToRtf(block.substring(startAt, block.length()));
+                println("b = [${b}]")
+                result.append(b);
             }
 
-            if (i < blocks.size() - 1) {
+            if (block.endsWith(MD_NEXT_LINE) && !block.endsWith(MD_EMPTY_LINE)) {
+                result.append(MD_NEXT_LINE);
+            }
+
+            if (i < blocks.size() - 1 || block.endsWith(MD_EMPTY_LINE)) {
                 result.append(MD_EMPTY_LINE);
             }
         }
