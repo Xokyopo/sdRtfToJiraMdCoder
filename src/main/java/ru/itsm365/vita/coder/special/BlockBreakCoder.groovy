@@ -9,12 +9,11 @@ import java.util.regex.Pattern
  * В обоих случая работает только с RTF тестом
  * в методе toRtf должен заменить все переносы строк на специфические для rtf элементы, или удалить их.
  * в методе toMd должен добавить все переносы необходимые дял корректной работы в MD.
+ *
+ * Поддерживает "ol", "ul", "table", "h1", "h2", "h3", "h4"
  */
 class BlockBreakCoder implements Coder {
     private static final MD_EMPTY_LINE = "\n\n";
-    private static final List<String> BLOCK_TAG_NAME = [
-            "ou", "ul", "table", "h1", "h2", "h3", "h4"
-    ]
     private static final Pattern EMPTY_LINES_TOKEN = Pattern.compile("(?<=/(h\\d|ul|ol|table)>)\\s+", Pattern.CASE_INSENSITIVE);
     private static final Pattern ANY_BLOCK_TAG_PATTERN = Pattern.compile("</?(?:h\\d|ul|ol|table)(?:>| [^><]*>)", Pattern.CASE_INSENSITIVE);
     private static final Pattern TAG_NAME_TOKEN = Pattern.compile("(?<=</?)h\\d|ul|ol|table(?=>| )", Pattern.CASE_INSENSITIVE);
