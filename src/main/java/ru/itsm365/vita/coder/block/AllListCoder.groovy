@@ -31,9 +31,9 @@ class AllListCoder implements Coder {
                 if (startAt > 0) {
                     result.append(block.substring(0, startAt));
                 }
-                println("block = [${block}]")
+
                 String b = convertListToRtf(block.substring(startAt, block.length()));
-                println("b = [${b}]")
+
                 result.append(b);
             }
 
