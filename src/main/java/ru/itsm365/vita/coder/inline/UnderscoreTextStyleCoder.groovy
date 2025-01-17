@@ -1,12 +1,12 @@
-package ru.itsm365.vita.coder.line
+package ru.itsm365.vita.coder.inline
 
 import ru.itsm365.vita.coder.Coder
 
-class SubScriptTextStyleCoder implements Coder {
-    private static final String RTF_TAG_NAME = "sub";
-    private static final String MD_TAG = "~";
-    private static final String MD_OPEN_TAG_REGEXP_PATTERN = "~(?!\\s)(?!~)(?=.)";
-    private static final String MD_CLOSE_TAG_REGEXP_PATTERN = "(?=.)(?<!\\s)(?<!~)~";
+class UnderscoreTextStyleCoder implements Coder {
+    private static final String RTF_TAG_NAME = "u";
+    private static final String MD_TAG = "+";
+    private static final String MD_OPEN_TAG_REGEXP_PATTERN = "\\+(?!\\s)(?!\\+)(?=.)";
+    private static final String MD_CLOSE_TAG_REGEXP_PATTERN = "(?=.)(?<!\\s)(?<!\\+)\\+";
     private final Coder coder;
 
     {

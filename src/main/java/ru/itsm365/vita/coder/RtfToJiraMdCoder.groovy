@@ -3,7 +3,7 @@ package ru.itsm365.vita.coder
 import ru.itsm365.vita.coder.block.HeaderCoder
 import ru.itsm365.vita.coder.block.MarkedListCoder
 import ru.itsm365.vita.coder.block.NumberedListCoder
-import ru.itsm365.vita.coder.line.*
+import ru.itsm365.vita.coder.inline.*
 import ru.itsm365.vita.coder.special.BlockBreakCoder
 import ru.itsm365.vita.coder.special.LineBreakCoder
 

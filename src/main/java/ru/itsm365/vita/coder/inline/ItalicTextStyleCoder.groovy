@@ -1,12 +1,12 @@
-package ru.itsm365.vita.coder.line
+package ru.itsm365.vita.coder.inline
 
 import ru.itsm365.vita.coder.Coder
 
-class StrikethroughTextStyleCoder implements Coder {
-    private static final String RTF_TAG_NAME = "s";
-    private static final String MD_TAG = "-";
-    private static final String MD_OPEN_TAG_REGEXP_PATTERN = "-(?!\\s)(?!-)(?=.)";
-    private static final String MD_CLOSE_TAG_REGEXP_PATTERN = "(?=.)(?<!\\s)(?<!-)-";
+class ItalicTextStyleCoder implements Coder {
+    private static final String RTF_TAG_NAME = "em";
+    private static final String MD_TAG = "_";
+    private static final String MD_OPEN_TAG_REGEXP_PATTERN = "_(?!\\s)(?!_)(?=.)";
+    private static final String MD_CLOSE_TAG_REGEXP_PATTERN = "(?=.)(?<!\\s)(?<!_)_";
     private final Coder coder;
 
     {
