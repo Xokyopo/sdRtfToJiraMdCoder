@@ -1,4 +1,4 @@
-package ru.itsm365.vita.coder.block
+package ru.itsm365.vita.coder.line
 
 import org.junit.Assert
 import org.junit.Before
