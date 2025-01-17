@@ -15,40 +15,24 @@ class BlockBreakCoderTest {
 
     @Test
     void toRtf() {
-        String textRtf = "<h1>Заголовок</h1>\n\n<ul><li>элемент1</li></ul>\n\n<ul><li>элемент2</li></ul>"
-        String expected = "<h1>Заголовок</h1><ul><li>элемент1</li></ul><ul><li>элемент2</li></ul>";
+        String textRtf = "<ul><li>элемент1</li></ul>\n\n<ul><li>элемент2</li></ul>"
+        String expected = "<ul><li>элемент1</li></ul><ul><li>элемент2</li></ul>";
         String actual = coder.toRtf(textRtf);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd() {
-        String textRtf = "<h1>Заголовок</h1><ul><li>элемент1</li></ul><ul><li>элемент2</li></ul>"
-        String expected = "<h1>Заголовок</h1>\n\n<ul><li>элемент1</li></ul>\n\n<ul><li>элемент2</li></ul>";
+        String textRtf = "<ul><li>элемент1</li></ul><ul><li>элемент2</li></ul>"
+        String expected = "<ul><li>элемент1</li></ul>\n\n<ul><li>элемент2</li></ul>";
         String actual = coder.toMd(textRtf);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void reverseTest() {
-        String expected = "<h1>Заголовок</h1>\n\n<ul><li>элемент1</li></ul>\n\n<ul><li>элемент2</li></ul>";
+        String expected = "<ul><li>элемент1</li></ul>\n\n<ul><li>элемент2</li></ul>";
         String actual = coder.toMd(coder.toRtf(expected));
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtf_ShouldRemoveEmptyLineBetweenHeader_WhenHaveManyTag() {
-        String textRtf = "<h1>Заголовок</h1>\n\n<h1>Заголовок</h1>"
-        String expected = "<h1>Заголовок</h1><h1>Заголовок</h1>";
-        String actual = coder.toRtf(textRtf);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toMd_ShouldAddEmptyLineBetweenHeader_WhenHaveManyTag() {
-        String textRtf = "<h1>Заголовок</h1><h1>Заголовок</h1>"
-        String expected = "<h1>Заголовок</h1>\n\n<h1>Заголовок</h1>";
-        String actual = coder.toMd(textRtf);
         Assert.assertEquals(expected, actual);
     }
 

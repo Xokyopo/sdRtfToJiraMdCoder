@@ -1,4 +1,4 @@
-package ru.itsm365.vita.coder.block
+package ru.itsm365.vita.coder.line
 
 import ru.itsm365.vita.coder.Coder
 
