@@ -14,9 +14,9 @@ import java.util.regex.Pattern
  */
 class BlockBreakCoder implements Coder {
     private static final MD_EMPTY_LINE = "\n\n";
-    private static final Pattern EMPTY_LINES_TOKEN = Pattern.compile("(?<=/(h\\d|ul|ol|table)>)\\s+", Pattern.CASE_INSENSITIVE);
-    private static final Pattern ANY_BLOCK_TAG_PATTERN = Pattern.compile("</?(?:h\\d|ul|ol|table)(?:>| [^><]*>)", Pattern.CASE_INSENSITIVE);
-    private static final Pattern TAG_NAME_TOKEN = Pattern.compile("(?<=</?)h\\d|ul|ol|table(?=>| )", Pattern.CASE_INSENSITIVE);
+    private static final Pattern EMPTY_LINES_TOKEN = Pattern.compile("(?<=/(ul|ol|table)>)\\s+", Pattern.CASE_INSENSITIVE);
+    private static final Pattern ANY_BLOCK_TAG_PATTERN = Pattern.compile("</?(?:ul|ol|table)(?:>| [^><]*>)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern TAG_NAME_TOKEN = Pattern.compile("(?<=</?)ul|ol|table(?=>| )", Pattern.CASE_INSENSITIVE);
     private static final String END_BLOCK_TAG_PREFIX = "</";
 
     @Override
