@@ -36,45 +36,6 @@ class TableCoderTest {
         Assert.assertEquals(expected, actual);
     }
 
-    @Test
-    void toRtfWithRigthslash() {
-        String mdText = 'fdfbdfb\n|11|12\\|21|\n|21|22|'
-        String expected = 'fdfbdfb\n' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12|21' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtfWithLink() {
-        String mdText = 'fdfbdfb\n|11|12[link title|http://example.com/] 21|\n|21|22|'
-        String expected = 'fdfbdfb\n' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12[link title|http://example.com/] 21' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtfHead() {
-        String mdText = 'fdfbdfb\n||11||12 [link title|http://example.com/] 21||\n|21|22|'
-        String expected = 'fdfbdfb\n' + TABLE_START + THEAD_START + TR_START + TH_START + '11' + TH_END + TH_START + '12 [link title|http://example.com/] 21' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtf_n() {
-        String mdText = 'fdfbdfb\n||1\n1\n1||12 [link title|http://example.com/] 21||\n|21|22|'
-        String expected = 'fdfbdfb\n' + TABLE_START + THEAD_START + TR_START + TH_START + '1\n1\n1' + TH_END + TH_START + '12 [link title|http://example.com/] 21' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtf_Screenshot() {
-        String mdText = 'fdfbdfb\n||1 \n!screenshot-1.png|thumbnail!\n 1||12 [link title|http://example.com/] 21||\n|21|22|'
-        String expected = 'fdfbdfb\n' + TABLE_START + THEAD_START + TR_START + TH_START + '1 \n!screenshot-1.png|thumbnail!\n 1' + TH_END + TH_START + '12 [link title|http://example.com/] 21' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
 
     @Test
     void toMd() {
@@ -85,28 +46,216 @@ class TableCoderTest {
     }
 
     @Test
-    void toMdN() {
-        String rtfText = 'fdfbdfb' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + "0123456789";
-        String expected = 'fdfbdfb|11|12|\n|21|22|0123456789'
-        String actual = this.coder.toMd(rtfText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toMdLink() {
-        String rtfText = 'fdfbdfb' + TABLE_START + TBODY_START + TR_START + TD_START + '1 ' + LINK + ' 1' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + "0123456789";
-        String expected = 'fdfbdfb|1 ' + LINK + ' 1|12|\n|21|22|0123456789'
-        String actual = this.coder.toMd(rtfText);
+    void reverse() {
+        String expected = """           ||11||_12_||13||
+                |[привязать заголовок|http://example.com]|22|23|
+            |31|32|!screenshot-1.png|thumbnail!|
+        """
+        String actual = this.coder.toMd(this.coder.toRtf(expected));
         Assert.assertEquals(expected, actual);
     }
 
 
     @Test
-    void toMdFile() {
+    void toRtf_onlyTableWithHeadTag() {
+        String mdText = '||11||12||\n|21|22|'
+        String expected = TABLE_START + THEAD_START + TR_START + TH_START + '11' + TH_END + TH_START + '12' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+
+    @Test
+    void toRtf_saveEmptyLineBeforeTable() {
+        String mdText = '\n|11|12|\n|21|22|'
+        String expected = '\n' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_saveEmptyLineAfterTable() {
+        String mdText = '|11|12|\n|21|22|\n'
+        String expected = TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + '\n';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_brokenTableIgnoreTableWithoutFirstRightSlash() {
+        String mdText = '11|12|'
+        String expected = '11|12|'
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_brokenTableUnevenQuantityCells() {
+        String mdText = """
+        |11|12|13|14|
+        |21|22|23|
+        |31|32|
+        """
+        String expected = """
+        |11|12|13|14|
+        |21|22|23|
+        |31|32|
+        """
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_checkTableWithOneCell() {
+        String mdText = "|11|"
+        String expected = "|11|"
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+
+    @Test
+    void toRtf_checkTwoTables() {
+        String mdText = "  fdfbdfb\n" +
+                "     |11|12|\n" +
+                "  |21|22|\n" +
+                "fdfbdfb\n" +
+                "|11|12|\n" +
+                "|21|22|"
+        String expected = "  fdfbdfb\n" + TABLE_START + TBODY_START + "     " + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + "  " + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + "\nfdfbdfb\n" + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_checkThreeTables() {
+        String mdText = 'fdfbdfb\n|11|12|\n|21|22|\nfdfbdfb\n|11|12|\n|21|22|\nfdfbdfb\n|11|12|\n|21|22|'
+        String expected = 'fdfbdfb\n' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + '\nfdfbdfb\n' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + '\nfdfbdfb\n' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_containsRightSlashInCell() {
+        String mdText = 'fdfbdfb\n|11|12\\|21|\n|21|22|'
+        String expected = 'fdfbdfb\n' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12|21' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+
+    @Test
+    void toRtf_containsLinkInCell() {
+        String mdText = 'fdfbdfb\n|11|12[link title|http://example.com/] 21|\n|21|22|'
+        String expected = 'fdfbdfb\n' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12[link title|http://example.com/] 21' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_containsTagHead() {
+        String mdText = 'fdfbdfb\n||11||12 [link title|http://example.com/] 21||\n|21|22|'
+        String expected = 'fdfbdfb\n' + TABLE_START + THEAD_START + TR_START + TH_START + '11' + TH_END + TH_START + '12 [link title|http://example.com/] 21' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_containsNewLineInCell(){
+        String mdText = 'fdfbdfb\n||1\n1\n1||12 [link title|http://example.com/] 21||\n|21|22|'
+        String expected = 'fdfbdfb\n' + TABLE_START + THEAD_START + TR_START + TH_START + '1\n1\n1' + TH_END + TH_START + '12 [link title|http://example.com/] 21' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_containsScreenshotInCell() {
+        String mdText = 'fdfbdfb\n||1 \n!screenshot-1.png|thumbnail!\n 1||12 [link title|http://example.com/] 21||\n|21|22|'
+        String expected = 'fdfbdfb\n' + TABLE_START + THEAD_START + TR_START + TH_START + '1 \n!screenshot-1.png|thumbnail!\n 1' + TH_END + TH_START + '12 [link title|http://example.com/] 21' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_containTabInCell() {
+        String mdText = 'fdfbdfb\n||\t\t!screenshot-1.png|thumbnail!||12 [link title|http://example.com/] 21||\n|21|22|'
+        String expected = 'fdfbdfb\n' + TABLE_START + THEAD_START + TR_START + TH_START + '\t\t!screenshot-1.png|thumbnail!' + TH_END + TH_START + '12 [link title|http://example.com/] 21' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_startWithNewLine() {
+        String rtfText = '\n' + TABLE_START + THEAD_START + TR_START + TH_START + '11' + TH_END + TH_START + '12' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END;
+        String expected = "\n"+
+                          "||11||12||\n"+
+                          "|21|22|"
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+
+    @Test
+    void toMd_newLine() {
+        String rtfText = 'fdfbdfb\n' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + "\n0123456789";
+        String expected = 'fdfbdfb\n|11|12|\n|21|22|\n0123456789'
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_containsLinkInCell() {
+        String rtfText = 'fdfbdfb' + TABLE_START + THEAD_START + TR_START + TH_START + '1 ' + LINK + ' 1' + TH_END + TH_START + '12' + TH_END + TR_END+ THEAD_END +TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + "0123456789";
+        String expected = 'fdfbdfb||1 ' + LINK + ' 1||12||\n|21|22|0123456789'
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_containsFileInCell() {
         String rtfText = 'fdfbdfb' + TABLE_START + TBODY_START + TR_START + TD_START + '1 ' + FILE + ' 1' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + "0123456789";
         String expected = 'fdfbdfb|1 ' + FILE + ' 1|12|\n|21|22|0123456789'
         String actual = this.coder.toMd(rtfText);
-        println(actual)
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_3Tables() {
+        String rtfText = 'fdfbdfb' + TABLE_START + TBODY_START + TR_START + TD_START + '11' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + '0123456789' + 'fdfbdfb' + TABLE_START + TBODY_START + TR_START + TD_START + '1 ' + FILE + ' 1' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + '0123456789' + 'fdfbdfb' + TABLE_START + TBODY_START + TR_START + TD_START + '1' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END + '0123456789';
+        String expected = 'fdfbdfb|11|12|\n|21|22|0123456789' + 'fdfbdfb|1 ' + FILE + ' 1|12|\n|21|22|0123456789' + 'fdfbdfb|1|12|\n|21|22|0123456789'
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_brokenTableWithoutLastTagTable() {
+        String rtfText = TABLE_START + TBODY_START + TR_START + TD_START + '1 ' + LINK + ' 1' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END
+        String expected = TABLE_START + TBODY_START + TR_START + TD_START + '1 ' + LINK + ' 1' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_brokenTableWithoutFirstTagTable() {
+        String rtfText = TBODY_START + TR_START + TD_START + '1 ' + LINK + ' 1' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END
+        String expected = TBODY_START + TR_START + TD_START + '1 ' + LINK + ' 1' + TD_END + TD_START + '12' + TD_END + TR_END + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_brokenTableWithoutFirstTagTR() {
+        String rtfText = TABLE_START + THEAD_START + TH_START + '11' + TH_END + TH_START + '12' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END
+        String expected = TABLE_START + THEAD_START + TH_START + '11' + TH_END + TH_START + '12' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TD_START + '22' + TD_END + TR_END + TBODY_END + TABLE_END
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_brokenTableUnevenQuantity() {
+        String rtfText = TABLE_START + THEAD_START + TH_START + '11' + TH_END + TH_START + '12' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TR_END + TBODY_END + TABLE_END
+        String expected = TABLE_START + THEAD_START + TH_START + '11' + TH_END + TH_START + '12' + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + '21' + TD_END + TR_END + TBODY_END + TABLE_END
+        String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 }
