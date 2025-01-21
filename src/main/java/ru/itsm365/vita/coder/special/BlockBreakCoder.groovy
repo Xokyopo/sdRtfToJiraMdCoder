@@ -13,7 +13,7 @@ import java.util.regex.Pattern
  * Поддерживает "ol", "ul", "table", "h1", "h2", "h3", "h4"
  */
 class BlockBreakCoder implements Coder {
-    private static final MD_EMPTY_LINE = "\n\n";
+    private static final MD_EMPTY_LINE = System.lineSeparator() * 2;
     private static final Pattern EMPTY_LINES_TOKEN = Pattern.compile("(?<=/(ul|ol|table)>)\\s+", Pattern.CASE_INSENSITIVE);
     private static final Pattern ANY_BLOCK_TAG_PATTERN = Pattern.compile("</?(?:ul|ol|table)(?:>| [^><]*>)", Pattern.CASE_INSENSITIVE);
     private static final Pattern TAG_NAME_TOKEN = Pattern.compile("(?<=</?)ul|ol|table(?=>| )", Pattern.CASE_INSENSITIVE);
