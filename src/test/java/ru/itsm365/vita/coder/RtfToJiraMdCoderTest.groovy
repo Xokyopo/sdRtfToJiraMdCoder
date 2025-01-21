@@ -149,6 +149,7 @@ printf('Hellow World')</pre>
 
     @Test
     void testToRtf() {
+        println(this.coder.toRtf(this.simpleText.md));
     }
 
     @Test
