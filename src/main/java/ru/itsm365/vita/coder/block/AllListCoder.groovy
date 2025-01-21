@@ -6,8 +6,8 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class AllListCoder implements Coder {
-    private static final String MD_EMPTY_LINE = "\n\n";
-    private static final String MD_NEXT_LINE = "\n";
+    private static final String MD_EMPTY_LINE = System.lineSeparator() * 2;
+    private static final String MD_NEXT_LINE = System.lineSeparator();
 
     private final Setting setting;
 
@@ -108,7 +108,7 @@ class AllListCoder implements Coder {
         Stack<Integer> levels = [];
         Element parent = rootElement;
         Element lastElement = parent;
-        List<String> lines = s.split("\n");
+        List<String> lines = s.split(MD_NEXT_LINE);
 
         for (String line in lines) {
             String currentValue = line.replaceFirst(setting.mdStartListItemRegexpPattern, "");
