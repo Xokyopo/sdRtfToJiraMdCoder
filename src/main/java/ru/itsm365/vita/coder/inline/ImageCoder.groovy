@@ -15,7 +15,7 @@ class ImageCoder implements Coder {
     private static final String RTF_REGEXP_PATTERN = "<img\\s[^><]*>";
     private static final String RTF_SRC_REGEXP_TOKEN = '(?<=src=\\")[^\\"]+';
     private static final String SPACE = " ";
-    private static final String MD_NEW_LINE = "\n";
+    private static final String MD_NEW_LINE = System.lineSeparator();
 
     @Override
     String toRtf(String s) {
