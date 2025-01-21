@@ -6,6 +6,8 @@ import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
 class LinkCoderTest {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+
     private Coder coder;
 
     @Before
@@ -70,24 +72,24 @@ class LinkCoderTest {
 
     @Test
     void toRtf_ShouldReturnLinkWithSavedNexLineSign_WhenHaveWhoLine() {
-        String mdText = '[привязать заголовок|http://example.com]\n[привязать заголовок2|http://ya.com]';
-        String expected = '<a href="http://example.com">привязать заголовок</a>\n<a href="http://ya.com">привязать заголовок2</a>';
+        String mdText = "[привязать заголовок|http://example.com]${LINE_SEPARATOR}[привязать заголовок2|http://ya.com]";
+        String expected = "<a href=\"http://example.com\">привязать заголовок</a>${LINE_SEPARATOR}<a href=\"http://ya.com\">привязать заголовок2</a>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnLinkWithStartedEmptyLine_WhenHaveEmptyLineBefore() {
-        String mdText = '\n[*привязать заголовок*|http://example.com]';
-        String expected = '\n<a href="http://example.com">*привязать заголовок*</a>';
+        String mdText = "${LINE_SEPARATOR}[*привязать заголовок*|http://example.com]";
+        String expected = "${LINE_SEPARATOR}<a href=\"http://example.com\">*привязать заголовок*</a>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnLinkWithEndedEmptyLine_WhenHaveEmptyLineAfter() {
-        String mdText = '[*привязать заголовок*|http://example.com]\n';
-        String expected = '<a href="http://example.com">*привязать заголовок*</a>\n';
+        String mdText = "[*привязать заголовок*|http://example.com]${LINE_SEPARATOR}";
+        String expected = "<a href=\"http://example.com\">*привязать заголовок*</a>${LINE_SEPARATOR}";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }

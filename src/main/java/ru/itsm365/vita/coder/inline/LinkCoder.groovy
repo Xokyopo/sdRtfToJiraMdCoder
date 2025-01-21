@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 
 class LinkCoder implements Coder {
     private static final String MD_REGEXP_PATTERN = "\\[[^\\|]+\\|[^\\[\\|]*\\]";
-    private static final String MD_NEXT_LINE = "\n";
+    private static final String MD_NEXT_LINE = System.lineSeparator();
     private static final String MD_OPEN_TAG = "[";
     private static final String MD_CLOSE_TAG = "]";
     private static final String MD_PART_DELIMITER_TAG = "|";
