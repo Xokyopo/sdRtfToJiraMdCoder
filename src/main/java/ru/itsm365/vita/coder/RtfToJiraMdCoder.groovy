@@ -2,6 +2,7 @@ package ru.itsm365.vita.coder
 
 import ru.itsm365.vita.coder.block.MarkedListCoder
 import ru.itsm365.vita.coder.block.NumberedListCoder
+import ru.itsm365.vita.coder.block.TableCoder
 import ru.itsm365.vita.coder.inline.*
 import ru.itsm365.vita.coder.line.HeaderCoder
 import ru.itsm365.vita.coder.special.BlockBreakCoder
@@ -18,8 +19,10 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder UNDERSCORE_TEXT_STYLE_CODER = new UnderscoreTextStyleCoder();
 
     private static final Coder HEADER_CODER = new HeaderCoder();
+
     private static final Coder MARKED_LIST_CODER = new MarkedListCoder();
     private static final Coder NUMBERED_LIST_CODER = new NumberedListCoder();
+    private static final Coder TABLE_CODER = new TableCoder();
 
     private static final Coder BLOCK_BREAK_CODER = new BlockBreakCoder();
     private static final Coder LINE_BREAK_CODER = new LineBreakCoder();
@@ -31,7 +34,7 @@ class RtfToJiraMdCoder implements Coder {
         TO_RTF = [
                 //Сначала специальные обработчики
 
-                //Затем обходим все строчные элементы
+                //Затем обходим все подстрочные элементы
                 BOLD_TEXT_STYLE_CODER,
                 IMAGE_CODER,
                 ITALIC_TEXT_STYLE_CODER,
@@ -41,8 +44,11 @@ class RtfToJiraMdCoder implements Coder {
                 SUPER_SCRIPT_TEXT_STYLE_CODER,
                 UNDERSCORE_TEXT_STYLE_CODER,
 
-                //Затем обходим все блочные элементы
+                //Затем обходим все строчные элементы
                 HEADER_CODER,
+
+                //Затем обходим все блочные элементы
+                TABLE_CODER,
                 //MARKED_LIST_CODER, - списки сломаны, все затирают.
                 //NUMBERED_LIST_CODER,
 
@@ -56,7 +62,7 @@ class RtfToJiraMdCoder implements Coder {
                 BLOCK_BREAK_CODER,
                 //LINE_BREAK_CODER,
 
-                //Затем обходим все строчные элементы
+                //Затем обходим все подстрочные элементы
                 BOLD_TEXT_STYLE_CODER,
                 IMAGE_CODER,
                 ITALIC_TEXT_STYLE_CODER,
@@ -66,8 +72,11 @@ class RtfToJiraMdCoder implements Coder {
                 SUPER_SCRIPT_TEXT_STYLE_CODER,
                 UNDERSCORE_TEXT_STYLE_CODER,
 
-                //Затем обходим все блочные элементы
+                //Затем обходим все строчные элементы
                 HEADER_CODER,
+
+                //Затем обходим все блочные элементы
+                TABLE_CODER,
                 MARKED_LIST_CODER,
                 NUMBERED_LIST_CODER,
 
