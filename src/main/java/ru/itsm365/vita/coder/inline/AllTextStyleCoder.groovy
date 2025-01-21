@@ -7,7 +7,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class AllTextStyleCoder implements Coder {
-    private static final String MD_NEXT_LINE = "\n";
+    private static final String MD_NEXT_LINE = System.lineSeparator();
     private final Settings settings;
 
     AllTextStyleCoder(Settings settings) {
