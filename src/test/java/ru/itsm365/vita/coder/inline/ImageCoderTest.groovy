@@ -6,6 +6,8 @@ import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
 class ImageCoderTest {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+
     private Coder coder;
 
     @Before
@@ -54,16 +56,16 @@ class ImageCoderTest {
 
     @Test
     void toRtf_ShouldSafeNewLine_WhenHaveTheLine() {
-        String mdText = 'до картики\n!screenshot-1.png|thumbnail!\nи после картинки';
-        String expected = 'до картики\n<img src="screenshot-1.png">\nи после картинки';
+        String mdText = "до картики${LINE_SEPARATOR}!screenshot-1.png|thumbnail!${LINE_SEPARATOR}и после картинки";
+        String expected = "до картики${LINE_SEPARATOR}<img src=\"screenshot-1.png\">${LINE_SEPARATOR}и после картинки";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldSafeNewLine_WhenHaveTheLine() {
-        String rtfText = 'до картики\n<img src="screenshot-1.png">\nи после картинки';
-        String expected = 'до картики\n!screenshot-1.png|thumbnail!\nи после картинки';
+        String rtfText = "до картики${LINE_SEPARATOR}<img src=\"screenshot-1.png\">${LINE_SEPARATOR}и после картинки";
+        String expected = "до картики${LINE_SEPARATOR}!screenshot-1.png|thumbnail!${LINE_SEPARATOR}и после картинки";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }

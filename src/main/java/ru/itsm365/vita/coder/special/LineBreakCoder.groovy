@@ -3,7 +3,7 @@ package ru.itsm365.vita.coder.special
 import ru.itsm365.vita.coder.Coder
 
 class LineBreakCoder implements Coder {
-    private static final String MD_LINE_BREAKER = "\n";
+    private static final String MD_LINE_BREAKER = System.lineSeparator();
     private static final String RTF_LINE_BREAKER = "<br/>";
 
     @Override

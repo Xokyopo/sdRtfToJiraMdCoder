@@ -15,7 +15,7 @@ class NumberedListCoderTest {
 
     @Test
     void reversTest() {
-        String expected = "текст до списка\n# первый список\n\nтекст между списками\n# второй список";
+        String expected = "текст до списка${System.lineSeparator()}# первый список${System.lineSeparator()}${System.lineSeparator()}текст между списками${System.lineSeparator()}# второй список";
         String actual = this.coder.toMd(this.coder.toRtf(expected));
         Assert.assertEquals(expected, actual);
     }
@@ -62,7 +62,7 @@ class NumberedListCoderTest {
 
     @Test
     void toRtf_ShouldReturnTwoElement_WhenRun() {
-        String mdText = "# первый элемент\n# второй элемент";
+        String mdText = "# первый элемент${System.lineSeparator()}# второй элемент";
         String expected = "<ol><li>первый элемент</li><li>второй элемент</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
@@ -71,14 +71,14 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnTwoElement_WhenRun() {
         String rtfText = "<ol><li>первый элемент</li><li>второй элемент</li></ol>";
-        String expected = "# первый элемент\n# второй элемент";
+        String expected = "# первый элемент${System.lineSeparator()}# второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnNestedListInListItem_WhenRun() {
-        String mdText = "# первый элемент\n    # вложенный элемент\n# второй элемент";
+        String mdText = "# первый элемент${System.lineSeparator()}    # вложенный элемент${System.lineSeparator()}# второй элемент";
         String expected = "<ol><li>первый элемент<ol><li>вложенный элемент</li></ol></li><li>второй элемент</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
@@ -87,14 +87,14 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnNestedListInListItem_WhenRun() {
         String rtfText = "<ol><li>первый элемент<ol><li>вложенный элемент</li></ol></li><li>второй элемент</li></ol>";
-        String expected = "# первый элемент\n    # вложенный элемент\n# второй элемент";
+        String expected = "# первый элемент${System.lineSeparator()}    # вложенный элемент${System.lineSeparator()}# второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnNestedListInNestedListItem_WhenRun() {
-        String mdText = "# первый элемент\n    # вложенный элемент\n        # вложенный во вложенный элемент\n# второй элемент";
+        String mdText = "# первый элемент${System.lineSeparator()}    # вложенный элемент${System.lineSeparator()}        # вложенный во вложенный элемент${System.lineSeparator()}# второй элемент";
         String expected = "<ol><li>первый элемент<ol><li>вложенный элемент<ol><li>вложенный во вложенный элемент</li></ol></li></ol></li><li>второй элемент</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
@@ -103,39 +103,39 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnNestedListInNestedListItem_WhenRun() {
         String rtfText = "<ol><li>первый элемент<ol><li>вложенный элемент<ol><li>вложенный во вложенный элемент</li></ol></li></ol></li><li>второй элемент</li></ol>";
-        String expected = "# первый элемент\n    # вложенный элемент\n        # вложенный во вложенный элемент\n# второй элемент";
+        String expected = "# первый элемент${System.lineSeparator()}    # вложенный элемент${System.lineSeparator()}        # вложенный во вложенный элемент${System.lineSeparator()}# второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnTowList_WhenHaveTwoList() {
-        String mdText = "# первый список\n\n# второй список";
-        String expected = "<ol><li>первый список</li></ol>\n\n<ol><li>второй список</li></ol>";
+        String mdText = "# первый список${System.lineSeparator()}${System.lineSeparator()}# второй список";
+        String expected = "<ol><li>первый список</li></ol>${System.lineSeparator()}${System.lineSeparator()}<ol><li>второй список</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldReturnTowList_WhenHaveTwoList() {
-        String rtfText = "<ol><li>первый список</li></ol>\n\n<ol><li>второй список</li></ol>";
-        String expected = "# первый список\n\n# второй список";
+        String rtfText = "<ol><li>первый список</li></ol>${System.lineSeparator()}${System.lineSeparator()}<ol><li>второй список</li></ol>";
+        String expected = "# первый список${System.lineSeparator()}${System.lineSeparator()}# второй список";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnTowListWithText_WhenHaveTextBetweenLists() {
-        String mdText = "# первый список\n\nТекст между списками\n# второй список";
-        String expected = "<ol><li>первый список</li></ol>\n\nТекст между списками\n<ol><li>второй список</li></ol>";
+        String mdText = "# первый список${System.lineSeparator()}${System.lineSeparator()}Текст между списками${System.lineSeparator()}# второй список";
+        String expected = "<ol><li>первый список</li></ol>${System.lineSeparator()}${System.lineSeparator()}Текст между списками${System.lineSeparator()}<ol><li>второй список</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldReturnTowListWithText_WhenHaveTextBetweenLists() {
-        String rtfText = "<ol><li>первый список</li></ol>\n\nТекст между списками\n<ol><li>второй список</li></ol>";
-        String expected = "# первый список\n\nТекст между списками\n# второй список";
+        String rtfText = "<ol><li>первый список</li></ol>${System.lineSeparator()}${System.lineSeparator()}Текст между списками${System.lineSeparator()}<ol><li>второй список</li></ol>";
+        String expected = "# первый список${System.lineSeparator()}${System.lineSeparator()}Текст между списками${System.lineSeparator()}# второй список";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
@@ -158,32 +158,32 @@ class NumberedListCoderTest {
 
     @Test
     void toRtf_ShouldConvertWithSavingEmptyLineBefore() {
-        String mdText = "\n# первый элемент";
-        String expected = "\n<ol><li>первый элемент</li></ol>";
+        String mdText = "${System.lineSeparator()}# первый элемент";
+        String expected = "${System.lineSeparator()}<ol><li>первый элемент</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldConvertWithSavingEmptyLineBefore() {
-        String rtfText = "\n<ol><li>первый элемент</li></ol>";
-        String expected = "\n# первый элемент";
+        String rtfText = "${System.lineSeparator()}<ol><li>первый элемент</li></ol>";
+        String expected = "${System.lineSeparator()}# первый элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldConvertWithSavingEmptyLineAfter() {
-        String mdText = "# первый элемент\n";
-        String expected = "<ol><li>первый элемент</li></ol>\n";
+        String mdText = "# первый элемент${System.lineSeparator()}";
+        String expected = "<ol><li>первый элемент</li></ol>${System.lineSeparator()}";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldConvertWithSavingEmptyLineAfter() {
-        String rtfText = "<ol><li>первый элемент</li></ol>\n";
-        String expected = "# первый элемент\n";
+        String rtfText = "<ol><li>первый элемент</li></ol>${System.lineSeparator()}";
+        String expected = "# первый элемент${System.lineSeparator()}";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }

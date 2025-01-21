@@ -6,6 +6,8 @@ import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
 class UnderscoreTextStyleCoderTest {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+
     private Coder coder;
 
     @Before
@@ -66,32 +68,32 @@ class UnderscoreTextStyleCoderTest {
 
     @Test
     void toRtf_ShouldNotModifiedString_WhenHaveInsideLineBreaker() {
-        String mdText = "simple +te\nst+ string";
-        String expected = "simple +te\nst+ string";
+        String mdText = "simple +te${LINE_SEPARATOR}st+ string";
+        String expected = "simple +te${LINE_SEPARATOR}st+ string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveOnsideLineBreaker() {
-        String mdText = "simple +test+ \nstring";
-        String expected = "simple <u>test</u> \nstring";
+        String mdText = "simple +test+ ${LINE_SEPARATOR}string";
+        String expected = "simple <u>test</u> ${LINE_SEPARATOR}string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideEmptyLine() {
-        String mdText = "simple +te\n\nst+ string";
-        String expected = "simple +te\n\nst+ string";
+        String mdText = "simple +te${LINE_SEPARATOR}${LINE_SEPARATOR}st+ string";
+        String expected = "simple +te${LINE_SEPARATOR}${LINE_SEPARATOR}st+ string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveOutsideEmptyLine() {
-        String mdText = "simple +test+\n\nstring";
-        String expected = "simple <u>test</u>\n\nstring";
+        String mdText = "simple +test+${LINE_SEPARATOR}${LINE_SEPARATOR}string";
+        String expected = "simple <u>test</u>${LINE_SEPARATOR}${LINE_SEPARATOR}string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }

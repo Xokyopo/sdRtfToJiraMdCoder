@@ -6,6 +6,8 @@ import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
 class HeaderCoderTest {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+
     private Coder coder;
 
     @Before
@@ -86,8 +88,8 @@ class HeaderCoderTest {
 
     @Test
     void toRtf_ShouldSaveEmptyLineBefore() {
-        String mdText = "\nh1. Заголовок 1";
-        String expected = "\n<h1>Заголовок 1</h1>";
+        String mdText = "${LINE_SEPARATOR}h1. Заголовок 1";
+        String expected = "${LINE_SEPARATOR}<h1>Заголовок 1</h1>";
         String actual = this.coder.toRtf(mdText);
 
         Assert.assertEquals(expected, actual);
@@ -95,8 +97,8 @@ class HeaderCoderTest {
 
     @Test
     void toMd_ShouldSaveEmptyLineBefore() {
-        String rtfText = "\n<h1>Заголовок 1</h1>";
-        String expected = "\nh1. Заголовок 1";
+        String rtfText = "${LINE_SEPARATOR}<h1>Заголовок 1</h1>";
+        String expected = "${LINE_SEPARATOR}h1. Заголовок 1";
         String actual = this.coder.toMd(rtfText);
 
         Assert.assertEquals(expected, actual);
@@ -104,8 +106,8 @@ class HeaderCoderTest {
 
     @Test
     void toRtf_ShouldSaveEmptyLineAfter() {
-        String mdText = "h1. Заголовок 1\n";
-        String expected = "<h1>Заголовок 1</h1>\n";
+        String mdText = "h1. Заголовок 1${LINE_SEPARATOR}";
+        String expected = "<h1>Заголовок 1</h1>${LINE_SEPARATOR}";
         String actual = this.coder.toRtf(mdText);
 
         Assert.assertEquals(expected, actual);
@@ -113,8 +115,8 @@ class HeaderCoderTest {
 
     @Test
     void toMd_ShouldSaveEmptyLineAfter() {
-        String rtfText = "<h1>Заголовок 1</h1>\n";
-        String expected = "h1. Заголовок 1\n";
+        String rtfText = "<h1>Заголовок 1</h1>${LINE_SEPARATOR}";
+        String expected = "h1. Заголовок 1${LINE_SEPARATOR}";
         String actual = this.coder.toMd(rtfText);
 
         Assert.assertEquals(expected, actual);
@@ -123,8 +125,8 @@ class HeaderCoderTest {
 
     @Test
     void toRtf_ShouldConvertTwoHeader_WhenHaveTwoHeader() {
-        String mdText = "h1. Заголовок 1\nh2. Заголовок 2";
-        String expected = "<h1>Заголовок 1</h1>\n<h2>Заголовок 2</h2>";
+        String mdText = "h1. Заголовок 1${LINE_SEPARATOR}h2. Заголовок 2";
+        String expected = "<h1>Заголовок 1</h1>${LINE_SEPARATOR}<h2>Заголовок 2</h2>";
         String actual = this.coder.toRtf(mdText);
 
         Assert.assertEquals(expected, actual);
@@ -132,8 +134,8 @@ class HeaderCoderTest {
 
     @Test
     void toMd_ShouldConvertTwoHeader_WhenHaveTwoHeader() {
-        String rtfText = "<h1>Заголовок 1</h1>\n<h2>Заголовок 2</h2>";
-        String expected = "h1. Заголовок 1\nh2. Заголовок 2";
+        String rtfText = "<h1>Заголовок 1</h1>${LINE_SEPARATOR}<h2>Заголовок 2</h2>";
+        String expected = "h1. Заголовок 1${LINE_SEPARATOR}h2. Заголовок 2";
         String actual = this.coder.toMd(rtfText);
 
         Assert.assertEquals(expected, actual);
