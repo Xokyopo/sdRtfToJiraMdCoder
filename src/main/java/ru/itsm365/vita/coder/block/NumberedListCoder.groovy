@@ -6,8 +6,8 @@ class NumberedListCoder implements Coder {
     private static final String RTF_LIST_TAG_NAME = "ol";
     private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<(?:ol|li)[^><]*>)|(</(?:ol|li)>)";
     private static final String MD_LIST_TAG = "#";
-    private static final String MD_LIST_REGEXP_PATTERN = "(?<!.)(?!\\n)\\s*#\\s[^\$]*";
-    private static final String MD_START_LIST_ITEM_REGEXP_PATTERN = "^\\s*#\\s";
+    private static final String MD_LIST_REGEXP_PATTERN = "h*#\\h[^\$]*";
+    private static final String MD_START_LIST_ITEM_REGEXP_PATTERN = "\\h*#\\h";
 
     private final Coder coder;
 
