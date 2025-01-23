@@ -35,6 +35,10 @@ class AllListCoder implements Coder {
                 String b = convertListToRtf(block.substring(startAt, block.length()));
 
                 result.append(b);
+
+                if (block.endsWith(MD_NEXT_LINE)) {
+                    result.append(MD_NEXT_LINE)
+                }
             } else {
                 result.append(block);
             }
