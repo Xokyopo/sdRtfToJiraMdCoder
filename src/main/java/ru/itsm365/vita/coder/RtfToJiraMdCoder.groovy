@@ -7,8 +7,10 @@ import ru.itsm365.vita.coder.inline.*
 import ru.itsm365.vita.coder.line.HeaderCoder
 import ru.itsm365.vita.coder.special.BlockBreakCoder
 import ru.itsm365.vita.coder.special.LineBreakCoder
+import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 
 class RtfToJiraMdCoder implements Coder {
+    //Подстрочные кодеры
     private static final Coder BOLD_TEXT_STYLE_CODER = new BoldTextStyleCoder();
     private static final Coder IMAGE_CODER = new ImageCoder();
     private static final Coder ITALIC_TEXT_STYLE_CODER = new ItalicTextStyleCoder();
@@ -18,15 +20,19 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder SUPER_SCRIPT_TEXT_STYLE_CODER = new SuperScriptTextStyleCoder();
     private static final Coder UNDERSCORE_TEXT_STYLE_CODER = new UnderscoreTextStyleCoder();
 
+    //Строчные кодеры
     private static final Coder HEADER_CODER = new HeaderCoder();
 
+    //Блочные кодеры
     private static final Coder MARKED_LIST_CODER = new MarkedListCoder();
     private static final Coder NUMBERED_LIST_CODER = new NumberedListCoder();
     private static final Coder TABLE_CODER = new TableCoder();
 
+    //Блочные Специальные кодеры
     private static final Coder BLOCK_BREAK_CODER = new BlockBreakCoder();
     private static final Coder LINE_BREAK_CODER = new LineBreakCoder();
 
+    //Настроенные цепочки дял преобразования.
     private static final List<Coder> TO_RTF;
     private static final List<Coder> TO_MD;
 
@@ -49,12 +55,14 @@ class RtfToJiraMdCoder implements Coder {
 
                 //Затем обходим все блочные элементы
                 TABLE_CODER,
-                //MARKED_LIST_CODER, - списки сломаны, все затирают.
-                //NUMBERED_LIST_CODER,
+                MARKED_LIST_CODER,
+                NUMBERED_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
                 BLOCK_BREAK_CODER,
                 //LINE_BREAK_CODER,
+
+
         ]
 
         TO_MD = [
