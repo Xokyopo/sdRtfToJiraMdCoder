@@ -31,6 +31,7 @@ class RtfToJiraMdCoder implements Coder {
     //Блочные Специальные кодеры
     private static final Coder BLOCK_BREAK_CODER = new BlockBreakCoder();
     private static final Coder LINE_BREAK_CODER = new LineBreakCoder();
+    private static final Coder XML_PRETTIFY_CODER = new XmlPrettifyCoder();
 
     //Настроенные цепочки дял преобразования.
     private static final List<Coder> TO_RTF;
@@ -61,12 +62,12 @@ class RtfToJiraMdCoder implements Coder {
                 //В завершение опять специальные обработчики.
                 BLOCK_BREAK_CODER,
                 //LINE_BREAK_CODER,
-
-
+                XML_PRETTIFY_CODER
         ]
 
         TO_MD = [
                 //Сначала специальные обработчики
+                XML_PRETTIFY_CODER,
                 BLOCK_BREAK_CODER,
                 //LINE_BREAK_CODER,
 
