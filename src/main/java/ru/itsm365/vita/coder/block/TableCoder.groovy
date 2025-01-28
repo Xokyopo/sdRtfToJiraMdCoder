@@ -7,6 +7,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class TableCoder implements Coder {
+    final static private String LINE_SEPARATOR = "${System.lineSeparator()}"
 //    toRtf
     final String TAG_TABLE_START = "<table style=\"border-collapse: collapse;\">"
     final String TAG_TABLE_END = "</table>"
@@ -16,11 +17,11 @@ class TableCoder implements Coder {
     final String TAG_TBODY_END = "</tbody>"
     final String TAG_TR_START = "<tr >"
     final String TAG_TR_END = "</tr>"
-    final String TAG_TH_START = "<th style=\"background: rgb(230, 230, 230);border: 1px solid rgb(221, 221, 221);\">"
+    final String TAG_TH_START = "<th style=\"background: rgb(230, 230, 230);border: 1px solid rgb(0, 0, 0);\">"
     final String TAG_TH_END = "</th>"
-    final String TAG_TD_START = "<td style=\"border: 1px solid rgb(221, 221, 221);\">"
+    final String TAG_TD_START = "<td style=\"border: 1px solid rgb(0, 0, 0);\">"
     final String TAG_TD_END = "</td>"
-    final String ROW_REGEX = "(?msi)^ *(?=\\|).+?(?<=\\|)\$\\n?|"
+    final String ROW_REGEX = "(?msi)^ *(?=\\|).+?(?<=\\|)\$(${LINE_SEPARATOR})?| *"
     final String LINK_REGEX = "\\[.+\\|http(s)*:\\/\\/.+\\]";
     final String FILE_REGEX = "!.+?(\\|)thumbnail!";
     final Pattern LINK_PATTERN = Pattern.compile(LINK_REGEX);
@@ -72,10 +73,10 @@ class TableCoder implements Coder {
         Matcher matcher = ROW_PATTERN.matcher(s);
         List<String> whitespace = new ArrayList<>()
         while (matcher.find()) {
-            String check = matcher.group();
-            if (check) {
+            String check = matcher.group(0);
+            if (check.trim()) {
                 whitespace.add(check.find("^ *(?=\\|)"))
-                hasNewLine = check.endsWith("\n")
+                hasNewLine = check.endsWith("${LINE_SEPARATOR}")
                 start = Math.min(matcher.start(), start);
                 end = matcher.end();
                 String[] items = null;
@@ -138,7 +139,7 @@ class TableCoder implements Coder {
         stringBuilder.append(TAG_TBODY_END)
         stringBuilder.append(TAG_TABLE_END);
         if (hasNewLine) {
-            stringBuilder.append("\n")
+            stringBuilder.append("${LINE_SEPARATOR}")
         }
         resultRtf.replace(start + shift, end + shift, stringBuilder.toString());
         shift -= -stringBuilder.length() + (end - start);
@@ -164,6 +165,7 @@ class TableCoder implements Coder {
                     createCell(tableContent, whitespace, TH_PATTERN.matcher(row), "||");
                     createCell(tableContent, whitespace, TD_PATTERN.matcher(row), "|");
                 }
+                tableContent.setLength(tableContent.length() - 1)
                 result.replace(start - shift, end - shift, tableContent.toString().substring(0, tableContent.length() - 1))
                 shift += end - start - tableContent.length() + 1
             }
@@ -184,7 +186,7 @@ class TableCoder implements Coder {
             hasCell = true;
         }
         if (hasCell) {
-            tableContent.append(ch).append("\n");
+            tableContent.append(ch).append("${LINE_SEPARATOR}");
         }
         return tableContent;
     }
