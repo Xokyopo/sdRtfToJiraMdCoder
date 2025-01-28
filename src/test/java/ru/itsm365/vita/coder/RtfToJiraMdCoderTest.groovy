@@ -37,8 +37,7 @@ class RtfToJiraMdCoderTest {
 
         TestValue(String md, String rtf) {
             this.md = loadResource(md)
-            //TODO Вынести в отдельны кодер.
-            this.rtf = loadResource(rtf).replaceAll(">\\s+<", "><").replaceAll("\n", "")
+            this.rtf = loadResource(rtf)
         }
 
         private static String loadResource(String text) {
