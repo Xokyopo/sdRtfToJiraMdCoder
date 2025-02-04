@@ -5,10 +5,13 @@ import ru.itsm365.vita.coder.Coder
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+/**
+ * thumbnail - в MD это миниатюра.
+ */
 class ImageCoder implements Coder {
-    private static final String MD_REGEXP_PATTERN = "(?<!^\\s) ?![^\\|]*\\|thumbnail! ?(?!^\\s)";
+    private static final String MD_REGEXP_PATTERN = "(?<=^|\\s)![^!\\s]+!(?=\\s|\$)";
     private static final String MD_IMAGE_DIRECTIVE = "thumbnail";
-    private static final String MD_SRC_REGEXP_TOKEN = '(?<=!)[^\\|]*(?=\\|thumbnail!)';
+    private static final String MD_SRC_REGEXP_TOKEN = '(?<=!)[^!|\\|]+';
     private static final String MD_TAG = "!";
     private static final String MD_PART_DELIMITER_TAG = "|";
     private static final String RTF_TAG_NAME = "img";

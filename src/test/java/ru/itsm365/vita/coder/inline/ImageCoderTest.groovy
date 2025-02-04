@@ -49,7 +49,7 @@ class ImageCoderTest {
     @Test
     void toRtf_ShouldReturnImage_WhenSurroundedByText() {
         String mdText = 'до картики !screenshot-1.png|thumbnail! и после картинки';
-        String expected = 'до картики<img src="screenshot-1.png">и после картинки';
+        String expected = 'до картики <img src="screenshot-1.png"> и после картинки';
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
@@ -97,7 +97,7 @@ class ImageCoderTest {
     @Test
     void toRtf_ShouldReturnTwoImage_WhenHaveTwoImage() {
         String mdText = '!screenshot-1.png|thumbnail! !screenshot-1.png|thumbnail!';
-        String expected = '<img src="screenshot-1.png"><img src="screenshot-1.png">';
+        String expected = '<img src="screenshot-1.png"> <img src="screenshot-1.png">';
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
