@@ -7,6 +7,8 @@ import java.util.regex.Pattern
 
 /**
  * thumbnail - в MD это миниатюра.
+ * При конвертации в MD всегда будет проставляться миниатюра, а в RTF обычное изображение.
+ * При конвертации из MD поддерживаются как обычные изображения так и миниатюры
  */
 class ImageCoder implements Coder {
     private static final String MD_REGEXP_PATTERN = "(?<=^|\\s)![^!\\s]+!(?=\\s|\$)";
