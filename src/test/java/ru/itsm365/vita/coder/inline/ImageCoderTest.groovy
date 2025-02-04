@@ -101,4 +101,36 @@ class ImageCoderTest {
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnTwoImage_WhenHaveTwoImageSeparatedByNumber() {
+        String mdText = '!screenshot-1.png|thumbnail!1!screenshot-1.png|thumbnail!';
+        String expected = '!screenshot-1.png|thumbnail!1!screenshot-1.png|thumbnail!';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnTwoImage_WhenHaveTwoImageSeparatedByWord() {
+        String mdText = '!screenshot-1.png|thumbnail!d!screenshot-1.png|thumbnail!';
+        String expected = '!screenshot-1.png|thumbnail!d!screenshot-1.png|thumbnail!';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnTwoImage_WhenHaveTwoImageSeparatedByRuWord() {
+        String mdText = '!screenshot-1.png|thumbnail!й!screenshot-1.png|thumbnail!';
+        String expected = '!screenshot-1.png|thumbnail!й!screenshot-1.png|thumbnail!';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnTwoImage_WhenHaveTwoImageSeparatedByNonWord() {
+        String mdText = '!screenshot-1.png|thumbnail!-!screenshot-1.png|thumbnail!';
+        String expected = '<img src="screenshot-1.png">-<img src="screenshot-1.png">';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
 }
