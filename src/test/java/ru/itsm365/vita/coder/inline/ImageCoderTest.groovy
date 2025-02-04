@@ -31,6 +31,14 @@ class ImageCoderTest {
     }
 
     @Test
+    void toRtf_WithoutThumbnail() {
+        String mdText = '!screenshot-1.png!';
+        String expected = '<img src="screenshot-1.png">';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     void toMd() {
         String rtfText = '<img src="screenshot-1.png">';
         String expected = '!screenshot-1.png|thumbnail!';
