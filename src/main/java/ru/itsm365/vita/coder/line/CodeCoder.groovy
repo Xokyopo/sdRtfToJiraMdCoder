@@ -10,17 +10,14 @@ class CodeCoder implements Coder {
     // toRtf
     private final String CODE_START = "{code:java}";
     private final String CODE_END = "{code}";
-    private final String CODE_REGEX = "(?msi)(?<=\\{code:java}).+?(?=\\{code})";
+    private final String CODE_REGEX = "(?msi)(?<=\\{code:java}).*?(?=\\{code})";
     private final String CODE_OPENING_TAG = "<pre fr-original-style=\"\" style=\"white-space: pre-wrap; overflow-wrap: break-word; overflow: visible;\">";
     private final String CODE_CLOSING_TAG = "</pre>";
     Pattern CODE_PATTERN = Pattern.compile(CODE_REGEX);
 
     // toMd
-//    private final String BLOCKQUOTE_OPENING_TAG = "<blockquote";
-//    private final String BLOCKQUOTE_CLOSING_END = "</blockquote>";
-    private final String PRE_REGEX = "(?msi)<pre.+?>.+?</pre.*?>"
+    private final String PRE_REGEX = "(?msi)<pre.*?>.*?</pre.*?>"
     private final String CHEVRONS_REGEX = "(?msi)(?<=>).*(?=<)"
-//    private final String BLOCKQUOTE_TO_QUOTE = "{quote}"
     Pattern PRE_PATTERN = Pattern.compile(PRE_REGEX)
     Pattern CHEVRONS_PATTERN = Pattern.compile(CHEVRONS_REGEX)
 
