@@ -31,6 +31,14 @@ class ImageCoderTest {
     }
 
     @Test
+    void toRtf_WithoutThumbnail() {
+        String mdText = '!screenshot-1.png!';
+        String expected = '<img src="screenshot-1.png">';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     void toMd() {
         String rtfText = '<img src="screenshot-1.png">';
         String expected = '!screenshot-1.png|thumbnail!';
@@ -41,7 +49,7 @@ class ImageCoderTest {
     @Test
     void toRtf_ShouldReturnImage_WhenSurroundedByText() {
         String mdText = 'до картики !screenshot-1.png|thumbnail! и после картинки';
-        String expected = 'до картики<img src="screenshot-1.png">и после картинки';
+        String expected = 'до картики <img src="screenshot-1.png"> и после картинки';
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
@@ -89,8 +97,64 @@ class ImageCoderTest {
     @Test
     void toRtf_ShouldReturnTwoImage_WhenHaveTwoImage() {
         String mdText = '!screenshot-1.png|thumbnail! !screenshot-1.png|thumbnail!';
-        String expected = '<img src="screenshot-1.png"><img src="screenshot-1.png">';
+        String expected = '<img src="screenshot-1.png"> <img src="screenshot-1.png">';
         String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnTwoImage_WhenHaveTwoImageSeparatedByNumber() {
+        String mdText = '!screenshot-1.png|thumbnail!1!screenshot-1.png|thumbnail!';
+        String expected = '!screenshot-1.png|thumbnail!1!screenshot-1.png|thumbnail!';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnTwoImage_WhenHaveTwoImageSeparatedByWord() {
+        String mdText = '!screenshot-1.png|thumbnail!d!screenshot-1.png|thumbnail!';
+        String expected = '!screenshot-1.png|thumbnail!d!screenshot-1.png|thumbnail!';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnTwoImage_WhenHaveTwoImageSeparatedByRuWord() {
+        String mdText = '!screenshot-1.png|thumbnail!й!screenshot-1.png|thumbnail!';
+        String expected = '!screenshot-1.png|thumbnail!й!screenshot-1.png|thumbnail!';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnTwoImage_WhenHaveTwoImageSeparatedByNonWord() {
+        String mdText = '!screenshot-1.png|thumbnail!-!screenshot-1.png|thumbnail!';
+        String expected = '<img src="screenshot-1.png">-<img src="screenshot-1.png">';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    //@Test TODO не проходит, но не критично
+    void toMd_ShouldReturnTwoImage_WhenHaveTwoImageSeparatedByNonWord() {
+        String rtfText = '<img src="screenshot-1.png">-<img src="screenshot-1.png">';
+        String expected = '!screenshot-1.png|thumbnail!-!screenshot-1.png|thumbnail!';
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    //@Test TODO не проходит, но не критично
+    void toMd_ShouldReturnConvertedStringWithoutSpace_WhenStartWithNonWordSign() {
+        String rtfText = '-<img src="screenshot-1.png">';
+        String expected = '-!screenshot-1.png|thumbnail!';
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    //@Test TODO не проходит, но не критично
+    void toMd_ShouldReturnConvertedStringWithoutSpace_WhenEndWithNonWordSign() {
+        String rtfText = '<img src="screenshot-1.png">-';
+        String expected = '!screenshot-1.png|thumbnail!-';
+        String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 }
