@@ -4,6 +4,7 @@ import ru.itsm365.vita.coder.block.MarkedListCoder
 import ru.itsm365.vita.coder.block.NumberedListCoder
 import ru.itsm365.vita.coder.block.TableCoder
 import ru.itsm365.vita.coder.inline.*
+import ru.itsm365.vita.coder.line.CodeCoder
 import ru.itsm365.vita.coder.line.HeaderCoder
 import ru.itsm365.vita.coder.line.QuoteCoder
 import ru.itsm365.vita.coder.special.BlockBreakCoder
@@ -24,6 +25,7 @@ class RtfToJiraMdCoder implements Coder {
     //Строчные кодеры
     private static final Coder HEADER_CODER = new HeaderCoder();
     private static final Coder QUOTE_CODER = new QuoteCoder();
+    private static final Coder CODE_CODER = new CodeCoder();
 
     //Блочные кодеры
     private static final Coder MARKED_LIST_CODER = new MarkedListCoder();
@@ -56,6 +58,7 @@ class RtfToJiraMdCoder implements Coder {
                 //Затем обходим все строчные элементы
                 HEADER_CODER,
                 QUOTE_CODER,
+                CODE_CODER,
 
                 //Затем обходим все блочные элементы
                 TABLE_CODER,
@@ -87,6 +90,7 @@ class RtfToJiraMdCoder implements Coder {
                 //Затем обходим все строчные элементы
                 HEADER_CODER,
                 QUOTE_CODER,
+                CODE_CODER,
 
                 //Затем обходим все блочные элементы
                 TABLE_CODER,
