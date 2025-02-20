@@ -1,6 +1,7 @@
 package ru.itsm365.vita.coder.special
 
 import ru.itsm365.vita.coder.Coder
+import ru.itsm365.vita.coder.model.RtfTag
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -8,6 +9,7 @@ import java.util.regex.Pattern
 /**
  * Обрабатывает строки, которые в RTF окружаются тегом div, а в MD выражаются переносом строки.
  * Вызывается после основных кодеров, и обрабатывает оставшиеся объекты как строки.
+ * в блоке кода нельзя трогать разметку, оставлять без изменений все что внутри.. (pre)
  */
 class RowCoder implements Coder {
     private static final String MD_LINE_SEPARATOR = System.lineSeparator();
@@ -17,16 +19,16 @@ class RowCoder implements Coder {
     private static final Pattern CONVERTED_MD_OPEN_TAG_PATTERN = Pattern.compile(CONVERTED_MD_OPEN_TAG_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
     private static final String DEFAULT_RTF_LINE_TAG_NAME = "div";
     private static final List<String> RTF_ROW_TAGS = [
-            DEFAULT_RTF_LINE_TAG_NAME, "h1", "h2", "h3", "h4", "h5", "h6", "h7", "pre", "blockquote"
+            DEFAULT_RTF_LINE_TAG_NAME, "h1", "h2", "h3", "h4", "h5", "h6", "h7", "pre", "blockquote", "p"
     ];
     private static final List<String> RTF_BLOCK_TAGS = [
             "table", "ul", "ol"
     ];
     private static final List<String> ESCAPED_RTF_TAGS = RTF_BLOCK_TAGS + [
-            "img"
+            "img", "pre"
     ];
     private static final String ESCAPED_MD_TAGS = [
-            //TODO что то будет только что.
+            "pre"
     ];
 
     @Override
@@ -34,6 +36,7 @@ class RowCoder implements Coder {
         StringBuilder result = new StringBuilder();
         List<String> lines = s.split(MD_LINE_SEPARATOR);
 
+        Stack<RtfTag> openedEscapedTags = [];
         for (String line in lines) {
             Matcher matcher = CONVERTED_MD_OPEN_TAG_PATTERN.matcher(line);
             if (matcher.find()) {
@@ -41,7 +44,17 @@ class RowCoder implements Coder {
                 RtfTag rtfTag = new RtfTag(tag);
                 boolean rowTag = RTF_ROW_TAGS.contains(rtfTag.name);
                 boolean blockTag = RTF_BLOCK_TAGS.contains(rtfTag.name);
-                if (rowTag || blockTag) {
+                boolean escapedTag = ESCAPED_MD_TAGS.contains(rtfTag.name);
+
+                if (escapedTag) {
+                    if (rtfTag.isOpen()) {
+                        openedEscapedTags.push(rtfTag);
+                    } else if (openedEscapedTags.last().name == rtfTag.name) {
+                        openedEscapedTags.pop();
+                    }
+                }
+
+                if (rowTag || blockTag || !openedEscapedTags.isEmpty()) {
                     result.append(line);
                 } else {
                     result.append(createTag(DEFAULT_RTF_LINE_TAG_NAME, line));
@@ -64,34 +77,38 @@ class RowCoder implements Coder {
         while (matcher.find(cursor)) {
             RtfTag rtfTag = new RtfTag(matcher.group());
 
+            if (ESCAPED_RTF_TAGS.contains(rtfTag.name)) {
+                if (rtfTag.isOpen()) {
+                    openedEscapedTags.push(rtfTag);
+                } else if (openedEscapedTags.last().name == rtfTag.name) {
+                    openedEscapedTags.pop();
+                }
+            }
+
+            if (!openedEscapedTags.isEmpty()) {
+                result.append(s.substring(cursor, matcher.end()));
+                cursor = matcher.end();
+                continue;
+            }
+
             if (rtfTag.name == DEFAULT_RTF_LINE_TAG_NAME) {
-                if (openedEscapedTags.isEmpty()) {
-                    result.append(s.substring(cursor, matcher.start()));
-                    if (!rtfTag.isOpen() && matcher.end() < s.length()) {
-                        result.append(MD_LINE_SEPARATOR);
-                    }
-                } else {
-                    result.append(s.substring(cursor, matcher.end()));
+                result.append(s.substring(cursor, matcher.start()));
+                if (!rtfTag.isOpen() && matcher.end() < s.length()) {
+                    result.append(MD_LINE_SEPARATOR);
                 }
             } else if (RTF_ROW_TAGS.contains(rtfTag.name)) {
                 result.append(s.substring(cursor, matcher.end()));
-                if (openedEscapedTags.isEmpty() && !rtfTag.isOpen() && matcher.end() < s.length()) {
+                if (!rtfTag.isOpen() && matcher.end() < s.length()) {
+                    result.append(MD_LINE_SEPARATOR);
+                }
+            } else if (RTF_BLOCK_TAGS.contains(rtfTag.name)) {
+                result.append(s.substring(cursor, matcher.end()));
+                if (!rtfTag.isOpen() && matcher.end() < s.length()) {
+                    result.append(MD_LINE_SEPARATOR);
                     result.append(MD_LINE_SEPARATOR);
                 }
             } else {
                 result.append(s.substring(cursor, matcher.end()));
-                if (ESCAPED_RTF_TAGS.contains(rtfTag.name)) {
-                    if (rtfTag.isOpen()) {
-                        openedEscapedTags.push(rtfTag);
-                    } else if (openedEscapedTags.last().name == rtfTag.name) {
-                        openedEscapedTags.pop();
-                    }
-                }
-
-                if (!rtfTag.isOpen() && RTF_BLOCK_TAGS.contains(rtfTag.name) && matcher.end() < s.length()) {
-                    result.append(MD_LINE_SEPARATOR);
-                    result.append(MD_LINE_SEPARATOR);
-                }
             }
 
             cursor = matcher.end()
@@ -104,30 +121,8 @@ class RowCoder implements Coder {
         return result.toString()
     }
 
-    private String createTag(String tagName, String content) {
+    private static String createTag(String tagName, String content) {
         return "<${tagName}>${content}</${tagName}>";
     }
 
-    static class RtfTag {
-        private static final String CLOSE_PREFIX = "</";
-        private static final String SOLO_POSTFIX = "/>";
-        private static final String NAME_TOKEN_STRING = "(?<=<\\/?)[^>\\/\\h]+";
-        private static final Pattern NAME_TOKEN = Pattern.compile(NAME_TOKEN_STRING, Pattern.CASE_INSENSITIVE);
-
-        private static final List<String> SOLO_TAGS = [
-                "br", "hr", "input", "img"
-        ]
-        String name = "";
-        boolean open = false;
-
-        RtfTag(String tag) {
-            Matcher matcher = NAME_TOKEN.matcher(tag);
-            this.name = matcher.find()
-                    ? matcher.group()
-                    : tag
-
-            boolean closeTag = tag.startsWith(CLOSE_PREFIX) || tag.endsWith(SOLO_POSTFIX) || SOLO_TAGS.contains(this.name);
-            this.open = !closeTag;
-        }
-    }
 }
