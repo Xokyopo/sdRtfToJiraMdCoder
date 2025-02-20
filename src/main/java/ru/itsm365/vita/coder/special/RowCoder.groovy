@@ -29,7 +29,7 @@ class RowCoder implements Coder {
     private static final List<String> ESCAPED_RTF_TAGS = RTF_BLOCK_TAGS + [
             "img", "pre", "blockquote"
     ];
-    private static final String ESCAPED_MD_TAGS = [
+    private static final List<String> ESCAPED_MD_TAGS = [
             "pre", "blockquote"
     ];
 
@@ -59,7 +59,6 @@ class RowCoder implements Coder {
             if (matcher.find()) {
                 String tag = matcher.group();
                 RtfTag rtfTag = new RtfTag(tag);
-
                 boolean escapedTag = ESCAPED_MD_TAGS.contains(rtfTag.name);
                 if (escapedTag) {
                     openedEscapedTags.push(rtfTag);
