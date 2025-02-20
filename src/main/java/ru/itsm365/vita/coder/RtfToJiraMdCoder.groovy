@@ -7,8 +7,8 @@ import ru.itsm365.vita.coder.inline.*
 import ru.itsm365.vita.coder.line.CodeCoder
 import ru.itsm365.vita.coder.line.HeaderCoder
 import ru.itsm365.vita.coder.line.QuoteCoder
-import ru.itsm365.vita.coder.special.BlockBreakCoder
 import ru.itsm365.vita.coder.special.LineBreakCoder
+import ru.itsm365.vita.coder.special.RowCoder
 import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 
 class RtfToJiraMdCoder implements Coder {
@@ -32,10 +32,10 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder NUMBERED_LIST_CODER = new NumberedListCoder();
     private static final Coder TABLE_CODER = new TableCoder();
 
-    //Блочные Специальные кодеры
-    private static final Coder BLOCK_BREAK_CODER = new BlockBreakCoder();
+    //Специальные кодеры
     private static final Coder LINE_BREAK_CODER = new LineBreakCoder();
     private static final Coder XML_PRETTIFY_CODER = new XmlPrettifyCoder();
+    private static final Coder ROW_CODER = new RowCoder();
 
     //Настроенные цепочки дял преобразования.
     private static final List<Coder> TO_RTF;
@@ -66,15 +66,15 @@ class RtfToJiraMdCoder implements Coder {
                 NUMBERED_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
-                BLOCK_BREAK_CODER,
                 //LINE_BREAK_CODER,
+                ROW_CODER,
                 XML_PRETTIFY_CODER
         ]
 
         TO_MD = [
                 //Сначала специальные обработчики
                 XML_PRETTIFY_CODER,
-                BLOCK_BREAK_CODER,
+                ROW_CODER,
                 //LINE_BREAK_CODER,
 
                 //Затем обходим все подстрочные элементы
