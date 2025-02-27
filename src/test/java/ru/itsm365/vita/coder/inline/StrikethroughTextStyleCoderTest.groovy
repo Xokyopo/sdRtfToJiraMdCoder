@@ -214,4 +214,40 @@ class StrikethroughTextStyleCoderTest {
 
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldIgnoreLinkText_WhenHaveImageMdTag() {
+        String mdText = "!image-2025-01-17-11-23-48-789.png!";
+        String expected = "!image-2025-01-17-11-23-48-789.png!";
+        String actual = this.coder.toRtf(mdText);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldIgnoreLinkText_WhenHaveShortLinkMdTag() {
+        String mdText = "[https://y-a-f.ru/]";
+        String expected = "[https://y-a-f.ru/]";
+        String actual = this.coder.toRtf(mdText);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldIgnoreLinkText_WhenHaveFullLinkMdTag() {
+        String mdText = "[ya.ru|https://y-a-f.ru/]";
+        String expected = "[ya.ru|https://y-a-f.ru/]";
+        String actual = this.coder.toRtf(mdText);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldIgnoreNameText_WhenHaveFullLinkMdTag() {
+        String mdText = "[y-a-f.ru|https://y-a-f.ru/]";
+        String expected = "[y-a-f.ru|https://y-a-f.ru/]";
+        String actual = this.coder.toRtf(mdText);
+
+        Assert.assertEquals(expected, actual);
+    }
 }
