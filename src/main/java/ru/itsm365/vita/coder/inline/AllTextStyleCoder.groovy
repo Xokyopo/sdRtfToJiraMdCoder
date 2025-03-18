@@ -33,7 +33,7 @@ class AllTextStyleCoder implements Coder {
 
                 if (closeMatcher.find(openMatcher.end())) {
                     result.append(settings.rtfOpenTag);
-                    if (closeMatcher.start() > openMatcher.end()) {
+                    if (openMatcher.end() < closeMatcher.start()) {
                         result.append(line.substring(openMatcher.end(), closeMatcher.start()));
                     }
                     result.append(settings.rtfCloseTag);
@@ -93,6 +93,7 @@ class AllTextStyleCoder implements Coder {
     }
 
     protected static class Settings {
+        private static final List<String> REG_EXP_OPERATORS = ["*", "^", "+"]
         final String rtfOpenTag;
         final String rtfCloseTag;
         final Pattern openRTFToken;
@@ -103,17 +104,16 @@ class AllTextStyleCoder implements Coder {
 
         Settings(
                 String rtfTagName,
-                String mdTag,
-                String mdOpenTagRegexpToken,
-                String mdCloseTagRegexpToken
+                String mdTag
         ) {
             this.rtfOpenTag = "<${rtfTagName}>"
             this.rtfCloseTag = "</${rtfTagName}>"
             this.mdTag = mdTag
-            this.openMDToken = Pattern.compile(mdOpenTagRegexpToken);
-            this.closeMDToken = Pattern.compile(mdCloseTagRegexpToken);
-            this.openRTFToken = Pattern.compile("<${rtfTagName}(?= |>)[^><]*>", Pattern.CASE_INSENSITIVE);
-            this.closeRTFToken = Pattern.compile(rtfCloseTag, Pattern.CASE_INSENSITIVE);
+            String escapedMdTag = REG_EXP_OPERATORS.contains(mdTag) ? "\\${mdTag}" : mdTag
+            this.openMDToken = Pattern.compile("(?<=\\s|^)${escapedMdTag}(?!\\s)");
+            this.closeMDToken = Pattern.compile("(?<!\\s|\\\\)${escapedMdTag}(?=\\s|\$)");
+            this.openRTFToken = Pattern.compile("<${rtfTagName}(?= |>)[^><]*>\\s*", Pattern.CASE_INSENSITIVE);
+            this.closeRTFToken = Pattern.compile("\\s*</${rtfTagName}>", Pattern.CASE_INSENSITIVE);
         }
     }
 }
