@@ -2,7 +2,9 @@ package ru.itsm365.vita.coder.inline
 
 
 import ru.itsm365.vita.coder.Coder
-
+/** При конвертации из HTMl в MD ставим самым первым в конвеере,
+ *  В обратную сторону из MD в HTML ставим в конец конвеера
+ */
 class EscapeCoder implements Coder {
     @Override
     String toRtf(String s) {

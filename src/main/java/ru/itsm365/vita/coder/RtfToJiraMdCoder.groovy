@@ -21,6 +21,7 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder SUB_SCRIPT_TEXT_STYLE_CODER = new SubScriptTextStyleCoder();
     private static final Coder SUPER_SCRIPT_TEXT_STYLE_CODER = new SuperScriptTextStyleCoder();
     private static final Coder UNDERSCORE_TEXT_STYLE_CODER = new UnderscoreTextStyleCoder();
+    private static final Coder ESCAPE_CODER = new EscapeCoder();
 
     //Строчные кодеры
     private static final Coder HEADER_CODER = new HeaderCoder();
@@ -68,11 +69,13 @@ class RtfToJiraMdCoder implements Coder {
                 //В завершение опять специальные обработчики.
                 //LINE_BREAK_CODER,
                 ROW_CODER,
-                XML_PRETTIFY_CODER
+                XML_PRETTIFY_CODER,
+                ESCAPE_CODER
         ]
 
         TO_MD = [
                 //Сначала специальные обработчики
+                ESCAPE_CODER,
                 XML_PRETTIFY_CODER,
                 ROW_CODER,
                 //LINE_BREAK_CODER,
