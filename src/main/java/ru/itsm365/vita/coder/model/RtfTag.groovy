@@ -12,11 +12,12 @@ class RtfTag {
     private static final List<String> SOLO_TAGS = [
             "br", "hr", "input", "img"
     ]
-    String name = "";
-    boolean open = false;
+    public final String tag;
+    public final String name;
+    public final boolean open;
 
     RtfTag(String rtfTag) {
-        String tag = rtfTag.trim();
+        this.tag = rtfTag.trim();
         Matcher matcher = NAME_TOKEN.matcher(tag);
         this.name = matcher.find()
                 ? matcher.group()
