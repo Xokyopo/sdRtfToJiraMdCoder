@@ -17,7 +17,7 @@ class RtfTag {
     public final boolean open;
 
     RtfTag(String rtfTag) {
-        this.tag = rtfTag.trim();
+        this.tag = rtfTag.trim().toLowerCase();
         Matcher matcher = NAME_TOKEN.matcher(tag);
         this.name = matcher.find()
                 ? matcher.group()
