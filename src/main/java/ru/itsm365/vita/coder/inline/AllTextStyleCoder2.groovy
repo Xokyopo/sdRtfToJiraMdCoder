@@ -36,7 +36,7 @@ class AllTextStyleCoder2 implements Coder {
         MD_CLOSE_TAG_PATTERN_BY_MD_TAGS = [:]
         RTF_TAG_NANE_BY_MD_TAGS.forEach { key, value ->
             String escapedMgTag = REG_EXP_OPERATORS.contains(key) ? "\\${key}" : key
-            MD_CLOSE_TAG_PATTERN_BY_MD_TAGS.put(key.toString(), Pattern.compile("(?<!^\\h)${escapedMgTag}(?=\\s|\$)", Pattern.CASE_INSENSITIVE));
+            MD_CLOSE_TAG_PATTERN_BY_MD_TAGS.put(key.toString(), Pattern.compile("(?<!\\h)${escapedMgTag}(?=\\s|\$)", Pattern.CASE_INSENSITIVE));
             MD_CLOSE_TAG_PATTERN_BY_MD_TAGS.put("{${key}}".toString(), Pattern.compile("\\{${escapedMgTag}}", Pattern.CASE_INSENSITIVE));
         }
 
