@@ -12,7 +12,7 @@ class UnderscoreTextStyleCoderTest {
 
     @Before
     void setUp() throws Exception {
-        this.coder = new UnderscoreTextStyleCoder();
+        this.coder = new AllTextStyleCoder();
     }
 
     @Test
@@ -58,9 +58,9 @@ class UnderscoreTextStyleCoderTest {
     }
 
     @Test
-    void toMd_ShouldReturnTrue_WhenHaveOutsideTag() {
+    void toMd_ShouldReturnEscapedMdTag_WhenHaveOutsideTag() {
         String rtfText = "simple <div><u>test</u></div> string";
-        String expected = "simple <div>+test+</div> string";
+        String expected = "simple <div>{+}test{+}</div> string";
         String actual = this.coder.toMd(rtfText);
 
         Assert.assertEquals(expected, actual);
@@ -125,23 +125,15 @@ class UnderscoreTextStyleCoderTest {
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideBoldToken() {
         String mdText = "simple +te *bold* st+ string";
-        String expected = "simple <u>te *bold* st</u> string";
+        String expected = "simple <u>te <strong>bold</strong> st</u> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    void toRtf_ShouldReturnUnmodifiedText_WhenHaveItalicBoldToken() {
+    void toRtf_ShouldReturnModifiedInsideText_WhenHaveItalicBoldToken() {
         String mdText = "simple +*test*+ string";
-        String expected = "simple <u>*test*</u> string";
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtf_ShouldReturnUnmodifiedText_WhenHaveBoldToken() {
-        String mdText = "simple *test* string";
-        String expected = "simple *test* string";
+        String expected = "simple <u><strong>test</strong></u> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
