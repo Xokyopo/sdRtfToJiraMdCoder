@@ -117,11 +117,17 @@ class AllTextStyleCoder2 implements Coder {
             if (rtfCloseTagPattern) {
                 Matcher closeMatcher = rtfCloseTagPattern.matcher(s)
                 if (closeMatcher.find(openMatcher.end())) {
-                    result.append(convertToMdEscapedTag(rtfTag));
-                    if (closeMatcher.start() > openMatcher.end()) {
-                        result.append(s.substring(openMatcher.end(), closeMatcher.start()));
+                    Closure<String> tagConverter = this.&convertToMdEscapedTag
+                    boolean emptyBeforeStart = openMatcher.start() == 0 || s[openMatcher.start() - 1] == " ";
+                    boolean emptyAfterEnd = closeMatcher.end() == s.length() || s[closeMatcher.end()] == " ";
+                    if (emptyBeforeStart && emptyAfterEnd) {
+                        tagConverter = this.&convertToMdTag;
                     }
-                    result.append(convertToMdEscapedTag(rtfTag));
+                    result.append(tagConverter(rtfTag));
+                    if (closeMatcher.start() > openMatcher.end()) {
+                        result.append(toMd(s.substring(openMatcher.end(), closeMatcher.start())));
+                    }
+                    result.append(tagConverter(rtfTag));
                     cursor = closeMatcher.end();
                     continue;
                 }
@@ -141,6 +147,11 @@ class AllTextStyleCoder2 implements Coder {
     private static String convertToMdEscapedTag(RtfTag rtfTag) {
         String mdTagName = MD_TAG_BY_RTF_TAG_NAMES.get(rtfTag.name);
         return mdTagName ? "{${mdTagName}}" : rtfTag.tag;
+    }
+
+    private static String convertToMdTag(RtfTag rtfTag) {
+        String mdTagName = MD_TAG_BY_RTF_TAG_NAMES.get(rtfTag.name);
+        return mdTagName ? "${mdTagName}" : rtfTag.tag;
     }
 
     private static String convertToRtfTag(MdTag mdTagName, boolean close = false) {
