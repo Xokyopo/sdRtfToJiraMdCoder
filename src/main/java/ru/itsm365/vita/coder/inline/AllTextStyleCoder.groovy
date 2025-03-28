@@ -72,7 +72,7 @@ class AllTextStyleCoder implements Coder {
                     if (closeMatcher.find(openMatcher.end())) {
                         result.append(convertToRtfTag(mdTag));
                         if (closeMatcher.start() > openMatcher.end()) {
-                            result.append(toRtf(s.substring(openMatcher.end(), closeMatcher.start())));
+                            result.append(toRtf(line.substring(openMatcher.end(), closeMatcher.start())));
                         }
                         result.append(convertToRtfTag(mdTag, true));
                         cursor = closeMatcher.end();
@@ -80,7 +80,7 @@ class AllTextStyleCoder implements Coder {
                     }
                 }
 
-                result.append(s.substring(cursor, openMatcher.end()));
+                result.append(line.substring(cursor, openMatcher.end()));
                 cursor = openMatcher.end();
             }
 
