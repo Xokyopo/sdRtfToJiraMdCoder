@@ -92,7 +92,7 @@ class RowCoder implements Coder {
             RtfTag rtfTag = new RtfTag(matcher.group());
 
             if (ESCAPED_RTF_TAGS.contains(rtfTag.name)) {
-                if (rtfTag.isOpen()) {
+                if (rtfTag.open) {
                     openedEscapedTags.push(rtfTag);
                 } else if (openedEscapedTags.last().name == rtfTag.name) {
                     openedEscapedTags.pop();
@@ -107,17 +107,17 @@ class RowCoder implements Coder {
 
             if (rtfTag.name == DEFAULT_RTF_LINE_TAG_NAME) {
                 result.append(s.substring(cursor, matcher.start()));
-                if (!rtfTag.isOpen() && matcher.end() < s.length()) {
+                if (!rtfTag.open && matcher.end() < s.length()) {
                     result.append(MD_LINE_SEPARATOR);
                 }
             } else if (RTF_ROW_TAGS.contains(rtfTag.name)) {
                 result.append(s.substring(cursor, matcher.end()));
-                if (!rtfTag.isOpen() && matcher.end() < s.length()) {
+                if (!rtfTag.open && matcher.end() < s.length()) {
                     result.append(MD_LINE_SEPARATOR);
                 }
             } else if (RTF_BLOCK_TAGS.contains(rtfTag.name)) {
                 result.append(s.substring(cursor, matcher.end()));
-                if (!rtfTag.isOpen() && matcher.end() < s.length()) {
+                if (!rtfTag.open && matcher.end() < s.length()) {
                     result.append(MD_LINE_SEPARATOR);
                     result.append(MD_LINE_SEPARATOR);
                 }
