@@ -15,9 +15,9 @@ class RowCoder implements Coder {
     private static final String MD_LINE_SEPARATOR = System.lineSeparator();
     private static final String RTF_TAG_PATTERN_STRING = "<[^>]+>";
     private static final Pattern RTF_TAG_PATTERN = Pattern.compile(RTF_TAG_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
-    private static final String CONVERTED_MD_OPEN_TAG_PATTERN_STRING = "^\\h*<\\/?[^>\\/]+\\/?>";
+    private static final String CONVERTED_MD_OPEN_TAG_PATTERN_STRING = "^\\h*<[^>]+>";
     private static final Pattern CONVERTED_MD_OPEN_TAG_PATTERN = Pattern.compile(CONVERTED_MD_OPEN_TAG_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
-    private static final String CONVERTED_MD_CLOSE_TAG_PATTERN_STRING = "<\\/?[^>\\/]+\\/?>\\h*\$";
+    private static final String CONVERTED_MD_CLOSE_TAG_PATTERN_STRING = "<\\\\[^>]+>\\h*\$";
     private static final Pattern CONVERTED_MD_CLOSE_TAG_PATTERN = Pattern.compile(CONVERTED_MD_CLOSE_TAG_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
     private static final String DEFAULT_RTF_LINE_TAG_NAME = "div";
     private static final List<String> RTF_ROW_TAGS = [
