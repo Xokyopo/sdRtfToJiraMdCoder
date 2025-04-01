@@ -12,7 +12,7 @@ class StrikethroughTextStyleCoderTest {
 
     @Before
     void setUp() throws Exception {
-        this.coder = new StrikethroughTextStyleCoder();
+        this.coder = new AllTextStyleCoder();
     }
 
     @Test
@@ -58,9 +58,9 @@ class StrikethroughTextStyleCoderTest {
     }
 
     @Test
-    void toMd_ShouldReturnTrue_WhenHaveOutsideTag() {
+    void toMd_ShouldReturnEscapedMdTags_WhenHaveOutsideTag() {
         String rtfText = "simple <div><s>test</s></div> string";
-        String expected = "simple <div>-test-</div> string";
+        String expected = "simple <div>{-}test{-}</div> string";
         String actual = this.coder.toMd(rtfText);
 
         Assert.assertEquals(expected, actual);
@@ -125,23 +125,15 @@ class StrikethroughTextStyleCoderTest {
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideBoldToken() {
         String mdText = "simple -te *bold* st- string";
-        String expected = "simple <s>te *bold* st</s> string";
+        String expected = "simple <s>te <strong>bold</strong> st</s> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    void toRtf_ShouldReturnUnmodifiedText_WhenHaveItalicBoldToken() {
+    void toRtf_ShouldReturnModifiedInsideText_WhenHaveItalicBoldToken() {
         String mdText = "simple -*test*- string";
-        String expected = "simple <s>*test*</s> string";
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtf_ShouldReturnUnmodifiedText_WhenHaveBoldToken() {
-        String mdText = "simple *test* string";
-        String expected = "simple *test* string";
+        String expected = "simple <s><strong>test</strong></s> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
@@ -211,6 +203,42 @@ class StrikethroughTextStyleCoderTest {
         String rtfText = "<s>test</s>";
         String expected = "-test-";
         String actual = this.coder.toMd(rtfText);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldIgnoreLinkText_WhenHaveImageMdTag() {
+        String mdText = "!image-2025-{-}01{-}-17-11-23-48-789.png!";
+        String expected = "!image-2025-<s>01</s>-17-11-23-48-789.png!";
+        String actual = this.coder.toRtf(mdText);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldIgnoreLinkText_WhenHaveShortLinkMdTag() {
+        String mdText = "[https://y-a-f.ru/]";
+        String expected = "[https://y-a-f.ru/]";
+        String actual = this.coder.toRtf(mdText);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldIgnoreLinkText_WhenHaveFullLinkMdTag() {
+        String mdText = "[ya.ru|https://y-a-f.ru/]";
+        String expected = "[ya.ru|https://y-a-f.ru/]";
+        String actual = this.coder.toRtf(mdText);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldIgnoreNameText_WhenHaveFullLinkMdTag() {
+        String mdText = "[y-a-f.ru|https://y-a-f.ru/]";
+        String expected = "[y-a-f.ru|https://y-a-f.ru/]";
+        String actual = this.coder.toRtf(mdText);
 
         Assert.assertEquals(expected, actual);
     }

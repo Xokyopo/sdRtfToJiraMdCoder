@@ -73,7 +73,8 @@ class XmlPrettifyCoder implements Coder {
 
     @Override
     String toMd(String s) {
-        String withoutTagSpaces = s.replaceAll(">\\s+<", "><");
+        String withoutTagSpaces = s.replaceAll(">\\s+", ">");
+        withoutTagSpaces = withoutTagSpaces.replaceAll("\\s+<", "<");
         String withoutLineSeparator = withoutTagSpaces.replaceAll(LINE_SEPARATOR, "");
         return withoutLineSeparator
     }

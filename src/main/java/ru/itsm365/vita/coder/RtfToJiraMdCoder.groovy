@@ -13,15 +13,9 @@ import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 
 class RtfToJiraMdCoder implements Coder {
     //Подстрочные кодеры
-    private static final Coder BOLD_TEXT_STYLE_CODER = new BoldTextStyleCoder();
+    private static final Coder ALL_TEST_STYLE_CODER = new AllTextStyleCoder();
     private static final Coder IMAGE_CODER = new ImageCoder();
-    private static final Coder ITALIC_TEXT_STYLE_CODER = new ItalicTextStyleCoder();
     private static final Coder LINK_CODER = new LinkCoder();
-    private static final Coder STRIKETHROUGH_TEXT_STYLE_CODER = new StrikethroughTextStyleCoder();
-    private static final Coder SUB_SCRIPT_TEXT_STYLE_CODER = new SubScriptTextStyleCoder();
-    private static final Coder SUPER_SCRIPT_TEXT_STYLE_CODER = new SuperScriptTextStyleCoder();
-    private static final Coder UNDERSCORE_TEXT_STYLE_CODER = new UnderscoreTextStyleCoder();
-    private static final Coder ESCAPE_CODER = new EscapeCoder();
 
     //Строчные кодеры
     private static final Coder HEADER_CODER = new HeaderCoder();
@@ -47,14 +41,9 @@ class RtfToJiraMdCoder implements Coder {
                 //Сначала специальные обработчики
 
                 //Затем обходим все подстрочные элементы
-                BOLD_TEXT_STYLE_CODER,
+                ALL_TEST_STYLE_CODER,
                 IMAGE_CODER,
-                ITALIC_TEXT_STYLE_CODER,
                 LINK_CODER,
-                STRIKETHROUGH_TEXT_STYLE_CODER,
-                SUB_SCRIPT_TEXT_STYLE_CODER,
-                SUPER_SCRIPT_TEXT_STYLE_CODER,
-                UNDERSCORE_TEXT_STYLE_CODER,
 
                 //Затем обходим все строчные элементы
                 HEADER_CODER,
@@ -69,26 +58,19 @@ class RtfToJiraMdCoder implements Coder {
                 //В завершение опять специальные обработчики.
                 //LINE_BREAK_CODER,
                 ROW_CODER,
-                XML_PRETTIFY_CODER,
-                ESCAPE_CODER
+                XML_PRETTIFY_CODER
         ]
 
         TO_MD = [
                 //Сначала специальные обработчики
-                ESCAPE_CODER,
                 XML_PRETTIFY_CODER,
                 ROW_CODER,
                 //LINE_BREAK_CODER,
 
                 //Затем обходим все подстрочные элементы
-                BOLD_TEXT_STYLE_CODER,
+                ALL_TEST_STYLE_CODER,
                 IMAGE_CODER,
-                ITALIC_TEXT_STYLE_CODER,
                 LINK_CODER,
-                STRIKETHROUGH_TEXT_STYLE_CODER,
-                SUB_SCRIPT_TEXT_STYLE_CODER,
-                SUPER_SCRIPT_TEXT_STYLE_CODER,
-                UNDERSCORE_TEXT_STYLE_CODER,
 
                 //Затем обходим все строчные элементы
                 HEADER_CODER,

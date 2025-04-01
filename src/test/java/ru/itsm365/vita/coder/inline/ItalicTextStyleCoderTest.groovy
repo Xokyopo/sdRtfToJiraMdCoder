@@ -12,7 +12,7 @@ class ItalicTextStyleCoderTest {
 
     @Before
     void setUp() throws Exception {
-        this.coder = new ItalicTextStyleCoder();
+        this.coder = new AllTextStyleCoder();
     }
 
     @Test
@@ -58,9 +58,9 @@ class ItalicTextStyleCoderTest {
     }
 
     @Test
-    void toMd_ShouldReturnTrue_WhenHaveOutsideTag() {
+    void toMd_ShouldReturnEscapedMdTag_WhenHaveOutsideAnymore() {
         String rtfText = "simple <div><em>test</em></div> string";
-        String expected = "simple <div>_test_</div> string";
+        String expected = "simple <div>{_}test{_}</div> string";
         String actual = this.coder.toMd(rtfText);
 
         Assert.assertEquals(expected, actual);
@@ -125,7 +125,7 @@ class ItalicTextStyleCoderTest {
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideBoldToken() {
         String mdText = "simple _te *bold* st_ string";
-        String expected = "simple <em>te *bold* st</em> string";
+        String expected = "simple <em>te <strong>bold</strong> st</em> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
@@ -133,15 +133,7 @@ class ItalicTextStyleCoderTest {
     @Test
     void toRtf_ShouldReturnUnmodifiedText_WhenHaveItalicBoldToken() {
         String mdText = "simple _*test*_ string";
-        String expected = "simple <em>*test*</em> string";
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtf_ShouldReturnUnmodifiedText_WhenHaveBoldToken() {
-        String mdText = "simple *test* string";
-        String expected = "simple *test* string";
+        String expected = "simple <em><strong>test</strong></em> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }

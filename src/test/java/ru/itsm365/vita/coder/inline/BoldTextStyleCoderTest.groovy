@@ -12,7 +12,7 @@ class BoldTextStyleCoderTest {
 
     @Before
     void setUp() throws Exception {
-        this.coder = new BoldTextStyleCoder();
+        this.coder = new AllTextStyleCoder();
     }
 
     @Test
@@ -58,9 +58,9 @@ class BoldTextStyleCoderTest {
     }
 
     @Test
-    void toMd_ShouldReturnTrue_WhenHaveOutsideTag() {
+    void toMd_ShouldReturnEscapedMdTag_WhenHaveOutsideAnymore() {
         String rtfText = "simple <div><strong>test</strong></div> string";
-        String expected = "simple <div>*test*</div> string";
+        String expected = "simple <div>{*}test{*}</div> string";
         String actual = this.coder.toMd(rtfText);
 
         Assert.assertEquals(expected, actual);
@@ -125,15 +125,7 @@ class BoldTextStyleCoderTest {
     @Test
     void toRtf_ShouldReturnTrue_WhenHaveInsideItalicToken() {
         String mdText = "simple *te _italic_ st* string";
-        String expected = "simple <strong>te _italic_ st</strong> string";
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtf_ShouldReturnUnmodifiedText_WhenHaveItalicBoldToken() {
-        String mdText = "simple *_test_* string";
-        String expected = "simple <strong>_test_</strong> string";
+        String expected = "simple <strong>te <em>italic</em> st</strong> string";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
