@@ -24,6 +24,13 @@ class RtfToJiraMdCoderTest {
     }
 
     @Test
+    void reverse_md_simpleText() {
+        String expectedMdText = this.simpleText.md;
+        String actualMdTest = this.coder.toMd(this.coder.toRtf(expectedMdText));
+        Assert.assertEquals(expectedMdText, actualMdTest);
+    }
+
+    @Test
     void testToRtf() {
         println(this.coder.toRtf(this.simpleText.md));
     }
