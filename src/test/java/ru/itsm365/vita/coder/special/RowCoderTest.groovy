@@ -133,6 +133,15 @@ class RowCoderTest {
     }
 
     @Test
+    void toMd_ShouldReturnInputString_WhenConvertImgTag() {
+        String rtfText = '<img src="./download?uuid=file$1960562362">';
+        String expected = rtfText;
+        String actual = this.coder.toMd(rtfText);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     void toRtf_ShouldReturnRemoveSeparated_WhenHaveSeparatedElements() {
         String mdText = "<ol><li>элемент 1</li></ol>${LINE_SEPARATOR}${LINE_SEPARATOR}<ol><li>элемент 1</li></ol>";
         String expected = "<ol><li>элемент 1</li></ol><ol><li>элемент 1</li></ol>";

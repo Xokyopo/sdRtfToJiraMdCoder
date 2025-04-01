@@ -13,7 +13,7 @@ import java.util.regex.Pattern
  */
 class RowCoder implements Coder {
     private static final String MD_LINE_SEPARATOR = System.lineSeparator();
-    private static final String RTF_TAG_PATTERN_STRING = "<\\/?[^>\\/]+\\/?>";
+    private static final String RTF_TAG_PATTERN_STRING = "<[^>]+>";
     private static final Pattern RTF_TAG_PATTERN = Pattern.compile(RTF_TAG_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
     private static final String CONVERTED_MD_OPEN_TAG_PATTERN_STRING = "^\\h*<\\/?[^>\\/]+\\/?>";
     private static final Pattern CONVERTED_MD_OPEN_TAG_PATTERN = Pattern.compile(CONVERTED_MD_OPEN_TAG_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
@@ -26,8 +26,8 @@ class RowCoder implements Coder {
     private static final List<String> RTF_BLOCK_TAGS = [
             "table", "ul", "ol"
     ];
-    private static final List<String> ESCAPED_RTF_TAGS = RTF_BLOCK_TAGS + [
-            "img", "pre", "blockquote"
+    private static final List<String> ESCAPED_RTF_PAIRED_TAGS = RTF_BLOCK_TAGS + [
+            "pre", "blockquote"
     ];
     private static final List<String> ESCAPED_MD_TAGS = [
             "pre", "blockquote"
@@ -91,7 +91,7 @@ class RowCoder implements Coder {
         while (matcher.find(cursor)) {
             RtfTag rtfTag = new RtfTag(matcher.group());
 
-            if (ESCAPED_RTF_TAGS.contains(rtfTag.name)) {
+            if (ESCAPED_RTF_PAIRED_TAGS.contains(rtfTag.name)) {
                 if (rtfTag.open) {
                     openedEscapedTags.push(rtfTag);
                 } else if (openedEscapedTags.last().name == rtfTag.name) {
