@@ -8,6 +8,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class AllTextStyleCoder implements Coder {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final List<String> REG_EXP_OPERATORS = ["*", "^", "+"]
     private static final Map<String, String> RTF_TAG_NANE_BY_MD_TAGS = [
             "*": "strong",
@@ -119,7 +120,9 @@ class AllTextStyleCoder implements Coder {
                 if (closeMatcher.find(openMatcher.end())) {
                     Closure<String> tagConverter = this.&convertToMdEscapedTag
                     boolean emptyBeforeStart = openMatcher.start() == 0 || s[openMatcher.start() - 1] == " ";
+                    emptyBeforeStart = emptyBeforeStart || startWith(LINE_SEPARATOR, s, openMatcher.start());
                     boolean emptyAfterEnd = closeMatcher.end() == s.length() || s[closeMatcher.end()] == " ";
+                    emptyAfterEnd = emptyAfterEnd || s.startsWith(LINE_SEPARATOR, closeMatcher.end());
                     if (emptyBeforeStart && emptyAfterEnd) {
                         tagConverter = this.&convertToMdTag;
                     }
@@ -160,6 +163,10 @@ class AllTextStyleCoder implements Coder {
             return close ? "</${rtfTagName}>" : "<${rtfTagName}>"
         }
         return mdTagName.tag;
+    }
+
+    private static boolean startWith(String prefix, String text, int lastIndex) {
+        return text.startsWith(prefix, Math.max(lastIndex - prefix.length(), 0));
     }
 
     protected static class MdTag {
