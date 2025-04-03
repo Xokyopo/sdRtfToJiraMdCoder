@@ -40,6 +40,33 @@ class RtfToJiraMdCoderTest {
         println(this.coder.toMd(this.simpleText.rtf));
     }
 
+    @Test
+    void formRgbToHexCoder() {
+        //#00875a
+        int r = 16;
+        int g = 15;
+        int b = 17;
+
+        String hexR = String.format("%s%s", r < 16 ? "0" : "", Integer.toHexString(r));
+        String hexG = String.format("%s%s", g < 16 ? "0" : "", Integer.toHexString(g));
+        String hexB = String.format("%s%s", b < 16 ? "0" : "", Integer.toHexString(b));
+        println("#${hexR}${hexG}${hexB}");
+    }
+
+    @Test
+    void formHexToRgbCoder() {
+        String hex = "#00875a"
+        String hexR = "00";
+        String hexG = "87";
+        String hexB = "5a";
+
+        int r = Integer.parseInt(hexR, 16);
+        int g = Integer.parseInt(hexG, 16);
+        int b = Integer.parseInt(hexB, 16);
+
+        println("rgp(${r}, ${g}, ${b})")
+    }
+
     static class TestValue {
         public final String md;
         public final String rtf;
