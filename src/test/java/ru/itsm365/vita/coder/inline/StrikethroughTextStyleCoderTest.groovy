@@ -242,4 +242,22 @@ class StrikethroughTextStyleCoderTest {
 
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnUnescapedMdTags_WhenStyledTextInTable() {
+        String mdText = "|-test-|";
+        String expected = "|<s>test</s>|";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnEscapedMdTags_WhenStyledTextInTable() {
+        String rtfText = '<td style="d"><s>test</s></td>';
+
+        String expected = '<td style="d">{-}test{-}</td>';
+        String actual = this.coder.toMd(rtfText);
+
+        Assert.assertEquals(expected, actual);
+    }
 }

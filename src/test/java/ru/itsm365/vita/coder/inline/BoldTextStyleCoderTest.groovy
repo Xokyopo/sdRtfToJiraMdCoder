@@ -198,4 +198,22 @@ class BoldTextStyleCoderTest {
 
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnUnescapedMdTags_WhenStyledTextInTable() {
+        String mdText = "|*test*|";
+        String expected = "|<strong>test</strong>|";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnEscapedMdTags_WhenStyledTextInTable() {
+        String rtfText = '<td style="d"><strong>test</strong></td>';
+
+        String expected = '<td style="d">{*}test{*}</td>';
+        String actual = this.coder.toMd(rtfText);
+
+        Assert.assertEquals(expected, actual);
+    }
 }

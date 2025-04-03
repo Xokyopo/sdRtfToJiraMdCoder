@@ -206,4 +206,22 @@ class ItalicTextStyleCoderTest {
 
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnUnescapedMdTags_WhenStyledTextInTable() {
+        String mdText = "|_test_|";
+        String expected = "|<em>test</em>|";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnEscapedMdTags_WhenStyledTextInTable() {
+        String rtfText = '<td style="d"><em>test</em></td>';
+
+        String expected = '<td style="d">{_}test{_}</td>';
+        String actual = this.coder.toMd(rtfText);
+
+        Assert.assertEquals(expected, actual);
+    }
 }
