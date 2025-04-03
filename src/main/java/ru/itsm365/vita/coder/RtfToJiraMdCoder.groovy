@@ -31,8 +31,8 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder LINE_BREAK_CODER = new LineBreakCoder();
     private static final Coder XML_PRETTIFY_CODER = new XmlPrettifyCoder();
     private static final Coder ROW_CODER = new RowCoder();
-    private static final Coder FIRST_ESCAPE_CODER = new FirstEscapeCoder();
-    private static final Coder LAST_ESCAPE_CODER = new LastEscapeCoder();
+    private static final Coder RTF_ESCAPE_CODER = new RtfEscapeCoder();
+    private static final Coder MD_ESCAPE_CODER = new MdEscapeCoder();
 
     //Настроенные цепочки дял преобразования.
     private static final List<Coder> TO_RTF;
@@ -41,7 +41,7 @@ class RtfToJiraMdCoder implements Coder {
     static {
         TO_RTF = [
                 //Сначала специальные обработчики
-                FIRST_ESCAPE_CODER,
+                RTF_ESCAPE_CODER,
                 //Затем обходим все подстрочные элементы
                 ALL_TEST_STYLE_CODER,
                 IMAGE_CODER,
@@ -61,12 +61,12 @@ class RtfToJiraMdCoder implements Coder {
                 //LINE_BREAK_CODER,
                 ROW_CODER,
                 XML_PRETTIFY_CODER,
-                LAST_ESCAPE_CODER
+                MD_ESCAPE_CODER
         ]
 
         TO_MD = [
                 //Сначала специальные обработчики
-                FIRST_ESCAPE_CODER,
+                MD_ESCAPE_CODER,
                 XML_PRETTIFY_CODER,
                 ROW_CODER,
                 //LINE_BREAK_CODER,
@@ -87,7 +87,7 @@ class RtfToJiraMdCoder implements Coder {
                 NUMBERED_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
-                LAST_ESCAPE_CODER
+                RTF_ESCAPE_CODER
         ]
     }
 

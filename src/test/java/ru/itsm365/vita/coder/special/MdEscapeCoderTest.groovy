@@ -5,12 +5,12 @@ import org.junit.Before
 import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
-class LastEscapeCoderTest {
+class MdEscapeCoderTest {
     private Coder coder;
 
     @Before
     void setUp() throws Exception {
-        coder = new LastEscapeCoder();
+        coder = new MdEscapeCoder();
     }
 
     @Test
@@ -37,27 +37,29 @@ class LastEscapeCoderTest {
         Assert.assertEquals(expected, actual);
     }
 
+
+
     @Test
     void toMdOneSign() {
-        String rtfText = '&otimes;'
-        String expected = '⊗'
-        String actual = this.coder.toMd(rtfText);
+        String mdText = '&otimes;'
+        String expected = '&otimes;'
+        String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMdTest() {
-        String rtfText = '\\*&lt;div&gt;'
-        String expected = '\\*<div>'
-        String actual = this.coder.toMd(rtfText);
+        String mdText = '*&lt;div&gt;'
+        String expected = '\\*&lt;div&gt;'
+        String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMdLine() {
-        String rtfText = '&otimes;&diams;&nbsp;151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;'
-        String expected = '⊗♦ 151651 ###+++  sdsdfsd * - _ ~ |♥ 1651 dvs ⌊'
-        String actual = this.coder.toMd(rtfText);
+        String mdText = '&otimes;&diams;&nbsp;151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;'
+        String expected = '&otimes;&diams;&nbsp;151651 \\#\\#\\#\\+\\+\\+  sdsdfsd \\* \\- \\_ \\~ \\|&hearts; 1651 dvs &lfloor;'
+        String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
 }
