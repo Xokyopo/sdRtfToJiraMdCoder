@@ -1,30 +1,16 @@
-package ru.itsm365.vita.coder.inline
+package ru.itsm365.vita.coder.special
 
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
-class EscapeCoderTest {
+class FirstEscapeCoderTest {
     private Coder coder;
 
     @Before
     void setUp() throws Exception {
-        coder = new EscapeCoder();
-    }
-
-    @Test
-    void MdReverse() {
-        String mdText = '⊗♦ 151651 \\#\\|\\*\\+♥ 1651 dvs ⌊'
-        String actual = this.coder.toMd(coder.toRtf(mdText))
-        Assert.assertEquals(mdText, actual)
-    }
-
-    @Test
-    void RtfReverse() {
-        String rtfText = '&otimes;&diams; 151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;'
-        String actual = this.coder.toRtf(this.coder.toMd(rtfText))
-        Assert.assertEquals(rtfText, actual)
+        coder = new FirstEscapeCoder();
     }
 
     @Test
@@ -36,9 +22,17 @@ class EscapeCoderTest {
     }
 
     @Test
+    void toRtfOneTest() {
+        String mdText = '\\*<div>'
+        String expected = '\\*&lt;div&gt;'
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     void toRtf() {
         String mdText = '⊗♦ 151651 \\#\\|\\*\\+♥ 1651 dvs ⌊'
-        String expected = '&otimes;&diams; 151651 #|*+&hearts; 1651 dvs &lfloor;'
+        String expected = '&otimes;&diams; 151651 \\#\\|\\*\\+&hearts; 1651 dvs &lfloor;'
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
@@ -46,7 +40,15 @@ class EscapeCoderTest {
     @Test
     void toMdOneSign() {
         String mdText = '&otimes;'
-        String expected = '⊗'
+        String expected = '&otimes;'
+        String actual = this.coder.toMd(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMdOneTest() {
+        String mdText = '*&lt;div&gt;'
+        String expected = '\\*&lt;div&gt;'
         String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
@@ -54,7 +56,7 @@ class EscapeCoderTest {
     @Test
     void toMdOne() {
         String mdText = '&otimes;&diams;&nbsp;151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;'
-        String expected = '⊗♦ 151651 \\#\\#\\#\\+\\+\\+  sdsdfsd \\* \\- \\_ \\~ \\|♥ 1651 dvs ⌊'
+        String expected = '&otimes;&diams;&nbsp;151651 \\#\\#\\#\\+\\+\\+  sdsdfsd \\* \\- \\_ \\~ \\|&hearts; 1651 dvs &lfloor;'
         String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
