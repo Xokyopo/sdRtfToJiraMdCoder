@@ -37,7 +37,7 @@ class AllTextStyleCoder implements Coder {
         MD_CLOSE_TAG_PATTERN_BY_MD_TAGS = [:]
         RTF_TAG_NANE_BY_MD_TAGS.forEach { key, value ->
             String escapedMgTag = REG_EXP_OPERATORS.contains(key) ? "\\${key}" : key
-            MD_CLOSE_TAG_PATTERN_BY_MD_TAGS.put(key.toString(), Pattern.compile("(?<!\\h)${escapedMgTag}(?=\\s|\$)", Pattern.CASE_INSENSITIVE));
+            MD_CLOSE_TAG_PATTERN_BY_MD_TAGS.put(key.toString(), Pattern.compile("(?<!\\h)${escapedMgTag}(?=\\s|\$|\\|)", Pattern.CASE_INSENSITIVE));
             MD_CLOSE_TAG_PATTERN_BY_MD_TAGS.put("{${key}}".toString(), Pattern.compile("\\{${escapedMgTag}}", Pattern.CASE_INSENSITIVE));
         }
 
@@ -46,7 +46,7 @@ class AllTextStyleCoder implements Coder {
         }
 
         String escapedStartMdTagPattern = "(?:${mdOpenTags.collect { "\\{${it}}" }.join("|")})"
-        String aloneStartMdTagPattern = "((?<=\\s|^)(?:${mdOpenTags.join("|")})(?!\\s))"
+        String aloneStartMdTagPattern = "((?<=\\s|^|\\|)(?:${mdOpenTags.join("|")})(?!\\s))"
         MD_OPEN_TAGS_PATTERN = Pattern.compile("${escapedStartMdTagPattern}|${aloneStartMdTagPattern}", Pattern.CASE_INSENSITIVE)
     }
 
