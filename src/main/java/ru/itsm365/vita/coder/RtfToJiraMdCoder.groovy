@@ -3,13 +3,13 @@ package ru.itsm365.vita.coder
 import ru.itsm365.vita.coder.block.MarkedListCoder
 import ru.itsm365.vita.coder.block.NumberedListCoder
 import ru.itsm365.vita.coder.block.TableCoder
-import ru.itsm365.vita.coder.inline.*
+import ru.itsm365.vita.coder.inline.AllTextStyleCoder
+import ru.itsm365.vita.coder.inline.ImageCoder
+import ru.itsm365.vita.coder.inline.LinkCoder
 import ru.itsm365.vita.coder.line.CodeCoder
 import ru.itsm365.vita.coder.line.HeaderCoder
 import ru.itsm365.vita.coder.line.QuoteCoder
-import ru.itsm365.vita.coder.special.LineBreakCoder
-import ru.itsm365.vita.coder.special.RowCoder
-import ru.itsm365.vita.coder.special.XmlPrettifyCoder
+import ru.itsm365.vita.coder.special.*
 
 class RtfToJiraMdCoder implements Coder {
     //Подстрочные кодеры
@@ -31,6 +31,8 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder LINE_BREAK_CODER = new LineBreakCoder();
     private static final Coder XML_PRETTIFY_CODER = new XmlPrettifyCoder();
     private static final Coder ROW_CODER = new RowCoder();
+    private static final Coder FIRST_ESCAPE_CODER = new FirstEscapeCoder();
+    private static final Coder LAST_ESCAPE_CODER = new LastEscapeCoder();
 
     //Настроенные цепочки дял преобразования.
     private static final List<Coder> TO_RTF;
@@ -39,7 +41,7 @@ class RtfToJiraMdCoder implements Coder {
     static {
         TO_RTF = [
                 //Сначала специальные обработчики
-
+                FIRST_ESCAPE_CODER,
                 //Затем обходим все подстрочные элементы
                 ALL_TEST_STYLE_CODER,
                 IMAGE_CODER,
@@ -58,11 +60,13 @@ class RtfToJiraMdCoder implements Coder {
                 //В завершение опять специальные обработчики.
                 //LINE_BREAK_CODER,
                 ROW_CODER,
-                XML_PRETTIFY_CODER
+                XML_PRETTIFY_CODER,
+                LAST_ESCAPE_CODER
         ]
 
         TO_MD = [
                 //Сначала специальные обработчики
+                FIRST_ESCAPE_CODER,
                 XML_PRETTIFY_CODER,
                 ROW_CODER,
                 //LINE_BREAK_CODER,
@@ -83,6 +87,7 @@ class RtfToJiraMdCoder implements Coder {
                 NUMBERED_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
+                LAST_ESCAPE_CODER
         ]
     }
 

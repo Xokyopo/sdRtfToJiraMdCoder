@@ -1,25 +1,9 @@
-package ru.itsm365.vita.coder.inline
+package ru.itsm365.vita.coder.model
 
-
-import ru.itsm365.vita.coder.Coder
-/** При конвертации из HTMl в MD ставим самым первым в конвеере,
- *  В обратную сторону из MD в HTML ставим в конец конвеера
- */
-class EscapeCoder implements Coder {
-    @Override
-    String toRtf(String s) {
-        return s.replaceAll("\\\\.", { mapEscapingMdToMd.get(it.toString().trim()) ?: it })
-                .replaceAll(".", { mapMdToHtml.get(it.toString().trim()) ?: it })
-    }
-
-    @Override
-    String toMd(String s) {
-        return s.replaceAll("&nbsp;", " ")
-                .replaceAll(".", { mapMdToEscapingMd.get(it.toString().trim()) ?: it })
-                .replaceAll("&[^ &]+?;", { mapHtmlToMd.get(it.toString().trim()) ?: it })
-    }
-
-    private final static Map mapHtmlToMd = [
+class Escaper {
+     final static Map mapHtmlToMd = [
+            "&lt;"      : "<",
+            "&gt;"      : ">",
             "&Agrave;"  : "À",
             "&Aacute;"  : "Á",
             "&Acirc;"   : "Â",
@@ -336,16 +320,16 @@ class EscapeCoder implements Coder {
             "&diams;"   : "♦"
     ]
 
-    private final static Map<String, String> mapMdToEscapingMd = [
+     final static Map<String, String> mapMdToEscapingMd = [
+            "_": "\\_",
             "|": "\\|",
             "#": "\\#",
             "*": "\\*",
-            "_": "\\_",
             "-": "\\-",
             "~": "\\~",
             "+": "\\+"
     ]
 
-    private final static Map mapMdToHtml = mapHtmlToMd.collectEntries { [it.value, it.key] }
-    private final static Map mapEscapingMdToMd = mapMdToEscapingMd.collectEntries { [it.value, it.key] }
+     final static Map mapMdToHtml = mapHtmlToMd.collectEntries { [it.value, it.key] }
+     final static Map mapEscapingMdToMd = mapMdToEscapingMd.collectEntries { [it.value, it.key] }
 }

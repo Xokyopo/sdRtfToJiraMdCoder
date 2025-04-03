@@ -47,10 +47,7 @@ class TableCoderTest {
 
     @Test
     void reverse() {
-        String expected = """           ||11||_12_||13||
-                |[привязать заголовок|http://example.com]|22|23|
-            |31|32|!screenshot-1.png|thumbnail!|
-        """
+        String expected = "||11||_12_||13||${System.lineSeparator()}|[привязать заголовок|http://example.com]|22|23|${System.lineSeparator()}|31|32|!screenshot-1.png|thumbnail!|"
         String actual = this.coder.toMd(this.coder.toRtf(expected));
         Assert.assertEquals(expected, actual);
     }
@@ -61,8 +58,6 @@ class TableCoderTest {
         String mdText = "||11||12||${System.lineSeparator()}|21|22|"
         String expected = TABLE_START + THEAD_START + TR_START + TH_START + "11" + TH_END + TH_START + "12" + TH_END + TR_END + THEAD_END + TBODY_START + TR_START + TD_START + "21" + TD_END + TD_START + "22" + TD_END + TR_END + TBODY_END + TABLE_END;
         String actual = this.coder.toRtf(mdText);
-//        println("***************")
-//        println(mdText)
         Assert.assertEquals(expected, actual);
     }
 
