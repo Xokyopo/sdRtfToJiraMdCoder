@@ -3,12 +3,11 @@ package ru.itsm365.vita.coder.special
 import ru.itsm365.vita.coder.Coder
 import ru.itsm365.vita.coder.model.Escaper
 
-/** При конвертации в обоих направления ставим в конец конвеера */
-class LastEscapeCoder implements Coder {
+class RtfEscapeCoder implements Coder {
     @Override
     String toRtf(String s) {
         return s
-                .replaceAll("\\\\${Escaper.mapEscapingMdToMd.keySet().toString().replaceAll("[ ,]", "")}", { Escaper.mapEscapingMdToMd.get(it.toString().trim()) ?: it })
+                .replaceAll(Escaper.mapMdToHtml.keySet().toString().replaceAll("[ ,]", ""), { Escaper.mapMdToHtml.get(it.toString().trim()) ?: it })
     }
 
     @Override
