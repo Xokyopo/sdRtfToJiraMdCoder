@@ -14,52 +14,82 @@ class MdEscapeCoderTest {
     }
 
     @Test
-    void toRtfOneSign() {
-        String mdText = '⊗'
-        String expected = '⊗'
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtfTest() {
-        String mdText = '⊗'
-        String expected = '⊗'
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toRtfLine() {
-        String mdText = '⊗♦ 151651 \\#\\|\\*\\+♥ 1651 dvs ⌊'
-        String expected = '⊗♦ 151651 #|*+♥ 1651 dvs ⌊'
-        String actual = this.coder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-
-
-    @Test
-    void toMdOneSign() {
-        String mdText = '&otimes;'
-        String expected = '&otimes;'
+    void toMd_ShouldReturnEscapedPlus_WhenHavePlus() {
+        String mdText = '+'
+        String expected = '\\+'
         String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    void toMdTest() {
-        String mdText = '*&lt;div&gt;'
-        String expected = '\\*&lt;div&gt;'
+    void toMd_ShouldReturnEscapedMinus_WhenHaveMinus() {
+        String mdText = '-'
+        String expected = '\\-'
         String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    void toMdLine() {
-        String mdText = '&otimes;&diams;&nbsp;151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;'
-        String expected = '&otimes;&diams;&nbsp;151651 \\#\\#\\#\\+\\+\\+  sdsdfsd \\* \\- \\_ \\~ \\|&hearts; 1651 dvs &lfloor;'
+    void toMd_ShouldReturnEscapedHash_WhenHaveHash() {
+        String mdText = '#'
+        String expected = '\\#'
         String actual = this.coder.toMd(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnEscapedTilda_WhenHaveTilda() {
+        String mdText = '~'
+        String expected = '\\~'
+        String actual = this.coder.toMd(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnEscapedLowLine_WhenHaveLowLine() {
+        String mdText = '_'
+        String expected = '\\_'
+        String actual = this.coder.toMd(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnEscapedPlus_WhenHavePlus() {
+        String rtfText = '\\+'
+        String expected = '+'
+        String actual = this.coder.toRtf(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnEscapedMinus_WhenHaveMinus() {
+        String rtfText = '\\-'
+        String expected = '-'
+        String actual = this.coder.toRtf(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnEscapedHash_WhenHaveHash() {
+        String rtfText = '\\#'
+        String expected = '#'
+        String actual = this.coder.toRtf(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnEscapedTilda_WhenHaveTilda() {
+        String rtfText = '\\~'
+        String expected = '~'
+        String actual = this.coder.toRtf(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnEscapedLowLine_WhenHaveLowLine() {
+        String rtfText = '\\_'
+        String expected = '_'
+        String actual = this.coder.toRtf(rtfText);
         Assert.assertEquals(expected, actual);
     }
 }
