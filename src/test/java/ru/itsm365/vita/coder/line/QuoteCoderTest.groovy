@@ -118,4 +118,27 @@ public class QuoteCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toMd_ShouldReturnConvertQuotes_WhenDividedText() {
+        String rtfText = "<blockquote>цитата1</blockquote>текст между цитатами<blockquote>цитата2</blockquote>";
+        String expected = "{quote}цитата1{quote}текст между цитатами{quote}цитата2{quote}";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnConvertQuotes_WhenDividedText() {
+        String defaultRtfQuoteStyle = [
+                'fr-original-style="" style="border-color: rgb(153, 153, 153); border-left-width: 2px; ',
+                'border-left-style: solid; margin-left: 0px; padding-left: 5px; color: rgb(153, 153, 153);"'
+        ].join("")
+        String mdText = "{quote}цитата1{quote}${LINE_SEPARATOR}текст между цитатами${LINE_SEPARATOR}{quote}цитата2{quote}";
+        String expected = [
+                "<blockquote $defaultRtfQuoteStyle>цитата1</blockquote>${LINE_SEPARATOR}текст между ",
+                "цитатами${LINE_SEPARATOR}<blockquote $defaultRtfQuoteStyle>цитата2</blockquote>"
+        ].join("")
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
 }
