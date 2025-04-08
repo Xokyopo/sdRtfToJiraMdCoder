@@ -340,24 +340,56 @@ class RtfEscapeCoderTest {
         mapHtmlToMd.forEach { key, value ->
             String mdText = value
             String expected = key
-            String actual = this.coder.toRtf(mdText);
-            if (actual != expected) {
-                def alias = ALIAS.get(actual);
-                actual = alias ?: actual;
-            }
-
-            Assert.assertEquals(expected, actual);
+            toRtfTest(mdText, expected);
         }
     }
 
 
     @Test
-    void toMdTest() {
+    void toMd() {
         mapHtmlToMd.forEach { key, value ->
             String rtfText = key
             String expected = value
             String actual = this.coder.toMd(rtfText);
             Assert.assertEquals(expected, actual);
         }
+    }
+
+    @Test
+    void toRtf_ShouldReturnUnmodifiedText_WhenHaveBoldText() {
+        String mdText = "*help*"
+        String expected = mdText
+        toRtfTest(mdText, expected);
+    }
+
+    @Test
+    void toRtf_ShouldReturnUnmodifiedText_WhenHaveStrikethroughText() {
+        String mdText = "-help-"
+        String expected = mdText
+        toRtfTest(mdText, expected);
+    }
+
+    @Test
+    void toRtf_ShouldReturnUnmodifiedText_WhenHaveEscapedBoldText() {
+        String mdText = "{*}help{*}"
+        String expected = mdText
+        toRtfTest(mdText, expected);
+    }
+
+    @Test
+    void toRtf_ShouldReturnUnmodifiedText_WhenHaveEscapedStrikethroughText() {
+        String mdText = "{-}help{-}"
+        String expected = mdText
+        toRtfTest(mdText, expected);
+    }
+
+    private toRtfTest(String mdText, String expected) {
+        String actual = this.coder.toRtf(mdText);
+        if (actual != expected) {
+            def alias = ALIAS.get(actual);
+            actual = alias ?: actual;
+        }
+
+        Assert.assertEquals(expected, actual);
     }
 }
