@@ -15,9 +15,7 @@ class QuoteCoder implements Coder {
     Pattern QUOTE_PATTERN = Pattern.compile(QUOTE_REGEX);
 
     // toMd
-//    private final String BLOCKQUOTE_OPENING_TAG = "<blockquote";
-//    private final String BLOCKQUOTE_CLOSING_END = "</blockquote>";
-    private final String BLOCKQUOTE_REGEX = "(?msi)<blockquote.+?>.+?</blockquote.*?>"
+    private final String BLOCKQUOTE_REGEX = "(?msi)<blockquote[^>]*>.+?</blockquote>"
     private final String CHEVRONS_REGEX = "(?msi)(?<=>).*(?=<)"
     private final String BLOCKQUOTE_TO_QUOTE = "{quote}"
     Pattern BLOCKQUOTE_PATTERN = Pattern.compile(BLOCKQUOTE_REGEX)
