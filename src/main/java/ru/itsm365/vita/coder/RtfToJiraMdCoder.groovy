@@ -42,6 +42,7 @@ class RtfToJiraMdCoder implements Coder {
         TO_RTF = [
                 //Сначала специальные обработчики
                 RTF_ESCAPE_CODER,
+
                 //Затем обходим все подстрочные элементы
                 ALL_TEST_STYLE_CODER,
                 IMAGE_CODER,
