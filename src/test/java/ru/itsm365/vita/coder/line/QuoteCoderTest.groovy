@@ -102,4 +102,20 @@ public class QuoteCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toMd_ShouldReturnConvertedQuote_WhenHaveSimpleQuote() {
+        String rtfText = "<blockquote>простая цитата</blockquote>";
+        String expected = "{quote}простая цитата{quote}";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnConvertOutsideQuote_WhenHaveQuoteInsideQuote() {
+        String rtfText = "<blockquote>цитата<blockquote>в</blockquote>цитате</blockquote>";
+        String expected = "{quote}цитата<blockquote>в</blockquote>цитате{quote}";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
 }
