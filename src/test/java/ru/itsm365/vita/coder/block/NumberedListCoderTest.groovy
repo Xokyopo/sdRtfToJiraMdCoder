@@ -187,4 +187,13 @@ class NumberedListCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnOneListWithTwoItem_WhenHaveSpaceBeforeListItem() {
+        String mdText = " # Первый элемент нумерованного списка.${System.lineSeparator()}" +
+                " # Второй элемент нумерованного списка.";
+        String expected = "<ol><li>Первый элемент нумерованного списка.</li><li>Второй элемент нумерованного списка.</li></ol>";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
 }
