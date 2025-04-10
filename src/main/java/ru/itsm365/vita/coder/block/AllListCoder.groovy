@@ -20,10 +20,8 @@ class AllListCoder implements Coder {
         StringBuilder result = new StringBuilder();
         List<String> blocks = s.split(MD_EMPTY_LINE);
 
-        def count = 0;
         for (int i = 0; i < blocks.size(); i++) {
             String block = blocks.get(i);
-            count++;
             String list = block.find(setting.mdListRegexpPattern);
 
             if (list) {
