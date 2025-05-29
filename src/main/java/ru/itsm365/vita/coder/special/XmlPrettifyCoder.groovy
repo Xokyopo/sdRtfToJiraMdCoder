@@ -11,8 +11,8 @@ import java.util.regex.Pattern
  * А так же минифицировать RTF перед преобразваоинем в MD
  */
 class XmlPrettifyCoder implements Coder {
-    private static final String TAG_PATTERN = "<\\/?[^>]*[^\\/]>";
-    private static final Pattern pattern = Pattern.compile(TAG_PATTERN, Pattern.CASE_INSENSITIVE);
+    private static final String ANY_TAG_REGEXP = "<\\/?[^>]*[^\\/]>";
+    private static final Pattern ANY_TAG_PATTERN = Pattern.compile(ANY_TAG_REGEXP, Pattern.CASE_INSENSITIVE);
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String END_TAG_PREFIX = "</";
     private static final String TAB = "\t";
@@ -24,7 +24,7 @@ class XmlPrettifyCoder implements Coder {
     String toRtf(String s) {
         String minifiedXml = this.toMd(s);
         StringBuilder result = new StringBuilder();
-        Matcher matcher = pattern.matcher(minifiedXml);
+        Matcher matcher = ANY_TAG_PATTERN.matcher(minifiedXml);
 
         int cursor = 0;
         int deepLayer = 0;
