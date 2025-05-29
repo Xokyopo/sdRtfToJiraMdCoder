@@ -71,14 +71,16 @@ class RtfToJiraMdCoder implements Coder {
                 //В завершение опять специальные обработчики.
                 //LINE_BREAK_CODER,
                 ROW_CODER,
+                MD_ESCAPE_CODER,
+
                 XML_PRETTIFY_CODER,
-                MD_ESCAPE_CODER
         ]
 
         TO_MD = [
                 //Сначала специальные обработчики
-                MD_ESCAPE_CODER,
                 XML_PRETTIFY_CODER,
+
+                MD_ESCAPE_CODER,
                 ROW_CODER,
                 //LINE_BREAK_CODER,
 
