@@ -37,6 +37,7 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder ROW_CODER = new RowCoder();
     private static final Coder RTF_ESCAPE_CODER = new RtfEscapeCoder();
     private static final Coder MD_ESCAPE_CODER = new MdEscapeCoder();
+    private static final Coder RTF_NBSP_CODER = new RtfNBSPCoder();
 
     //Настроенные цепочки дял преобразования.
     private static final List<Coder> TO_RTF;
@@ -73,12 +74,14 @@ class RtfToJiraMdCoder implements Coder {
                 ROW_CODER,
                 MD_ESCAPE_CODER,
 
+                RTF_NBSP_CODER,
                 XML_PRETTIFY_CODER,
         ]
 
         TO_MD = [
                 //Сначала специальные обработчики
                 XML_PRETTIFY_CODER,
+                RTF_NBSP_CODER,
 
                 MD_ESCAPE_CODER,
                 ROW_CODER,
