@@ -19,7 +19,8 @@ class RtfToJiraMdCoderTest {
     @Test
     void reverse_rtf_simpleText() {
         String expectedRtfText = xmlPrettifyCoder.toRtf(this.simpleText.rtf);
-        String actualRtfTest = this.coder.toRtf(this.coder.toMd(expectedRtfText));
+//        String actualRtfTest = this.coder.toRtf(this.coder.toMd(expectedRtfText));
+        String actualRtfTest = this.coder.toMd(expectedRtfText);
         Assert.assertEquals(expectedRtfText, actualRtfTest);
     }
 

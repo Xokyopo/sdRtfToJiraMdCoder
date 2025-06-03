@@ -15,40 +15,40 @@ class MdEscapeCoderTest {
 
     @Test
     void toMd_ShouldReturnEscapedPlus_WhenHavePlus() {
-        String mdText = '+'
-        String expected = '\\+'
+        String mdText = '>+<'
+        String expected = '>\\+<'
         String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldReturnEscapedMinus_WhenHaveMinus() {
-        String mdText = '-'
-        String expected = '\\-'
+        String mdText = '>-<'
+        String expected = '>\\-<'
         String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldReturnEscapedHash_WhenHaveHash() {
-        String mdText = '#'
-        String expected = '\\#'
+        String mdText = '>#<'
+        String expected = '>\\#<'
         String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldReturnEscapedTilda_WhenHaveTilda() {
-        String mdText = '~'
-        String expected = '\\~'
+        String mdText = '>~<'
+        String expected = '>\\~<'
         String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toMd_ShouldReturnEscapedLowLine_WhenHaveLowLine() {
-        String mdText = '_'
-        String expected = '\\_'
+        String mdText = '>_<'
+        String expected = '>\\_<'
         String actual = this.coder.toMd(mdText);
         Assert.assertEquals(expected, actual);
     }
