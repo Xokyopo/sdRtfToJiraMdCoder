@@ -12,7 +12,6 @@ class RtfEscapeCoder implements Coder {
     @Override
     String toMd(String s) {
         return s
-                .replaceAll("&nbsp;", " ")
                 .replaceAll("&[^ &]+?;", { mapHtmlToMd.get(it.toString().trim()) ?: it })
     }
 
@@ -104,18 +103,6 @@ class RtfEscapeCoder implements Coder {
             "&Emacr;"   : "Ē",
             "&emacr;"   : "ē",
             "&Ebreve;"  : "Ĕ",
-            "&ebreve;"  : "ĕ",
-            "&Edot;"    : "Ė",
-            "&edot;"    : "ė",
-            "&Eogon;"   : "Ę",
-            "&eogon;"   : "ę",
-            "&Ecaron;"  : "Ě",
-            "&ecaron;"  : "ě",
-            "&Gcirc;"   : "Ĝ",
-            "&gcirc;"   : "ĝ",
-            "&Gbreve;"  : "Ğ",
-            "&gbreve;"  : "ğ",
-            "&Gdot;"    : "Ġ",
             "&gdot;"    : "ġ",
             "&Gcedil;"  : "Ģ",
             "&gcedil;"  : "ģ",
@@ -133,6 +120,18 @@ class RtfEscapeCoder implements Coder {
             "&iogon;"   : "į",
             "&Idot;"    : "İ",
             "&imath;"   : "ı",
+            "&ebreve;"  : "ĕ",
+            "&Edot;"    : "Ė",
+            "&edot;"    : "ė",
+            "&Eogon;"   : "Ę",
+            "&eogon;"   : "ę",
+            "&Ecaron;"  : "Ě",
+            "&ecaron;"  : "ě",
+            "&Gcirc;"   : "Ĝ",
+            "&gcirc;"   : "ĝ",
+            "&Gbreve;"  : "Ğ",
+            "&gbreve;"  : "ğ",
+            "&Gdot;"    : "Ġ",
             "&inodot;"  : "ı",
             "&IJlig;"   : "Ĳ",
             "&ijlig;"   : "ĳ",
