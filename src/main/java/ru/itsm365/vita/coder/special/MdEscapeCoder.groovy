@@ -13,8 +13,6 @@ class MdEscapeCoder implements Coder {
 
     @Override
     String toMd(String s) {
-
-        println(REGEX)
         StringBuilder example = new StringBuilder(s);
         Matcher toMdMather = toMdPattern.matcher(s)
         int shifter = 0;
