@@ -1,6 +1,7 @@
 package ru.itsm365.vita.coder.line
 
 import ru.itsm365.vita.coder.Coder
+import ru.itsm365.vita.coder.VoidCoder
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -21,6 +22,8 @@ class QuoteCoder implements Coder {
     Pattern BLOCKQUOTE_PATTERN = Pattern.compile(BLOCKQUOTE_REGEX)
     Pattern CHEVRONS_PATTERN = Pattern.compile(CHEVRONS_REGEX)
 
+    private Coder inlineTexCoder = new VoidCoder();
+
     @Override
     String toRtf(String s) {
         Matcher matcher = QUOTE_PATTERN.matcher(s)
@@ -34,7 +37,7 @@ class QuoteCoder implements Coder {
                 Integer start = matcher.start() - QUOTE.length() + 1
                 Integer end = matcher.end() + QUOTE.length() - 1
                 result.append(QUOTE_OPENING_TAG)
-                result.append(matcher.group())
+                result.append(this.inlineTexCoder.toRtf(matcher.group()))
                 result.append(QUOTE_CLOSING_TAG)
                 resultRtf.replace(start + shift, end + shift, result.toString());
                 shift += result.length() - (end - start);
@@ -57,12 +60,16 @@ class QuoteCoder implements Coder {
             if (CHEVRONS_MATCHER.find()) {
                 StringBuilder result = new StringBuilder()
                 result.append(BLOCKQUOTE_TO_QUOTE)
-                result.append(CHEVRONS_MATCHER.group())
+                result.append(this.inlineTexCoder.toMd(CHEVRONS_MATCHER.group()));
                 result.append(BLOCKQUOTE_TO_QUOTE)
                 resultMd.replace(start + shift, end + shift, result.toString());
                 shift += result.length() - (end - start);
             }
         }
         return resultMd
+    }
+
+    void setInlineTexCoder(Coder inlineTexCoder) {
+        this.inlineTexCoder = inlineTexCoder
     }
 }

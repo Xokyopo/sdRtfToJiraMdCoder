@@ -110,6 +110,10 @@ class RtfToJiraMdCoder implements Coder {
         ]
     }
 
+    {
+        QUOTE_CODER.setInlineTexCoder(this);
+    }
+
     @Override
     String toRtf(String s) {
         StringBuilder result = new StringBuilder();
