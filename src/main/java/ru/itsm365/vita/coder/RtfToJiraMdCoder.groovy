@@ -6,6 +6,7 @@ import ru.itsm365.vita.coder.block.TableCoder
 import ru.itsm365.vita.coder.inline.AllTextStyleCoder
 import ru.itsm365.vita.coder.inline.ImageCoder
 import ru.itsm365.vita.coder.inline.LinkCoder
+import ru.itsm365.vita.coder.inline.SpanCoder
 import ru.itsm365.vita.coder.line.CodeCoder
 import ru.itsm365.vita.coder.line.HeaderCoder
 import ru.itsm365.vita.coder.line.QuoteCoder
@@ -25,6 +26,7 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder HEADER_CODER = new HeaderCoder();
     private static final Coder QUOTE_CODER = new QuoteCoder();
     private static final Coder CODE_CODER = new CodeCoder();
+    private static final Coder SPAN_CODER = new SpanCoder();
 
     //Блочные кодеры
     private static final Coder MARKED_LIST_CODER = new MarkedListCoder();
@@ -59,6 +61,7 @@ class RtfToJiraMdCoder implements Coder {
                 ALL_TEST_STYLE_CODER,
                 IMAGE_CODER,
                 LINK_CODER,
+                SPAN_CODER,
 
                 //Затем обходим все строчные элементы
                 HEADER_CODER,
@@ -91,6 +94,7 @@ class RtfToJiraMdCoder implements Coder {
                 ALL_TEST_STYLE_CODER,
                 IMAGE_CODER,
                 LINK_CODER,
+                SPAN_CODER,
 
                 //Затем обходим все строчные элементы
                 HEADER_CODER,
