@@ -8,6 +8,8 @@ import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 class RtfToJiraMdCoderTest {
     private final XmlPrettifyCoder xmlPrettifyCoder = new XmlPrettifyCoder();
     private final TestValue simpleText = new TestValue("/simpleText/md", "/simpleText/rtf");
+    private final TestValue originalText = new TestValue("/originalText/md", "/originalText/rtf");
+    private final TestValue expectedText = new TestValue("/expectedText/md", "/expectedText/rtf");
 
     private Coder coder;
 
@@ -27,6 +29,20 @@ class RtfToJiraMdCoderTest {
     void reverse_md_simpleText() {
         String expectedMdText = this.simpleText.md;
         String actualMdTest = this.coder.toMd(this.coder.toRtf(expectedMdText));
+        Assert.assertEquals(expectedMdText, actualMdTest);
+    }
+
+    @Test
+    void toRtf_ReturnExpectedResult_WhenConvertOriginalText() {
+        String expectedRtfText = xmlPrettifyCoder.toRtf(this.expectedText.rtf);
+        String actualRtfTest = this.coder.toRtf(this.originalText.md);
+        Assert.assertEquals(expectedRtfText, actualRtfTest);
+    }
+
+    @Test
+    void toMd_ReturnExpectedResult_WhenConvertOriginalText() {
+        String expectedMdText = this.expectedText.md;
+        String actualMdTest = this.coder.toMd(this.originalText.rtf);
         Assert.assertEquals(expectedMdText, actualMdTest);
     }
 
