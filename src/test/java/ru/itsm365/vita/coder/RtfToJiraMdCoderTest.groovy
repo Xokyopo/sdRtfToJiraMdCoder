@@ -34,7 +34,7 @@ class RtfToJiraMdCoderTest {
 
     @Test
     void toRtf_ReturnExpectedResult_WhenConvertOriginalText() {
-        String expectedRtfText = xmlPrettifyCoder.toRtf(this.expectedText.rtf);
+        String expectedRtfText = this.expectedText.rtf;
         String actualRtfTest = this.coder.toRtf(this.originalText.md);
         Assert.assertEquals(expectedRtfText, actualRtfTest);
     }
