@@ -202,4 +202,13 @@ class RowCoderTest {
             Assert.assertEquals(expected, actual);
         }
     }
+
+    @Test
+    void toRtf_ShouldAddDivBeforeEscapedTagsPair_WhenEscapedTags() {
+        String mdText = "<blockquote><div>Цитата</div></blockquote>${LINE_SEPARATOR}💏-какой то смайл";
+        String expected = "<blockquote><div>Цитата</div></blockquote><div>💏-какой то смайл</div>";
+        String actual = this.coder.toRtf(mdText);
+
+        Assert.assertEquals(expected, actual);
+    }
 }

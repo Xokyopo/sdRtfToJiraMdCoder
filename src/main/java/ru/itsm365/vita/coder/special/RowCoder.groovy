@@ -17,7 +17,7 @@ class RowCoder implements Coder {
     private static final Pattern RTF_TAG_PATTERN = Pattern.compile(RTF_TAG_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
     private static final String CONVERTED_MD_OPEN_TAG_PATTERN_STRING = "^\\h*<[^>]+>";
     private static final Pattern CONVERTED_MD_OPEN_TAG_PATTERN = Pattern.compile(CONVERTED_MD_OPEN_TAG_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
-    private static final String CONVERTED_MD_CLOSE_TAG_PATTERN_STRING = "<\\\\[^>]+>\\h*\$";
+    private static final String CONVERTED_MD_CLOSE_TAG_PATTERN_STRING = "</[^>]+>\\h*\$";
     private static final Pattern CONVERTED_MD_CLOSE_TAG_PATTERN = Pattern.compile(CONVERTED_MD_CLOSE_TAG_PATTERN_STRING, Pattern.CASE_INSENSITIVE);
     private static final String DEFAULT_RTF_LINE_TAG_NAME = "div";
     private static final List<String> RTF_ROW_TAGS = [
@@ -58,16 +58,26 @@ class RowCoder implements Coder {
             Matcher matcher = CONVERTED_MD_OPEN_TAG_PATTERN.matcher(line);
             if (matcher.find()) {
                 String tag = matcher.group();
-                RtfTag rtfTag = new RtfTag(tag);
-                boolean escapedTag = ESCAPED_MD_TAGS.contains(rtfTag.name);
+                RtfTag openRtfTag = new RtfTag(tag);
+                boolean escapedTag = ESCAPED_MD_TAGS.contains(openRtfTag.name);
                 if (escapedTag) {
-                    openedEscapedTags.push(rtfTag);
+                    Matcher closeEscapeTagMatcher = CONVERTED_MD_CLOSE_TAG_PATTERN.matcher(line);
+                    if (closeEscapeTagMatcher.find()) {
+                        String closeTag = closeEscapeTagMatcher.group();
+                        RtfTag closeRtfTag = new RtfTag(closeTag);
+                        if (openRtfTag.name == closeRtfTag.name) {
+                            result.append(line);
+                            continue;
+                        }
+                    }
+
+                    openedEscapedTags.push(openRtfTag);
                     result.append(line);
                     continue;
                 }
 
-                boolean rowTag = RTF_ROW_TAGS.contains(rtfTag.name);
-                boolean blockTag = RTF_BLOCK_TAGS.contains(rtfTag.name);
+                boolean rowTag = RTF_ROW_TAGS.contains(openRtfTag.name);
+                boolean blockTag = RTF_BLOCK_TAGS.contains(openRtfTag.name);
                 if (rowTag || blockTag) {
                     result.append(line);
                 } else {
