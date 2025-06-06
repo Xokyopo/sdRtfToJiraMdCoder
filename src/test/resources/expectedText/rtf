@@ -50,35 +50,35 @@
 <table style="border-collapse: collapse;">
     <tbody>
         <tr>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 С/З
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 С
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 С/В
             </td>
         </tr>
         <tr>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 З
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 экватор
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 В
             </td>
         </tr>
         <tr>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 Ю/З
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 Ю
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 Ю/В
             </td>
         </tr>
@@ -90,47 +90,47 @@
 <table style="border-collapse: collapse;">
     <tbody>
         <tr>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 <strong>
                     жирный
                 </strong>
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 <em>
                     курсив
                 </em>
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 <u>
                     подчеркнутый
                 </u>
             </td>
         </tr>
         <tr>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 <s>
                     зачеркнуты
                 </s>
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 <sub>
                     подстрочный
                 </sub>
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 <sup>
                     надстрочный
                 </sup>
             </td>
         </tr>
         <tr>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 красный
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 георгическим шрифтом
             </td>
-            <td style="border: 1px solid rgb(0, 0, 0);>
+            <td style="border: 1px solid rgb(0, 0, 0);">
                 <a fr-original-style="" href="https://ya.ru/" style="user-select: auto;" target="_top">
                     https://ya.ru/
                 </a>
