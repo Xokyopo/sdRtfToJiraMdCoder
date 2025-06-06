@@ -93,4 +93,12 @@ class LinkCoderTest {
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnConvertedLink_WhenHaveShortLink() {
+        String mdText = '[http://example.com]';
+        String expected = '<a href="http://example.com">http://example.com</a>';
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
 }
