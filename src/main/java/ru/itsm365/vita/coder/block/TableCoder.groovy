@@ -50,19 +50,20 @@ class TableCoder implements Coder {
     final Pattern TH_PATTERN = Pattern.compile(TH_REGEX);
     final Pattern TD_PATTERN = Pattern.compile(TD_REGEX);
 
-    StringBuilder resultRtf;
     int shift = 0;
     Boolean hasNewLine = false;
 
     @Override
     String toRtf(String s) {
-
+        shift = 0;
+        hasNewLine = false;
         s = s.replaceAll("(\\\\\\|)", "Џ");
         s = LINK_PATTERN.matcher(s).replaceAll({ it -> it.group(0).replaceAll("[|]", "˦") });
         s = FILE_PATTERN.matcher(s).replaceAll({ it -> it.group(0).replaceAll("[|]", "˦") });
-        resultRtf = new StringBuilder(s);
         List<String> text = new ArrayList<>();
         List<List<String>> data = new ArrayList<>();
+
+        StringBuilder resultRtf = new StringBuilder(s);
 
         int start = Integer.MAX_VALUE;
         int end = 0;
@@ -101,7 +102,7 @@ class TableCoder implements Coder {
                 text = new ArrayList<>();
             } else {
                 if (!data.isEmpty() && !isBroken) {
-                    toRtf000(start, end, hasHeader, data, whitespace);
+                    toRtf000(resultRtf, start, end, hasHeader, data, whitespace);
                     start = Integer.MAX_VALUE;
                     data = new ArrayList<>();
                     hasHeader = false;
@@ -112,7 +113,8 @@ class TableCoder implements Coder {
         return resultRtf.toString().replaceAll("[Џ˦]", "|")
     }
 
-    private void toRtf000(Integer start, Integer end, Boolean isHasHeader, List<List<String>> data, List<String> space) {
+    private void toRtf000(StringBuilder originalText, Integer start, Integer end, Boolean isHasHeader, List<List<String>> data, List<String> space) {
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(TAG_TABLE_START);
         int counterBodyRows = 0;
@@ -141,7 +143,7 @@ class TableCoder implements Coder {
         if (hasNewLine) {
             stringBuilder.append("${LINE_SEPARATOR}")
         }
-        resultRtf.replace(start + shift, end + shift, stringBuilder.toString());
+        originalText.replace(start + shift, end + shift, stringBuilder.toString());
         shift -= -stringBuilder.length() + (end - start);
     }
 
@@ -151,6 +153,8 @@ class TableCoder implements Coder {
         StringBuilder result = new StringBuilder(s);
         Matcher tableMatcher = TABLE_PATTERN.matcher(s);
         int shift = 0;
+        this.hasNewLine = false;
+        this.shift = 0;
 
         while (tableMatcher.find()) {
             int start = tableMatcher.start()
