@@ -78,7 +78,7 @@ class NumberedListCoderTest {
 
     @Test
     void toRtf_ShouldReturnNestedListInListItem_WhenRun() {
-        String mdText = "# первый элемент${System.lineSeparator()}    # вложенный элемент${System.lineSeparator()}# второй элемент";
+        String mdText = "# первый элемент${System.lineSeparator()}## вложенный элемент${System.lineSeparator()}# второй элемент";
         String expected = "<ol><li>первый элемент<ol><li>вложенный элемент</li></ol></li><li>второй элемент</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
@@ -87,14 +87,14 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnNestedListInListItem_WhenRun() {
         String rtfText = "<ol><li>первый элемент<ol><li>вложенный элемент</li></ol></li><li>второй элемент</li></ol>";
-        String expected = "# первый элемент${System.lineSeparator()}    # вложенный элемент${System.lineSeparator()}# второй элемент";
+        String expected = "# первый элемент${System.lineSeparator()}## вложенный элемент${System.lineSeparator()}# второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     void toRtf_ShouldReturnNestedListInNestedListItem_WhenRun() {
-        String mdText = "# первый элемент${System.lineSeparator()}    # вложенный элемент${System.lineSeparator()}        # вложенный во вложенный элемент${System.lineSeparator()}# второй элемент";
+        String mdText = "# первый элемент${System.lineSeparator()}## вложенный элемент${System.lineSeparator()}### вложенный во вложенный элемент${System.lineSeparator()}# второй элемент";
         String expected = "<ol><li>первый элемент<ol><li>вложенный элемент<ol><li>вложенный во вложенный элемент</li></ol></li></ol></li><li>второй элемент</li></ol>";
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
@@ -103,7 +103,7 @@ class NumberedListCoderTest {
     @Test
     void toMd_ShouldReturnNestedListInNestedListItem_WhenRun() {
         String rtfText = "<ol><li>первый элемент<ol><li>вложенный элемент<ol><li>вложенный во вложенный элемент</li></ol></li></ol></li><li>второй элемент</li></ol>";
-        String expected = "# первый элемент${System.lineSeparator()}    # вложенный элемент${System.lineSeparator()}        # вложенный во вложенный элемент${System.lineSeparator()}# второй элемент";
+        String expected = "# первый элемент${System.lineSeparator()}## вложенный элемент${System.lineSeparator()}### вложенный во вложенный элемент${System.lineSeparator()}# второй элемент";
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
