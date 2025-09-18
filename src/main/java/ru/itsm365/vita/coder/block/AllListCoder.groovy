@@ -277,8 +277,7 @@ class AllListCoder implements Coder {
         String toMd(int level = 0) {
             StringBuilder result = new StringBuilder();
 
-            result.append(setting.MD_LEVEL_PREFIX.repeat(level))
-            result.append(setting.mdListTag);
+            result.append(setting.mdListTag.repeat(level + 1));
             result.append(" ");
 
             if (this.value) {
@@ -297,7 +296,6 @@ class AllListCoder implements Coder {
     }
 
     protected static class Setting {
-        static final String MD_LEVEL_PREFIX = " ".repeat(4);
         static final String RTF_LIST_ITEM_TAG_NAME = "li"
         static final String RTF_OPEN_ITEM_TAG = "<${RTF_LIST_ITEM_TAG_NAME}>";
         static final String RTF_CLOSE_ITEM_TAG = "</${RTF_LIST_ITEM_TAG_NAME}>";
