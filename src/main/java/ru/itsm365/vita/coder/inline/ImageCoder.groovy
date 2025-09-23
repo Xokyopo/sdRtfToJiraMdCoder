@@ -11,7 +11,7 @@ import java.util.regex.Pattern
  * При конвертации из MD поддерживаются как обычные изображения так и миниатюры
  */
 class ImageCoder implements Coder {
-    private static final String MD_REGEXP_PATTERN = "(?<=\\B)![^!\\s]+!(?=\\B)";
+    private static final String MD_REGEXP_PATTERN = "![^!\\s]+!";
     private static final String MD_IMAGE_DIRECTIVE = "thumbnail";
     private static final String MD_SRC_REGEXP_TOKEN = '(?<=!)[^!|\\|]+';
     private static final String MD_TAG = "!";
