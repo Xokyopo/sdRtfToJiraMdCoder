@@ -7,7 +7,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class LinkCoder implements Coder {
-    private static final String MD_REGEXP_PATTERN = "\\[[^\\|]+\\|[^\\[\\|]*\\]";
+    private static final String MD_REGEXP_PATTERN = "\\[[^\\|]+\\|?[^\\[\\|]*\\]";
     private static final String MD_NEXT_LINE = System.lineSeparator();
     private static final String MD_OPEN_TAG = "[";
     private static final String MD_CLOSE_TAG = "]";
@@ -89,6 +89,12 @@ class LinkCoder implements Coder {
 
     private static String convertLinkMdToRtf(String link) {
         Integer delimiterIndex = link.indexOf(MD_PART_DELIMITER_TAG);
+
+        if (delimiterIndex < 1) {
+            String href = link.substring(1, link.length() - 1);
+            return createRtfLink(href, href);
+        }
+
         String text = link.substring(1, delimiterIndex);
         String href = link.substring(delimiterIndex + 1, link.length() - 1);
         return createRtfLink(href, text);
