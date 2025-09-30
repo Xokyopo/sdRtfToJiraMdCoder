@@ -16,7 +16,7 @@
 <div>обычная таблица</div>
 <div>
 
-	<<table style="border-collapse: collapse;">
+	<table style="border-collapse: collapse;">
 		<tbody>
 			<tr fr-original-style="" style="user-select: none;">
 				<td fr-original-style="width: 33.3333%;" style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);">С/З</td>
