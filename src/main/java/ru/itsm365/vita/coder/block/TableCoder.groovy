@@ -15,7 +15,7 @@ class TableCoder implements Coder {
     final String TAG_THEAD_END = "</thead>"
     final String TAG_TBODY_START = "<tbody>"
     final String TAG_TBODY_END = "</tbody>"
-    final String TAG_TR_START = "<tr >"
+    final String TAG_TR_START = "<tr>"
     final String TAG_TR_END = "</tr>"
     final String TAG_TH_START = "<th style=\"background: rgb(230, 230, 230);border: 1px solid rgb(0, 0, 0);\">"
     final String TAG_TH_END = "</th>"

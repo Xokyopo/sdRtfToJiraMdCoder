@@ -331,7 +331,8 @@ class RtfEscapeCoder implements Coder {
             "&spades;"  : "♠",
             "&clubs;"   : "♣",
             "&hearts;"  : "♥",
-            "&diams;"   : "♦"
+            "&diams;"   : "♦",
+            "&deg;"     : "°"
     ]
 
     final static Map mapMdToHtml = mapHtmlToMd.collectEntries { [it.value, it.key] }
