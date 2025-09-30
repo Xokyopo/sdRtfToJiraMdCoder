@@ -14,7 +14,7 @@ class TableCoderTest {
     private static final String THEAD_END = "</thead>"
     private static final String TBODY_START = "<tbody>"
     private static final String TBODY_END = "</tbody>"
-    private static final String TR_START = "<tr >"
+    private static final String TR_START = "<tr>"
     private static final String TR_END = "</tr>"
     private static final String TH_START = "<th style=\"background: rgb(230, 230, 230);border: 1px solid rgb(0, 0, 0);\">"
     private static final String TH_END = "</th>"

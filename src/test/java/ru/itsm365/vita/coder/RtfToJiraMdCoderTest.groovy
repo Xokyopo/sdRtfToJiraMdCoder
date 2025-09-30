@@ -10,6 +10,8 @@ class RtfToJiraMdCoderTest {
     private final TestValue simpleText = new TestValue("/simpleText/md", "/simpleText/rtf");
     private final TestValue originalText = new TestValue("/originalText/md", "/originalText/rtf");
     private final TestValue expectedText = new TestValue("/expectedText/md", "/expectedText/rtf");
+    private final TestValue originalTableText = new TestValue("/originalText/table/md", "/originalText/table/rtf");
+    private final TestValue expectedTableText = new TestValue("/expectedText/table/md", "/expectedText/table/rtf");
 
     private Coder coder;
 
@@ -30,6 +32,20 @@ class RtfToJiraMdCoderTest {
         String expectedMdText = this.expectedText.md;
         String actualMdTest = this.coder.toMd(this.originalText.rtf);
         Assert.assertEquals(expectedMdText, actualMdTest);
+    }
+
+    @Test
+    void toRtfComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
+        String expectedRtfText = this.originalTableText.md;
+        String actualRtfTest = this.coder.toRtf(expectedRtfText);
+        Assert.assertEquals(expectedTableText.rtf, actualRtfTest);
+    }
+
+    @Test
+    void toMdComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
+        String expectedMdText = this.originalTableText.rtf;
+        String actualMdTest = this.coder.toMd(expectedMdText);
+        Assert.assertEquals(this.originalTableText.md, actualMdTest);
     }
 
     //Полный реверс не достижим
