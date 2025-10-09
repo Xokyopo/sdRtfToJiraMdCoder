@@ -17,6 +17,7 @@ class FixedAllListCoder implements Coder {
     //3. Поиск элементов
     private static final String RTF_OPEN_ITEM_TAG_REGEXP_PATTERN = "<li[^><]*>";
     private static final String RTF_LIST_IN_ITEM_TAG_REGEXP_PATTERN = "(<[o,u]l[^><]*>)|(</[o,u]l>)|(</li>)";
+    private static final String MD_ITEM_GROUPS_REGEXP_PATTERN = "(?:\\h*)([\\*,\\#]+)(?:\\h)([^\$]*)";
 
     //4. Разделение на маркированный и нумированный.
     private static final ListTypeConfig MARKED_LIST_CONFIG = new ListTypeConfig("*", "ul");
@@ -109,41 +110,64 @@ class FixedAllListCoder implements Coder {
     }
 
     private String convertListToRtf(String s) {
-        /*Element rootElement = new RootElement();
-
-        Stack<Integer> levels = [];
-        Element parent = rootElement;
-        Element lastElement = parent;
+        StringBuilder result = new StringBuilder();
         List<String> lines = s.split(MD_NEXT_LINE);
+        Pattern mdItemGroupsPattern = Pattern.compile(MD_ITEM_GROUPS_REGEXP_PATTERN)
 
+        Stack<ListTypeConfig> listTypeConfigs = new Stack<>();
         for (String line in lines) {
-            String currentValue = line.replaceFirst(setting.mdStartListItemRegexpPattern, "");
-            Integer currentLevel = line.length() - currentValue.length();
-            if (currentLevel > 0) {
-                if (levels.isEmpty()) {
-                    levels.push(currentLevel);
-                } else {
-                    if (levels.last() < currentLevel) {
-                        levels.push(currentLevel);
-                        parent = lastElement;
-                    } else {
-                        while (!levels.isEmpty() && levels.last() > currentLevel) {
-                            levels.pop();
-                            lastElement = parent;
-                            parent = lastElement.parent;
-                        }
+            if (line.matches(MD_LIST_REGEXP_PATTERN)) {
+                Matcher matcher = mdItemGroupsPattern.matcher(line);
+                matcher.find();
+                String tag = matcher.group(1);
+                int listLevel = tag.length();
+                ListTypeConfig currentListType = tag.startsWith(NUMBERED_LIST_CONFIG.mdListTagName)
+                        ? NUMBERED_LIST_CONFIG
+                        : MARKED_LIST_CONFIG
 
+                while (listTypeConfigs.size() < listLevel) {
+                    listTypeConfigs.push(null);
+                }
+
+                while (listLevel < listTypeConfigs.size()) {
+                    ListTypeConfig listTypeConfig = listTypeConfigs.pop();
+                    if (listTypeConfig != null) {
+                        result.append(RTF_CLOSE_ITEM_TAG)
+                        result.append(listTypeConfig.rtfCloseListTag)
                     }
                 }
-                lastElement = new Element(currentValue);
-                parent.addChild(lastElement);
-            } else if (lastElement) {
-                lastElement.value += currentValue;
+
+                ListTypeConfig savedTypeConfig = listTypeConfigs.pop();
+                if (savedTypeConfig != null) {
+                    result.append(RTF_CLOSE_ITEM_TAG)
+                }
+                if (savedTypeConfig != null && savedTypeConfig.mdListTagName != currentListType.mdListTagName) {
+                    result.append(savedTypeConfig.rtfCloseListTag);
+                }
+
+                if (savedTypeConfig == null || savedTypeConfig.mdListTagName != currentListType.mdListTagName) {
+                    result.append(currentListType.rtfOpenListTag);
+                }
+
+                listTypeConfigs.push(currentListType);
+                result.append(RTF_OPEN_ITEM_TAG)
+                if (matcher.groupCount() == 2) {
+                    result.append(matcher.group(2));
+                }
+            } else {
+                result.append(line);
             }
         }
 
-        return rootElement.toRtf();*/
-        return s;
+        while (!listTypeConfigs.isEmpty()) {
+            ListTypeConfig listTypeConfig = listTypeConfigs.pop();
+            if (listTypeConfig != null) {
+                result.append(RTF_CLOSE_ITEM_TAG)
+                result.append(listTypeConfig.rtfCloseListTag)
+            }
+        }
+
+        return result.toString();
     }
 
     private String convertListToMD(String rtfList, int level = 0) {
@@ -194,73 +218,6 @@ class FixedAllListCoder implements Coder {
 
         return stringBuilder.toString();
     }
-
-//    private class RootElement extends Element {
-//
-//        RootElement() {
-//            super(null)
-//        }
-//
-//        @Override
-//        String toRtf() {
-//            StringBuilder result = new StringBuilder();
-//
-//            if (this.childs) {
-//                result.append(setting.rtfOpenListTag)
-//                this.childs.forEach { result.append(it.toRtf()) }
-//                result.append(setting.rtfCloseListTag);
-//            }
-//
-//            return result.toString();
-//        }
-//
-//    }
-//
-//    class Element {
-//        protected String value;
-//        protected Element parent;
-//        protected List<Element> childs = new LinkedList<>();
-//
-//        Element(String value) {
-//            this.value = value
-//        }
-//
-//        void addChild(Element child) {
-//            this.childs.add(child)
-//            child.setParent(this);
-//        }
-//
-//        Element getParent() {
-//            return parent
-//        }
-//
-//        protected void setParent(Element parent) {
-//            this.parent = parent;
-//        }
-//
-//        boolean haveParent() {
-//            return this.parent != null;
-//        }
-//
-//        String toRtf() {
-//            StringBuilder result = new StringBuilder();
-//            result.append(setting.RTF_OPEN_ITEM_TAG);
-//
-//            if (this.value) {
-//                result.append(this.value);
-//            }
-//
-//            if (this.childs) {
-//                result.append(setting.rtfOpenListTag)
-//                this.childs.forEach { result.append(it.toRtf()) }
-//                result.append(setting.rtfCloseListTag);
-//            }
-//
-//            result.append(setting.RTF_CLOSE_ITEM_TAG);
-//
-//            return result.toString();
-//        }
-//    }
 
     static class ListTypeConfig {
         final String mdListTagName;
