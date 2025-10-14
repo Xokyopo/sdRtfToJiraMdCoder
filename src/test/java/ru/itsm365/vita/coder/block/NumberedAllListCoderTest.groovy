@@ -5,12 +5,12 @@ import org.junit.Before
 import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
-class NumberedListCoderTest {
+class NumberedAllListCoderTest {
     private Coder coder;
 
     @Before
     void setUp() {
-        this.coder = new NumberedListCoder();
+        this.coder = new AllListCoder();
     }
 
     @Test

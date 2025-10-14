@@ -1,6 +1,7 @@
 package ru.itsm365.vita.coder.block
 
 import ru.itsm365.vita.coder.Coder
+import ru.itsm365.vita.coder.model.RtfTag
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -9,11 +10,23 @@ class AllListCoder implements Coder {
     private static final String MD_EMPTY_LINE = System.lineSeparator() * 2;
     private static final String MD_NEXT_LINE = System.lineSeparator();
 
-    private final Setting setting;
+    //1. Поиск списков.
+    private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<[o,u]l[^><]*>)|(</[o,u]l>)";
+    private static final String MD_LIST_REGEXP_PATTERN = "\\h*[\\*,\\#]+\\h[^\$]*";
 
-    AllListCoder(Setting setting) {
-        this.setting = setting;
-    }
+    //3. Поиск элементов
+    private static final String RTF_OPEN_ITEM_TAG_REGEXP_PATTERN = "<li[^><]*>";
+    private static final String RTF_LIST_IN_ITEM_TAG_REGEXP_PATTERN = "(<[o,u]l[^><]*>)|(</[o,u]l>)|(</li>)";
+    private static final String MD_ITEM_GROUPS_REGEXP_PATTERN = "(?:\\h*)([\\*,\\#]+)(?:\\h)([^\$]*)";
+
+    //4. Разделение на маркированный и нумированный.
+    private static final ListTypeConfig MARKED_LIST_CONFIG = new ListTypeConfig("*", "ul");
+    private static final ListTypeConfig NUMBERED_LIST_CONFIG = new ListTypeConfig("#", "ol");
+
+    //5. Преобразование
+    static final String RTF_LIST_ITEM_TAG_NAME = "li"
+    static final String RTF_OPEN_ITEM_TAG = "<${RTF_LIST_ITEM_TAG_NAME}>";
+    static final String RTF_CLOSE_ITEM_TAG = "</${RTF_LIST_ITEM_TAG_NAME}>";
 
     @Override
     String toRtf(String s) {
@@ -22,7 +35,7 @@ class AllListCoder implements Coder {
 
         for (int i = 0; i < blocks.size(); i++) {
             String block = blocks.get(i);
-            String list = block.find(setting.mdListRegexpPattern);
+            String list = block.find(MD_LIST_REGEXP_PATTERN);
 
             if (list) {
                 Integer startAt = block.length() - list.length();
@@ -53,33 +66,27 @@ class AllListCoder implements Coder {
     String toMd(String s) {
         StringBuilder result = new StringBuilder();
 
-        Integer cursor = 0;
+        int cursor = 0;
 
-        Pattern pattern = Pattern.compile(setting.rtfListTagRegexpPattern, Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(RTF_LIST_TAG_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(s);
 
-        while (matcher.find()) {
-            Integer firstGroupCursor = matcher.start();
-            String group = matcher.group().toLowerCase();
-            if (group.startsWith(setting.rtfListTagName, 1)) {
-                Stack<String> stack = [];
-                stack.push(group);
-                while (!stack.isEmpty() && matcher.find()) {
-                    String currentTag = matcher.group().toLowerCase();
-                    if (currentTag.startsWith(setting.rtfListTagName, 1) || currentTag.startsWith(setting.RTF_LIST_ITEM_TAG_NAME, 1)) {
-                        stack.push(currentTag);
-                    } else if (currentTag == setting.rtfCloseListTag) {
-                        if (stack.last().startsWith(setting.rtfListTagName, 1)) {
-                            stack.pop();
-                        } else {
+        while (matcher.find(cursor)) {
+            int firstGroupCursor = matcher.start();
+
+            RtfTag openListTag = new RtfTag(matcher.group().toLowerCase());
+            if (openListTag.open) {
+                Stack<RtfTag> stack = []
+                stack.push(openListTag)
+                while (!stack.isEmpty() && matcher.find(matcher.end())) {
+                    RtfTag currentListTag = new RtfTag(matcher.group().toLowerCase());
+                    if (!currentListTag.open) {
+                        if (stack.isEmpty()) {
                             break;
                         }
-                    } else if (currentTag == setting.RTF_CLOSE_ITEM_TAG) {
-                        if (stack.last().startsWith(setting.RTF_LIST_ITEM_TAG_NAME, 1)) {
-                            stack.pop();
-                        } else {
-                            break;
-                        }
+                        stack.pop();
+                    } else {
+                        stack.push(currentListTag)
                     }
                 }
 
@@ -103,225 +110,124 @@ class AllListCoder implements Coder {
     }
 
     private String convertListToRtf(String s) {
-        Element rootElement = new RootElement();
-
-        Stack<Integer> levels = [];
-        Element parent = rootElement;
-        Element lastElement = parent;
+        StringBuilder result = new StringBuilder();
         List<String> lines = s.split(MD_NEXT_LINE);
+        Pattern mdItemGroupsPattern = Pattern.compile(MD_ITEM_GROUPS_REGEXP_PATTERN)
 
+        Stack<ListTypeConfig> listTypeConfigs = new Stack<>();
         for (String line in lines) {
-            String currentValue = line.replaceFirst(setting.mdStartListItemRegexpPattern, "");
-            Integer currentLevel = line.length() - currentValue.length();
-            if (currentLevel > 0) {
-                if (levels.isEmpty()) {
-                    levels.push(currentLevel);
-                } else {
-                    if (levels.last() < currentLevel) {
-                        levels.push(currentLevel);
-                        parent = lastElement;
-                    } else {
-                        while (!levels.isEmpty() && levels.last() > currentLevel) {
-                            levels.pop();
-                            lastElement = parent;
-                            parent = lastElement.parent;
-                        }
+            if (line.matches(MD_LIST_REGEXP_PATTERN)) {
+                Matcher matcher = mdItemGroupsPattern.matcher(line);
+                matcher.find();
+                String tag = matcher.group(1);
+                int listLevel = tag.length();
+                ListTypeConfig currentListType = tag.startsWith(NUMBERED_LIST_CONFIG.mdListTagName)
+                        ? NUMBERED_LIST_CONFIG
+                        : MARKED_LIST_CONFIG
 
+                while (listTypeConfigs.size() < listLevel) {
+                    listTypeConfigs.push(null);
+                }
+
+                while (listLevel < listTypeConfigs.size()) {
+                    ListTypeConfig listTypeConfig = listTypeConfigs.pop();
+                    if (listTypeConfig != null) {
+                        result.append(RTF_CLOSE_ITEM_TAG)
+                        result.append(listTypeConfig.rtfCloseListTag)
                     }
                 }
-                lastElement = new Element(currentValue);
-                parent.addChild(lastElement);
-            } else if (lastElement) {
-                lastElement.value += currentValue;
-            }
-        }
 
-        return rootElement.toRtf();
-    }
-
-    private String convertListToMD(String notFixedXml) {
-        String s = "<root>${notFixedXml}</root>";
-        Node xmlList = new XmlParser().parseText(s);
-        NodeList rtfList = xmlList[setting.rtfListTagName] ?: xmlList[setting.rtfListTagName.toUpperCase()];
-        Node firstList = rtfList.find { it instanceof Node };
-        Stack<Iterator<Node>> iteratorsStack = [];
-        iteratorsStack.push(firstList.iterator());
-
-        Element rootElement = new RootElement();
-
-        while (!iteratorsStack.isEmpty()) {
-            Iterator<Node> lastIterator = iteratorsStack.pop();
-            while (lastIterator.hasNext()) {
-                Object element = lastIterator.next();
-                if (element instanceof Node) {
-                    String tagName = element.name()?.toLowerCase();
-                    if (setting.RTF_LIST_ITEM_TAG_NAME == tagName) {
-                        String nodeName = getNodeName(element);
-                        Element currentElement = new Element(nodeName);
-                        rootElement.addChild(currentElement);
-                        if (element.children().size() > 1) {
-                            iteratorsStack.push(lastIterator);
-                            lastIterator = element.iterator();
-                            rootElement = currentElement;
-                        }
-                    } else if (setting.rtfListTagName == tagName) {
-                        iteratorsStack.push(lastIterator);
-                        lastIterator = element.iterator();
-                    }
+                ListTypeConfig savedTypeConfig = listTypeConfigs.pop();
+                if (savedTypeConfig != null) {
+                    result.append(RTF_CLOSE_ITEM_TAG)
                 }
-            }
-            if (rootElement.haveParent()) {
-                rootElement = rootElement.parent;
-            }
-        }
+                if (savedTypeConfig != null && savedTypeConfig.mdListTagName != currentListType.mdListTagName) {
+                    result.append(savedTypeConfig.rtfCloseListTag);
+                }
 
-        return rootElement.toMd();
-    }
+                if (savedTypeConfig == null || savedTypeConfig.mdListTagName != currentListType.mdListTagName) {
+                    result.append(currentListType.rtfOpenListTag);
+                }
 
-    private String getNodeName(Node node) {
-        Object nodeValue = node.value();
-        if (nodeValue instanceof String) {
-            return nodeValue;
-        }
-
-        if (nodeValue instanceof Collection) {
-            Collection c = nodeValue;
-            Object firstValue = c[0];
-            if (firstValue instanceof String) {
-                return firstValue;
-            }
-        }
-
-        return "";
-    }
-
-    private class RootElement extends Element {
-
-        RootElement() {
-            super(null)
-        }
-
-        @Override
-        String toMd(int level = 0) {
-            StringBuilder result = new StringBuilder();
-
-            if (this.childs) {
-                this.childs.forEach { result.append(it.toMd(0)) }
-            }
-
-            //Удаляем последний перенос строки, так как это выгодней чем проверка в циклах.
-            result.setLength(result.size() - MD_NEXT_LINE.size());
-            return result.toString();
-        }
-
-        @Override
-        String toRtf() {
-            StringBuilder result = new StringBuilder();
-
-            if (this.childs) {
-                result.append(setting.rtfOpenListTag)
-                this.childs.forEach { result.append(it.toRtf()) }
-                result.append(setting.rtfCloseListTag);
-            }
-
-            return result.toString();
-        }
-
-    }
-
-    class Element {
-        protected String value;
-        protected Element parent;
-        protected List<Element> childs = new LinkedList<>();
-
-        Element(String value) {
-            this.value = value
-        }
-
-        void addChild(Element child) {
-            this.childs.add(child)
-            child.setParent(this);
-        }
-
-        Element getParent() {
-            return parent
-        }
-
-        protected void setParent(Element parent) {
-            this.parent = parent;
-        }
-
-        boolean haveParent() {
-            return this.parent != null;
-        }
-
-        String toRtf() {
-            StringBuilder result = new StringBuilder();
-            result.append(setting.RTF_OPEN_ITEM_TAG);
-
-            if (this.value) {
-                result.append(this.value);
-            }
-
-            if (this.childs) {
-                result.append(setting.rtfOpenListTag)
-                this.childs.forEach { result.append(it.toRtf()) }
-                result.append(setting.rtfCloseListTag);
-            }
-
-            result.append(setting.RTF_CLOSE_ITEM_TAG);
-
-            return result.toString();
-        }
-
-        String toMd(int level = 0) {
-            StringBuilder result = new StringBuilder();
-
-            result.append(setting.mdListTag.repeat(level + 1));
-            result.append(" ");
-
-            if (this.value) {
-                result.append(this.value);
-            }
-
-            if (this.childs) {
-                result.append(MD_NEXT_LINE);
-                this.childs.forEach { result.append(it.toMd(level + 1)) }
+                listTypeConfigs.push(currentListType);
+                result.append(RTF_OPEN_ITEM_TAG)
+                if (matcher.groupCount() == 2) {
+                    result.append(matcher.group(2));
+                }
             } else {
-                result.append(MD_NEXT_LINE);
+                result.append(line);
             }
-
-            return result.toString();
         }
+
+        while (!listTypeConfigs.isEmpty()) {
+            ListTypeConfig listTypeConfig = listTypeConfigs.pop();
+            if (listTypeConfig != null) {
+                result.append(RTF_CLOSE_ITEM_TAG)
+                result.append(listTypeConfig.rtfCloseListTag)
+            }
+        }
+
+        return result.toString();
     }
 
-    protected static class Setting {
-        static final String RTF_LIST_ITEM_TAG_NAME = "li"
-        static final String RTF_OPEN_ITEM_TAG = "<${RTF_LIST_ITEM_TAG_NAME}>";
-        static final String RTF_CLOSE_ITEM_TAG = "</${RTF_LIST_ITEM_TAG_NAME}>";
+    private String convertListToMD(String rtfList, int level = 0) {
+        StringBuilder stringBuilder = new StringBuilder();
+        ListTypeConfig listTypeConfig = rtfList.endsWithIgnoreCase(MARKED_LIST_CONFIG.rtfCloseListTag) ? MARKED_LIST_CONFIG : NUMBERED_LIST_CONFIG
+        int cursor = 0;
 
-        final String mdListTag;
-        final String mdListRegexpPattern;
-        final String mdStartListItemRegexpPattern;
+        Pattern rtfOpenItemTagPattern = Pattern.compile(RTF_OPEN_ITEM_TAG_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
+        Matcher openItemTagMather = rtfOpenItemTagPattern.matcher(rtfList);
+        Pattern rtfListInItemTagPattern = Pattern.compile(RTF_LIST_IN_ITEM_TAG_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
+        Matcher listTagMather = rtfListInItemTagPattern.matcher(rtfList);
+        Pattern rtfListTagPattern = Pattern.compile(RTF_LIST_TAG_REGEXP_PATTERN, Pattern.CASE_INSENSITIVE);
+        Matcher openCloseListTagMather = rtfListTagPattern.matcher(rtfList);
 
+        while (openItemTagMather.find(cursor)) {
+            listTagMather.find(openItemTagMather.end());
+
+            stringBuilder.append(listTypeConfig.mdListTagName.repeat(level + 1));
+            stringBuilder.append(" ");
+            stringBuilder.append(rtfList.substring(openItemTagMather.end(), listTagMather.start()))
+            cursor = listTagMather.end()
+
+            RtfTag currentRtfTag = new RtfTag(listTagMather.group());
+            if (currentRtfTag.name != RTF_LIST_ITEM_TAG_NAME) {
+
+                Stack<RtfTag> openTags = [];
+                openTags.push(currentRtfTag);
+                while (!openTags.isEmpty() && openCloseListTagMather.find(cursor)) {
+                    cursor = openCloseListTagMather.end();
+                    currentRtfTag = new RtfTag(openCloseListTagMather.group());
+                    if (currentRtfTag.open) {
+                        openTags.push(currentRtfTag)
+                    } else {
+                        openTags.pop();
+                    }
+                }
+
+                stringBuilder.append(MD_NEXT_LINE)
+                stringBuilder.append(convertListToMD(rtfList.substring(listTagMather.start(), cursor), level + 1));
+            }
+
+            stringBuilder.append(MD_NEXT_LINE)
+        }
+
+        if (stringBuilder.endsWithAny(MD_NEXT_LINE)) {
+            stringBuilder.setLength(stringBuilder.length() - MD_NEXT_LINE.length());
+        }
+
+        return stringBuilder.toString();
+    }
+
+    static class ListTypeConfig {
+        final String mdListTagName;
         final String rtfListTagName;
-        final String rtfListTagRegexpPattern;
         final String rtfOpenListTag;
         final String rtfCloseListTag;
 
-        Setting(
-                String rtfListTagName,
-                String rtfListTagRegexpPattern,
-                String mdListTag,
-                String mdListRegexpPattern,
-                String mdStartListItemRegexpPattern
-        ) {
+        ListTypeConfig(String mdListTagName, String rtfListTagName) {
+            this.mdListTagName = mdListTagName
             this.rtfListTagName = rtfListTagName
-            this.rtfListTagRegexpPattern = rtfListTagRegexpPattern
-            this.mdListTag = mdListTag
-            this.mdListRegexpPattern = mdListRegexpPattern
-            this.mdStartListItemRegexpPattern = mdStartListItemRegexpPattern
-
             this.rtfOpenListTag = "<${rtfListTagName}>";
             this.rtfCloseListTag = "</${rtfListTagName}>";
         }

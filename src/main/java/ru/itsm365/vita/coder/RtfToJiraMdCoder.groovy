@@ -1,6 +1,6 @@
 package ru.itsm365.vita.coder
 
-import ru.itsm365.vita.coder.block.FixedAllListCoder
+import ru.itsm365.vita.coder.block.AllListCoder
 import ru.itsm365.vita.coder.block.TableCoder
 import ru.itsm365.vita.coder.inline.AllTextStyleCoder
 import ru.itsm365.vita.coder.inline.ImageCoder
@@ -28,7 +28,7 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder SPAN_CODER = new SpanCoder();
 
     //Блочные кодеры
-    private static final Coder ALL_LIST_CODER = new FixedAllListCoder();
+    private static final Coder ALL_LIST_CODER = new AllListCoder();
     private static final Coder TABLE_CODER = new TableCoder();
 
     //Специальные кодеры

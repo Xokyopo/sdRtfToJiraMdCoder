@@ -4,12 +4,12 @@ import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class FixedAllListCoderTest {
-    private FixedAllListCoder coder;
+class AllListCoderTest {
+    private AllListCoder coder;
 
     @BeforeEach
     void setUp() {
-        this.coder = new FixedAllListCoder();
+        this.coder = new AllListCoder();
     }
 
     @Test
