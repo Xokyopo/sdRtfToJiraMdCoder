@@ -11,13 +11,13 @@ class AllListCoder implements Coder {
     private static final String MD_NEXT_LINE = System.lineSeparator();
 
     //1. Поиск списков.
-    private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<[o,u]l[^><]*>)|(</[o,u]l>)";
-    private static final String MD_LIST_REGEXP_PATTERN = "\\h*[\\*,\\#]+\\h[^\$]*";
+    private static final String RTF_LIST_TAG_REGEXP_PATTERN = "(<[ou]l[^><]*>)|(</[ou]l>)";
+    private static final String MD_LIST_REGEXP_PATTERN = "\\h*[\\*\\#]+\\h[^\$]*";
 
     //3. Поиск элементов
     private static final String RTF_OPEN_ITEM_TAG_REGEXP_PATTERN = "<li[^><]*>";
-    private static final String RTF_LIST_IN_ITEM_TAG_REGEXP_PATTERN = "(<[o,u]l[^><]*>)|(</[o,u]l>)|(</li>)";
-    private static final String MD_ITEM_GROUPS_REGEXP_PATTERN = "(?:\\h*)([\\*,\\#]+)(?:\\h)([^\$]*)";
+    private static final String RTF_LIST_IN_ITEM_TAG_REGEXP_PATTERN = "(<[ou]l[^><]*>)|(</[ou]l>)|(</li>)";
+    private static final String MD_ITEM_GROUPS_REGEXP_PATTERN = "(?:\\h*)([\\*\\#]+)(?:\\h)([^\$]*)";
 
     //4. Разделение на маркированный и нумированный.
     private static final ListTypeConfig MARKED_LIST_CONFIG = new ListTypeConfig("*", "ul");
