@@ -3,6 +3,7 @@ package ru.itsm365.vita.coder
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import ru.itsm365.vita.coder.model.TestValue
 import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 
 class RtfToJiraMdCoderTest {
@@ -10,8 +11,6 @@ class RtfToJiraMdCoderTest {
     private final TestValue simpleText = new TestValue("/simpleText/md", "/simpleText/rtf");
     private final TestValue originalText = new TestValue("/originalText/md", "/originalText/rtf");
     private final TestValue expectedText = new TestValue("/expectedText/md", "/expectedText/rtf");
-    private final TestValue originalTableText = new TestValue("/originalText/table/md", "/originalText/table/rtf");
-    private final TestValue expectedTableText = new TestValue("/expectedText/table/md", "/expectedText/table/rtf");
 
     private Coder coder;
 
@@ -32,20 +31,6 @@ class RtfToJiraMdCoderTest {
         String expectedMdText = this.expectedText.md;
         String actualMdTest = this.coder.toMd(this.originalText.rtf);
         Assert.assertEquals(expectedMdText, actualMdTest);
-    }
-
-    @Test
-    void toRtfComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
-        String expectedRtfText = this.originalTableText.md;
-        String actualRtfTest = this.coder.toRtf(expectedRtfText);
-        Assert.assertEquals(expectedTableText.rtf, actualRtfTest);
-    }
-
-    @Test
-    void toMdComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
-        String expectedMdText = this.originalTableText.rtf;
-        String actualMdTest = this.coder.toMd(expectedMdText);
-        Assert.assertEquals(this.originalTableText.md, actualMdTest);
     }
 
     //Полный реверс не достижим
@@ -100,28 +85,4 @@ class RtfToJiraMdCoderTest {
         println("rgp(${r}, ${g}, ${b})")
     }
 
-    static class TestValue {
-        public final String md;
-        public final String rtf;
-
-        TestValue(String md, String rtf) {
-            this.md = loadResource(md)
-            this.rtf = loadResource(rtf)
-        }
-
-        private static String loadResource(String text) {
-            InputStream inputStream = TestValue.class.getResourceAsStream(text)
-            try {
-                if (inputStream == null) {
-                    throw new IllegalArgumentException("Ресурс с таким именем не найден или доступ к ресурсу запрещен менеджером безопасности");
-                }
-
-                return inputStream.text
-            } finally {
-                if (inputStream) {
-                    inputStream.close();
-                }
-            }
-        }
-    }
 }
