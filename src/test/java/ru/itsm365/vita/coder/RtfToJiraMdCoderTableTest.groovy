@@ -8,8 +8,8 @@ import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 
 class RtfToJiraMdCoderTableTest {
     private final XmlPrettifyCoder xmlPrettifyCoder = new XmlPrettifyCoder();
-    private final TestValue originalTableText = new TestValue("/originalText/table/md", "/originalText/table/rtf");
-    private final TestValue expectedTableText = new TestValue("/expectedText/table/md", "/expectedText/table/rtf");
+    private final TestValue originalTableText = new TestValue("/originalText/table/md.txt", "/originalText/table/rtf.txt");
+    private final TestValue expectedTableText = new TestValue("/expectedText/table/md.txt", "/expectedText/table/rtf.txt");
 
     private Coder coder;
 

@@ -8,9 +8,9 @@ import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 
 class RtfToJiraMdCoderTest {
     private final XmlPrettifyCoder xmlPrettifyCoder = new XmlPrettifyCoder();
-    private final TestValue simpleText = new TestValue("/simpleText/md", "/simpleText/rtf");
-    private final TestValue originalText = new TestValue("/originalText/md", "/originalText/rtf");
-    private final TestValue expectedText = new TestValue("/expectedText/md", "/expectedText/rtf");
+    private final TestValue simpleText = new TestValue("/simpleText/md.txt", "/simpleText/rtf.txt");
+    private final TestValue originalText = new TestValue("/originalText/md.txt", "/originalText/rtf.txt");
+    private final TestValue expectedText = new TestValue("/expectedText/md.txt", "/expectedText/rtf.txt");
 
     private Coder coder;
 
