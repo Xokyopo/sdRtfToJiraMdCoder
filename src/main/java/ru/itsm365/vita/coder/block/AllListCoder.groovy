@@ -183,15 +183,19 @@ class AllListCoder implements Coder {
         Matcher openCloseListTagMather = rtfListTagPattern.matcher(rtfList);
 
         while (openItemTagMather.find(cursor)) {
-            listTagMather.find(openItemTagMather.end());
-
             stringBuilder.append(listTypeConfig.mdListTagName.repeat(level + 1));
             stringBuilder.append(" ");
-            stringBuilder.append(rtfList.substring(openItemTagMather.end(), listTagMather.start()))
-            cursor = listTagMather.end()
 
-            RtfTag currentRtfTag = new RtfTag(listTagMather.group());
-            if (currentRtfTag.name != RTF_LIST_ITEM_TAG_NAME) {
+            cursor = openItemTagMather.end();
+
+            while (listTagMather.find(cursor)) {
+                stringBuilder.append(rtfList.substring(cursor, listTagMather.start()))
+                cursor = listTagMather.end()
+
+                RtfTag currentRtfTag = new RtfTag(listTagMather.group());
+                if (currentRtfTag.name == RTF_LIST_ITEM_TAG_NAME && !currentRtfTag.open) {
+                    break;
+                }
 
                 Stack<RtfTag> openTags = [];
                 openTags.push(currentRtfTag);
@@ -205,11 +209,11 @@ class AllListCoder implements Coder {
                     }
                 }
 
-                stringBuilder.append(MD_NEXT_LINE)
+                stringBuilder.append(MD_NEXT_LINE);
                 stringBuilder.append(convertListToMD(rtfList.substring(listTagMather.start(), cursor), level + 1));
             }
 
-            stringBuilder.append(MD_NEXT_LINE)
+            stringBuilder.append(MD_NEXT_LINE);
         }
 
         if (stringBuilder.endsWithAny(MD_NEXT_LINE)) {
