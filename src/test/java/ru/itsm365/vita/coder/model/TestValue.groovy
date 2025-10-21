@@ -10,17 +10,12 @@ class TestValue {
     }
 
     private static String loadResource(String text) {
-        InputStream inputStream = TestValue.class.getResourceAsStream(text)
-        try {
-            if (inputStream == null) {
+        return TestValue.class.getResourceAsStream(text).withCloseable {
+            if (it == null) {
                 throw new IllegalArgumentException("Ресурс с таким именем не найден или доступ к ресурсу запрещен менеджером безопасности");
             }
 
-            return inputStream.text
-        } finally {
-            if (inputStream) {
-                inputStream.close();
-            }
+            return it.text
         }
     }
 }
