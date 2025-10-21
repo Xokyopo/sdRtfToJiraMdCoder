@@ -1,7 +1,6 @@
 package ru.itsm365.vita.coder
 
-import ru.itsm365.vita.coder.block.MarkedListCoder
-import ru.itsm365.vita.coder.block.NumberedListCoder
+import ru.itsm365.vita.coder.block.AllListCoder
 import ru.itsm365.vita.coder.block.TableCoder
 import ru.itsm365.vita.coder.inline.AllTextStyleCoder
 import ru.itsm365.vita.coder.inline.ImageCoder
@@ -29,8 +28,7 @@ class RtfToJiraMdCoder implements Coder {
     private static final Coder SPAN_CODER = new SpanCoder();
 
     //Блочные кодеры
-    private static final Coder MARKED_LIST_CODER = new MarkedListCoder();
-    private static final Coder NUMBERED_LIST_CODER = new NumberedListCoder();
+    private static final Coder ALL_LIST_CODER = new AllListCoder();
     private static final Coder TABLE_CODER = new TableCoder();
 
     //Специальные кодеры
@@ -69,8 +67,7 @@ class RtfToJiraMdCoder implements Coder {
 
                 //Затем обходим все блочные элементы
                 TABLE_CODER,
-                MARKED_LIST_CODER,
-                NUMBERED_LIST_CODER,
+                ALL_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
                 //LINE_BREAK_CODER,
@@ -102,8 +99,7 @@ class RtfToJiraMdCoder implements Coder {
 
                 //Затем обходим все блочные элементы
                 TABLE_CODER,
-                MARKED_LIST_CODER,
-                NUMBERED_LIST_CODER,
+                ALL_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
                 RTF_ESCAPE_CODER
