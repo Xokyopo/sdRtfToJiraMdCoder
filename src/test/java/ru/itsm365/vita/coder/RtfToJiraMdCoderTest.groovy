@@ -36,14 +36,14 @@ class RtfToJiraMdCoderTest {
     //Полный реверс не достижим
 //    @Test
 //    void reverse_rtf_simpleText() {
-//        String expectedRtfText = xmlPrettifyCoder.toRtf(this.simpleText.rtf);
+//        String expectedRtfText = xmlPrettifyCoder.toRtf(this.simpleText.rtf.txt);
 //        String actualRtfTest = this.coder.toRtf(this.coder.toMd(expectedRtfText));
 //        Assert.assertEquals(expectedRtfText, actualRtfTest);
 //    }
 //
 //    @Test
 //    void reverse_md_simpleText() {
-//        String expectedMdText = this.simpleText.md;
+//        String expectedMdText = this.simpleText.md.txt;
 //        String actualMdTest = this.coder.toMd(this.coder.toRtf(expectedMdText));
 //        Assert.assertEquals(expectedMdText, actualMdTest);
 //    }

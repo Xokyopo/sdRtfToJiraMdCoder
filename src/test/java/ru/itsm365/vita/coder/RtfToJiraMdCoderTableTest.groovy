@@ -19,16 +19,30 @@ class RtfToJiraMdCoderTableTest {
     }
 
     @Test
-    void toRtfComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
-        String expectedRtfText = this.originalTableText.md;
-        String actualRtfTest = this.coder.toRtf(expectedRtfText);
-        Assert.assertEquals(this.xmlPrettifyCoder.toRtf(expectedTableText.rtf), this.xmlPrettifyCoder.toRtf(actualRtfTest));
+    void toRtf_ComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
+        String expected = this.originalTableText.md;
+        String actual = this.coder.toRtf(expected);
+        Assert.assertEquals(this.xmlPrettifyCoder.toRtf(expectedTableText.rtf), this.xmlPrettifyCoder.toRtf(actual));
     }
 
     @Test
-    void toMdComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
-        String expectedMdText = this.originalTableText.rtf;
-        String actualMdTest = this.coder.toMd(expectedMdText);
-        Assert.assertEquals(this.originalTableText.md, actualMdTest);
+    void toMd_ComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
+        String expected = this.originalTableText.rtf;
+        String actual = this.coder.toMd(expected);
+        Assert.assertEquals(this.originalTableText.md, actual);
+    }
+
+    @Test
+    void toRtf_ReverseComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
+        String expected = this.originalTableText.rtf;
+        String actual = this.coder.toRtf(this.coder.toMd(expected));
+        Assert.assertEquals(this.xmlPrettifyCoder.toRtf(expectedTableText.rtf), this.xmlPrettifyCoder.toRtf(actual));
+    }
+
+    @Test
+    void toMd_ReverseComplexTable_ReturnExpectedResult_WhenConvertOriginalText() {
+        String expected = this.originalTableText.md;
+        String actual = this.coder.toMd(this.coder.toRtf(expected));
+        Assert.assertEquals(this.originalTableText.md, actual);
     }
 }

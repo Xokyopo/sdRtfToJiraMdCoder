@@ -8,7 +8,7 @@ class XmlPrettifyCoderTest {
 
     private XmlPrettifyCoder coder;
 
-    private final TestValue simpleText = new TestValue("/simpleText/md", "/simpleText/rtf");
+    private final TestValue simpleText = new TestValue("/simpleText/md.txt", "/simpleText/rtf.txt");
 
 
     @Before
