@@ -1,0 +1,288 @@
+* Проект "Электронная коммерция"
+ ** Бэкенд (Spring Boot)
+ *** Контроллеры (REST API)
+ **** UserController
+ ***** GET /api/users
+ ****** Параметры: page, size, sort
+ ****** Ответ: Page<UserDTO>
+ ****** Права доступа: ADMIN
+ ***** POST /api/users
+ ****** Тело: UserCreateRequest
+ ****** Валидация: email, password
+ ****** Ответ: UserDTO
+ ***** PUT /api/users/{id}
+ ****** Path variable: id
+ ****** Тело: UserUpdateRequest
+ ****** Ответ: UserDTO
+ ***** DELETE /api/users/{id}
+ ****** Path variable: id
+ ****** Ответ: 204 No Content
+ **** ProductController
+ ***** GET /api/products
+ ****** Параметры: category, price_min, price_max
+ ****** Фильтрация: по availability
+ ****** Пагинация: pageable
+ ***** GET /api/products/{id}
+ ****** Path variable: id
+ ****** Ответ: ProductDetailDTO
+ ****** Кэширование: 5 minutes
+ ***** POST /api/products
+ ****** Тело: ProductCreateRequest
+ ****** Загрузка изображений: multipart
+ ****** Ответ: ProductDTO
+ ***** PUT /api/products/{id}
+ ****** Path variable: id
+ ****** Тело: ProductUpdateRequest
+ ****** Ответ: ProductDTO
+ **** OrderController
+ ***** GET /api/orders
+ ****** Фильтрация: по пользователю
+ ****** Сортировка: по дате создания
+ ****** Ответ: List<OrderDTO>
+ ***** POST /api/orders
+ ****** Тело: OrderCreateRequest
+ ****** Валидация: items not empty
+ ****** Ответ: OrderDTO
+ ***** PUT /api/orders/{id}/status
+ ****** Path variable: id
+ ****** Тело: StatusUpdateRequest
+ ****** Уведомления: email to user
+ *** Сервисы (Business Logic)
+ **** AuthService
+ ***** registerUser()
+ ****** Входные данные: RegistrationRequest
+ ****** Проверка: уникальность email
+ ****** Хэширование: пароль bcrypt
+ ****** Ответ: AuthResponse с JWT
+ ***** login()
+ ****** Входные данные: LoginRequest
+ ****** Аутентификация: email/password
+ ****** Генерация: access/refresh tokens
+ ****** Ответ: AuthResponse
+ ***** validateToken()
+ ****** Входные данные: JWT token
+ ****** Парсинг: claims extraction
+ ****** Проверка: signature, expiration
+ ****** Ответ: Authentication object
+ ***** refreshToken()
+ ****** Входные данные: refresh token
+ ****** Валидация: token existence
+ ****** Генерация: new access token
+ ****** Ответ: new AuthResponse 
+**** UserService
+ ***** createUser()
+ ****** Входные данные: UserCreateDTO
+ ****** Преобразование: DTO -> Entity
+ ****** Сохранение: user repository
+ ****** Ответ: UserDTO
+ ***** updateUser()
+ ****** Входные данные: UserUpdateDTO
+ ****** Поиск: user by id
+ ****** Обновление: только разрешенные поля
+ ****** Ответ: updated UserDTO
+ ***** deleteUser()
+ ****** Входные данные: userId
+ ****** Проверка: существование пользователя
+ ****** Soft delete: mark as inactive
+ ****** Ответ: void
+ ***** getUserProfile()
+ ****** Входные данные: userId
+ ****** Загрузка: связанные данные
+ ****** Преобразование: Entity -> ProfileDTO
+ ****** Ответ: UserProfileDTO 
+**** ProductService
+ ***** getAllProducts()
+ ****** Параметры: фильтры, пагинация
+ ****** Запрос: product repository
+ ****** Преобразование: Entity -> DTO
+ ****** Ответ: Page<ProductDTO>
+ ***** getProductById()
+ ****** Входные данные: productId
+ ****** Поиск: product repository
+ ****** Проверка: is active product
+ ****** Ответ: ProductDetailDTO
+ ***** searchProducts()
+ ****** Входные данные: search query
+ ****** Поиск: по title, description
+ ****** Ранжирование: по релевантности
+ ****** Ответ: List<ProductDTO>
+ ***** updateStock()
+ ****** Входные данные: productId, quantity
+ ****** Атомарность: @Transactional
+ ****** Проверка: достаточное количество
+ ****** Ответ: updated ProductDTO
+ **** OrderService
+ ***** createOrder()
+ ****** Входные данные: OrderCreateRequest
+ ****** Проверка: доступность товаров
+ ****** Расчет: общая стоимость
+ ****** Сохранение: order + order items
+ ***** calculateTotal()
+ ****** Входные данные: список товаров
+ ****** Расчет: цена * количество
+ ****** Учет: скидки, налоги
+ ****** Ответ: total amount
+ ***** processPayment()
+ ****** Входные данные: payment details
+ ****** Интеграция: payment gateway
+ ****** Обработка: transaction
+ ****** Ответ: payment status
+ ***** sendConfirmation()
+ ****** Входные данные: order, user
+ ****** Генерация: email template
+ ****** Отправка: email service
+ ****** Логирование: sent status
+ *** Репозитории (Data Access)
+ **** UserRepository
+ ***** findByEmail()
+ ****** Параметры: email string
+ ****** Запрос: SELECT * FROM users
+ ****** Условие: email = ?1
+ ****** Ответ: Optional<User>
+ ***** existsByUsername()
+ ****** Параметры: username string
+ ****** Запрос: COUNT(\*) > 0
+ ****** Использование: при регистрации
+ ****** Ответ: boolean
+ ***** countByStatus()
+ ****** Параметры: UserStatus status
+ ****** Группировка: по статусу
+ ****** Агрегация: COUNT(\*)
+ ****** Ответ: Long
+ **** ProductRepository
+ ***** findByCategory()
+ ****** Параметры: Category category
+ ****** Запрос: JOIN с categories
+ ****** Фильтрация: is_active = true
+ ****** Ответ: List<Product>
+ ***** searchByTitle()
+ ****** Параметры: search term
+ ****** Запрос: ILIKE %?1%
+ ****** Сортировка: по релевантности
+ ****** Ответ: List<Product>
+ ***** findAvailableProducts()
+ ****** Параметры: minStock quantity
+ ****** Условия: stock > ?1 AND active
+ ****** Сортировка: по названию
+ ****** Ответ: List<Product> 
+**** OrderRepository
+ ***** findByUserId()
+ ****** Параметры: userId, Pageable
+ ****** Запрос: JOIN с users
+ ****** Сортировка: created_at DESC
+ ****** Ответ: Page<Order>
+ ***** findRecentOrders()
+ ****** Параметры: days interval
+ ****** Условие: created_at >= ?1
+ ****** Лимит: top 100
+ ****** Ответ: List<Order>
+ ***** countByStatus()
+ ****** Параметры: OrderStatus status
+ ****** Группировка: по статусу
+ ****** Агрегация: COUNT(\*)
+ ****** Ответ: Map<Status, Long> 
+*** Конфигурация
+ **** SecurityConfig
+ ***** Настройки безопасности
+ ****** HTTP security configuration
+ ****** CORS policy setup
+ ****** CSRF protection
+ ****** Session management
+ ***** JWT аутентификация
+ ****** JWT token filter
+ ****** Secret key configuration
+ ****** Token expiration settings
+ ****** Refresh token handling
+ ***** CORS конфигурация
+ ****** Allowed origins
+ ****** Allowed methods
+ ****** Allowed headers
+ ****** Credentials support
+ **** DatabaseConfig
+ ***** DataSource настройки
+ ****** Connection pool: HikariCP
+ ****** URL, username, password
+ ****** Connection timeout
+ ****** Maximum pool size
+ ***** JPA конфигурация
+ ****** Hibernate dialect
+ ****** DDL auto: validate
+ ****** Show SQL: dev only
+ ****** Naming strategy
+ ***** Миграции Flyway
+ ****** Migration locations
+ ****** Baseline version
+ ****** Clean disabled
+ ****** Out of order 
+**** SwaggerConfig
+ ***** Документация API
+ ****** API info: title, version
+ ****** Contact information
+ ****** License details
+ ****** Terms of service
+ ***** Настройки UI
+ ****** Swagger UI path
+ ****** Custom styling
+ ****** Operations sorter
+ ****** Tags sorter
+ ***** Security схемы
+ ****** JWT security scheme
+ ****** API key security
+ ****** OAuth2 configuration
+ ****** Scopes definition
+** Фронтенд (React/TypeScript)
+ *** Компоненты
+ **** Layout компоненты
+ ***** Header
+ ****** Навигация
+ ******* Logo and brand
+ ******* Main menu items
+ ******* Dropdown menus
+ ******* Mobile hamburger
+ ****** Поиск
+ ******* Search input field
+ ******* Autocomplete suggestions
+ ******* Search history
+ ******* Quick filters
+ ****** Корзина
+ ******* Cart icon with badge
+ ******* Cart items preview
+ ******* Total amount display
+ ******* Checkout button
+ ****** Профиль пользователя
+ ******* User avatar
+ ******* Login/Register buttons
+ ******* User menu dropdown
+ ******* Admin panel link
+ ***** Footer
+ ****** Ссылки
+ ******* Company information
+ ******* Customer service
+ ******* Social media links
+ ******* Legal documents
+ ****** Контакты
+ ******* Phone numbers
+ ******* Email addresses
+ ******* Physical address
+ ******* Working hours
+ ****** Соцсети
+ ******* Facebook icon/link
+ ******* Instagram icon/link
+ ******* Twitter icon/link
+ ******* YouTube icon/link
+ ***** Sidebar
+ ****** Категории
+ ******* Category tree view
+ ******* Subcategories expandable
+ ******* Category icons
+ ******* Product counts
+ ****** Фильтры
+ ******* Price range slider
+ ******* Brand selection
+ ******* Rating filters
+ ******* Availability toggle
+ ****** Быстрый доступ
+ ******* Recent products
+ ******* Favorite items
+ ******* Quick settings
+ ******* Help 
