@@ -15,7 +15,9 @@ class TestValue {
                 throw new IllegalArgumentException("Ресурс с таким именем не найден или доступ к ресурсу запрещен менеджером безопасности");
             }
 
-            return it.text
+            String loadedText = it.text;
+            //Удаление пустой строки в конце файла которую добавляет IDE при сохранении наших файлов для теста.
+            return loadedText?.replaceAll("\r\n\$", "");
         }
     }
 }
