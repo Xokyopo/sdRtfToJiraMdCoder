@@ -1,0 +1,3 @@
+<div>тройные&nbsp; &nbsp;отступы&nbsp; &nbsp;между&nbsp; &nbsp;слов</div>
+<div>тройной отступ в конце&nbsp; &nbsp;</div>
+<div>&nbsp; &nbsp;тройной пробел в начале</div>
