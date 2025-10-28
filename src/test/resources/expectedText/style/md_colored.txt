@@ -1,0 +1,1 @@
+_{color:#b8312f}курсив{color}_ *{color:#b8312f}жирный{color}* +{color:#b8312f}подчеркнутый{color}+ -{color:#b8312f}зачеркнутый{color}- ~{color:#b8312f}основание{color}~ ^{color:#b8312f}степень{color}^
