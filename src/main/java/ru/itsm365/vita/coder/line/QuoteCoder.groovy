@@ -11,7 +11,7 @@ class QuoteCoder implements Coder {
     // toRtf
     private final String QUOTE = "\\{quote}";
     private final String QUOTE_REGEX = "(?msi)(?<=\\{quote}).+?(?=\\{quote})";
-    private final String QUOTE_OPENING_TAG = "<blockquote fr-original-style=\"\" style=\"border-color: rgb(153, 153, 153); border-left-width: 2px; border-left-style: solid; margin-left: 0px; padding-left: 5px; color: rgb(153, 153, 153);\">";
+    private final String QUOTE_OPENING_TAG = "<blockquote style=\"border-color: rgb(153, 153, 153); border-left-width: 2px; border-left-style: solid; margin-left: 0px; padding-left: 5px; color: rgb(153, 153, 153);\">";
     private final String QUOTE_CLOSING_TAG = "</blockquote>";
     Pattern QUOTE_PATTERN = Pattern.compile(QUOTE_REGEX);
 
@@ -61,6 +61,7 @@ class QuoteCoder implements Coder {
                 StringBuilder result = new StringBuilder()
                 result.append(BLOCKQUOTE_TO_QUOTE)
                 result.append(this.inlineTexCoder.toMd(CHEVRONS_MATCHER.group()));
+                result.append("\n")
                 result.append(BLOCKQUOTE_TO_QUOTE)
                 resultMd.replace(start + shift, end + shift, result.toString());
                 shift += result.length() - (end - start);
