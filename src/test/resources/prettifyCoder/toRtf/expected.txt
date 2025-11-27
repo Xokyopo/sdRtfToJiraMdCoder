@@ -1,80 +1,33 @@
 <ol>
-	<li>
-		Первый элемент нумерованного списка
-	</li>
-	<li>
-		Второй элемент нумерованного списка
+	<li>Первый элемент нумерованного списка</li>
+	<li>Второй элемент нумерованного списка
 		<ul>
-			<li>
-				Первый элемент вложенного списка
-			</li>
-			<li>
-				Второй элемент вложенного списка
-			</li>
+			<li>Первый элемент вложенного списка</li>
+			<li>Второй элемент вложенного списка</li>
 		</ul>
 	</li>
 </ol>
-<div>
-	Первая строка после списка
-</div>
-<div>
-	<strong style="font-weight: 700;" fr-original-style="">
-		Жирный текст
-	</strong>
-</div>
-<div>
-	<em>
-		&nbsp; &nbsp;Тест с трема пробелами до и после нбсп-ешками&nbsp; &nbsp;
-	</em>
-</div>
+<div>Первая строка после списка</div>
+<div><strong style="font-weight: 700;" fr-original-style="">Жирный текст</strong></div>
+<div><em>&nbsp; &nbsp;Тест с трема пробелами до и после нбсп-ешками&nbsp; &nbsp;</em></div>
 <table style="width: 100%; border: none; border-collapse: collapse; empty-cells: show; max-width: 100%;" fr-original-style="width: 100%;" fr-original-class="fr-table-with-borders">
 	<tbody>
 		<tr>
-			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">
-				С-З
-			</td>
-			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">
-				С
-			</td>
-			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">
-				С-В
-			</td>
+			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">С-З</td>
+			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">С</td>
+			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">С-В</td>
 		</tr>
 		<tr>
-			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">
-				З
-			</td>
-			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">
-				точка
-			</td>
-			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">
-				В
-			</td>
+			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">З</td>
+			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">точка</td>
+			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">В</td>
 		</tr>
 		<tr>
-			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">
-				Ю-З
-			</td>
-			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">
-				Ю
-			</td>
-			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">
-				Ю-В
-			</td>
+			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">Ю-З</td>
+			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">Ю</td>
+			<td style="width: 33.3333%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 33.3333%;">Ю-В</td>
 		</tr>
 	</tbody>
 </table>
-<h1>
-	Заголовок 1
-</h1>
-<div>
-	тест в
-	<u>
-		котором
-	</u>
-	 
-	<em>
-		форматирование
-	</em>
-	 окружено пробелами
-</div>
+<h1>Заголовок 1</h1>
+<div>тест в<u>котором</u><em>форматирование</em>окружено пробелами</div>
