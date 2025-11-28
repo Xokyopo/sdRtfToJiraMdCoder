@@ -15,7 +15,6 @@ class XmlPrettifyCoder implements Coder {
     private static final String ANY_TAG_REGEXP = "<\\/?[^>]*[^\\/]>";
     private static final Pattern ANY_TAG_PATTERN = Pattern.compile(ANY_TAG_REGEXP, Pattern.CASE_INSENSITIVE);
     private static final String LINE_SEPARATOR = System.lineSeparator();
-    private static final String END_TAG_PREFIX = "</";
     private static final String TAB = "\t";
     private static final List<String> RTF_ROW_TAGS = [
             "div", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "pre", "blockquote", "p", "li", "td"
@@ -90,10 +89,11 @@ class XmlPrettifyCoder implements Coder {
 
     @Override
     String toMd(String s) {
-        String withoutTagSpaces = s.replaceAll(">\\s+", ">");
-        withoutTagSpaces = withoutTagSpaces.replaceAll("\\s+<", "<");
-        String withoutLineSeparator = withoutTagSpaces.replaceAll(LINE_SEPARATOR, "");
-        return withoutLineSeparator
+        String withoutLeftSpaces = s.replaceAll("\\s+(?=<(?:${(RTF_BLOCK_TAGS + RTF_ROW_TAGS).join("|")}))", "");
+        String withoutRightSpaces = withoutLeftSpaces.replaceAll("(?<=/(?:${(RTF_BLOCK_TAGS + RTF_ROW_TAGS).join("|")})>)\\s+", "");
+        String afterOpenBlockSpaces = withoutRightSpaces.replaceAll("(?<=/(?:${(RTF_BLOCK_TAGS).join("|")})>)\\s+", "")
+        String afterClosedBlockSpaces = afterOpenBlockSpaces.replaceAll("\\s+(?=</(?:${(RTF_BLOCK_TAGS).join("|")}))", "");
+        return afterClosedBlockSpaces
     }
 
     private static void append(String text, int count, StringBuilder stringBuilder) {
