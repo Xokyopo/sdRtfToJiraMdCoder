@@ -3,13 +3,11 @@ package ru.itsm365.vita.coder.special
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import ru.itsm365.vita.coder.model.TestValue
 
 class XmlPrettifyCoderTest {
 
     private XmlPrettifyCoder coder;
-
-    private final TestValue simpleText = new TestValue("/simpleText/md.txt", "/simpleText/rtf.txt");
-
 
     @Before
     void setUp() {
@@ -17,39 +15,32 @@ class XmlPrettifyCoderTest {
     }
 
     @Test
-    void testToRtf() {
-        coder.toRtf(simpleText.rtf);
-        Assert.assertTrue(true);
+    void toRtf() {
+        TestValue testValue = new TestValue("/prettifyCoder/toRtf/input.txt", "/prettifyCoder/toRtf/expected.txt");
+        String expected = testValue.rtf;
+        String actual = coder.toRtf(testValue.md);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
-    void testToMd() {
-        coder.toMd(simpleText.rtf);
-        Assert.assertTrue(true);
+    void toRtf_print() {
+        TestValue testValue = new TestValue("/prettifyCoder/toRtf/input.txt", "/prettifyCoder/toRtf/expected.txt");
+        String actual = coder.toRtf(testValue.md);
+        println(actual);
     }
 
-    static class TestValue {
-        public final String md;
-        public final String rtf;
+    @Test
+    void toMd() {
+        TestValue testValue = new TestValue("/prettifyCoder/toMd/expected.txt", "/prettifyCoder/toMd/input.txt");
+        String expected = testValue.md;
+        String actual = coder.toMd(testValue.rtf);
+        Assert.assertEquals(expected, actual);
+    }
 
-        TestValue(String md, String rtf) {
-            this.md = loadResource(md)
-            this.rtf = loadResource(rtf)
-        }
-
-        private static String loadResource(String text) {
-            InputStream inputStream = TestValue.class.getResourceAsStream(text)
-            try {
-                if (inputStream == null) {
-                    throw new IllegalArgumentException("Ресурс с таким именем не найден или доступ к ресурсу запрещен менеджером безопасности");
-                }
-
-                return inputStream.text
-            } finally {
-                if (inputStream) {
-                    inputStream.close();
-                }
-            }
-        }
+    @Test
+    void toMd_print() {
+        TestValue testValue = new TestValue("/prettifyCoder/toMd/expected.txt", "/prettifyCoder/toMd/input.txt");
+        String actual = coder.toMd(testValue.rtf);
+        println(actual)
     }
 }
