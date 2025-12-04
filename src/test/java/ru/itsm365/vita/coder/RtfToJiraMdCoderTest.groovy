@@ -9,8 +9,6 @@ import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 class RtfToJiraMdCoderTest {
     private final XmlPrettifyCoder xmlPrettifyCoder = new XmlPrettifyCoder();
     private final TestValue simpleText = new TestValue("/simpleText/md.txt", "/simpleText/rtf.txt");
-    private final TestValue originalText = new TestValue("/originalText/md.txt", "/originalText/rtf.txt");
-    private final TestValue expectedText = new TestValue("/expectedText/md.txt", "/expectedText/rtf.txt");
 
     private Coder coder;
 
@@ -21,15 +19,17 @@ class RtfToJiraMdCoderTest {
 
     @Test
     void toRtf_ReturnExpectedResult_WhenConvertOriginalText() {
-        String expectedRtfText = this.expectedText.rtf;
-        String actualRtfTest = this.coder.toRtf(this.originalText.md);
+        TestValue testValue = new TestValue("/originalText/md.txt", "/expectedText/rtf.txt");
+        String expectedRtfText = testValue.rtf;
+        String actualRtfTest = this.coder.toRtf(testValue.md);
         Assert.assertEquals(expectedRtfText, actualRtfTest);
     }
 
     @Test
     void toMd_ReturnExpectedResult_WhenConvertOriginalText() {
-        String expectedMdText = this.expectedText.md;
-        String actualMdTest = this.coder.toMd(this.originalText.rtf);
+        TestValue testValue = new TestValue("/expectedText/md.txt", "/originalText/rtf.txt");
+        String expectedMdText = testValue.md;
+        String actualMdTest = this.coder.toMd(testValue.rtf);
         Assert.assertEquals(expectedMdText, actualMdTest);
     }
 
@@ -57,32 +57,4 @@ class RtfToJiraMdCoderTest {
     void testToMd() {
         println(this.coder.toMd(this.simpleText.rtf));
     }
-
-    @Test
-    void formRgbToHexCoder() {
-        //#00875a
-        int r = 16;
-        int g = 15;
-        int b = 17;
-
-        String hexR = String.format("%s%s", r < 16 ? "0" : "", Integer.toHexString(r));
-        String hexG = String.format("%s%s", g < 16 ? "0" : "", Integer.toHexString(g));
-        String hexB = String.format("%s%s", b < 16 ? "0" : "", Integer.toHexString(b));
-        println("#${hexR}${hexG}${hexB}");
-    }
-
-    @Test
-    void formHexToRgbCoder() {
-        String hex = "#00875a"
-        String hexR = "00";
-        String hexG = "87";
-        String hexB = "5a";
-
-        int r = Integer.parseInt(hexR, 16);
-        int g = Integer.parseInt(hexG, 16);
-        int b = Integer.parseInt(hexB, 16);
-
-        println("rgp(${r}, ${g}, ${b})")
-    }
-
 }

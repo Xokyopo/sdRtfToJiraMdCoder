@@ -1,7 +1,7 @@
 <div>Обычное предложение, ничего интересного.</div>
 <div>Предложение на второй строке.</div>
-<div><strong fr-original-style="" style="font-weight: 700;">Жирный текст&nbsp;<em>Жирный курсив&nbsp;<u>Жирный подчеркнутый курсив</u></em></strong></div>
-<div><em>Курсив&nbsp;<u>Подчеркнутый курсив</u></em></div>
+<div><strong fr-original-style="" style="font-weight: 700;">Жирный текст <em>Жирный курсив <u>Жирный подчеркнутый курсив</u></em></strong></div>
+<div><em>Курсив <u>Подчеркнутый курсив</u></em></div>
 <div><u>Подчеркнутый</u></div>
 
 <ol>
