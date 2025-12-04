@@ -93,7 +93,8 @@ class XmlPrettifyCoder implements Coder {
         String withoutRightSpaces = withoutLeftSpaces.replaceAll("(?<=/(?:${(RTF_BLOCK_TAGS + RTF_ROW_TAGS).join("|")})>)\\s+", "");
         String afterOpenBlockSpaces = withoutRightSpaces.replaceAll("(?<=/(?:${(RTF_BLOCK_TAGS).join("|")})>)\\s+", "")
         String afterClosedBlockSpaces = afterOpenBlockSpaces.replaceAll("\\s+(?=</(?:${(RTF_BLOCK_TAGS).join("|")}))", "");
-        return afterClosedBlockSpaces
+        String withoutLineSeparator = afterClosedBlockSpaces.replaceAll(LINE_SEPARATOR, "");
+        return withoutLineSeparator
     }
 
     private static void append(String text, int count, StringBuilder stringBuilder) {
