@@ -183,6 +183,7 @@ class AllListCoder implements Coder {
         Matcher openCloseListTagMather = rtfListTagPattern.matcher(rtfList);
 
         while (openItemTagMather.find(cursor)) {
+            stringBuilder.append(" ");
             stringBuilder.append(listTypeConfig.mdListTagName.repeat(level + 1));
             stringBuilder.append(" ");
 
