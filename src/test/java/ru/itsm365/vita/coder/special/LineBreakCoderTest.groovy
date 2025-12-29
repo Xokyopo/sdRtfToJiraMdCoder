@@ -22,14 +22,6 @@ class LineBreakCoderTest {
     }
 
     @Test
-    void toRtf_ShouldReturnTrue_WhenRun() {
-        String mdText = "dffdgfd${LINE_SEPARATOR}dfgfdgdgffd${LINE_SEPARATOR}dfsdfsdfsd ${LINE_SEPARATOR}sdfsdfsdfdf";
-        String expected = "dffdgfd<br/>dfgfdgdgffd<br/>dfsdfsdfsd <br/>sdfsdfsdfdf";
-        String actual = lineBreakCoder.toRtf(mdText);
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
     void toMd_ShouldReturnTrue_WhenRun() {
         String rtfText = "dffdgfd<br/>dfgfdgdgffd<br/>dfsdfsdfsd <br/>sdfsdfsdfdf";
         String expected = "dffdgfd${LINE_SEPARATOR}dfgfdgdgffd${LINE_SEPARATOR}dfsdfsdfsd ${LINE_SEPARATOR}sdfsdfsdfdf";

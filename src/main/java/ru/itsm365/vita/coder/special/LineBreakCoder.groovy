@@ -4,26 +4,15 @@ import ru.itsm365.vita.coder.Coder
 
 class LineBreakCoder implements Coder {
     private static final String MD_LINE_BREAKER = System.lineSeparator();
-    private static final String RTF_LINE_BREAKER = "<br/>";
+    private static final String RTF_LINE_BREAKER_TAG_TOKEN = "(?i)<br *\\/?>";
 
     @Override
     String toRtf(String s) {
-        return s.replaceAll(MD_LINE_BREAKER, RTF_LINE_BREAKER);
+        return s;
     }
 
     @Override
     String toMd(String s) {
-        StringBuilder result = new StringBuilder(s);
-        String lowerCaseIn = s.toLowerCase();
-
-        List<Integer> matches = [];
-        Closure<Integer> getNextPosition = { int it -> lowerCaseIn.indexOf(RTF_LINE_BREAKER, it + RTF_LINE_BREAKER.length()) }
-        for (int position = lowerCaseIn.indexOf(RTF_LINE_BREAKER); position > 0; position = getNextPosition(position)) {
-            matches << position;
-        }
-
-        matches.reverse().forEach { result.replace(it, it + RTF_LINE_BREAKER.length(), MD_LINE_BREAKER) }
-
-        return result.toString();
+        return s.replaceAll(RTF_LINE_BREAKER_TAG_TOKEN, MD_LINE_BREAKER);
     }
 }
