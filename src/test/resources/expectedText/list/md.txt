@@ -8,12 +8,12 @@
  *** Права доступа: ADMIN
  * existsByUsername()
  ## Параметры: username string
- ## Запрос: COUNT(!https://jira-test.vitaexpress.ru/images/icons/emoticons/star_yellow.png|thumbnail!) > 0
+ ## Запрос: COUNT( !https://jira-test.vitaexpress.ru/images/icons/emoticons/star_yellow.png|thumbnail! ) > 0
  ## Использование: при регистрации
  ## Ответ: boolean
  * countByStatus()
  ** Параметры: UserStatus status
  ** Группировка: по статусу
- ** Агрегация: COUNT(!https://jira-test.vitaexpress.ru/images/icons/emoticons/star_yellow.png|thumbnail!)
+ ** Агрегация: COUNT( !https://jira-test.vitaexpress.ru/images/icons/emoticons/star_yellow.png|thumbnail! )
  ** Ответ: Long
  * Компоненты                        
