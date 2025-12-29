@@ -43,4 +43,12 @@ class XmlPrettifyCoderTest {
         String actual = coder.toMd(testValue.rtf);
         println(actual)
     }
+
+    @Test
+    void toMd_BR() {
+        TestValue testValue = new TestValue("/prettifyCoder/toMd/expected_br.txt", "/prettifyCoder/toMd/input_br.txt");
+        String expected = testValue.md;
+        String actual = coder.toMd(testValue.rtf);
+        Assert.assertEquals(expected, actual);
+    }
 }

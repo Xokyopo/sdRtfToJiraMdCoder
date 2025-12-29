@@ -22,6 +22,7 @@ class XmlPrettifyCoder implements Coder {
     private static final List<String> RTF_BLOCK_TAGS = [
             "table", "ul", "ol", "tbody", "tr"
     ];
+    private static final BR_TAG_NAME = "br";
 
     @Override
     String toRtf(String s) {
@@ -89,7 +90,7 @@ class XmlPrettifyCoder implements Coder {
 
     @Override
     String toMd(String s) {
-        String withoutLeftSpaces = s.replaceAll("\\s+(?=<(?:${(RTF_BLOCK_TAGS + RTF_ROW_TAGS).join("|")}))", "");
+        String withoutLeftSpaces = s.replaceAll("\\s+(?=<(?:${(RTF_BLOCK_TAGS + RTF_ROW_TAGS).join("|") + "|${BR_TAG_NAME}"}))", "");
         String withoutRightSpaces = withoutLeftSpaces.replaceAll("(?<=/(?:${(RTF_BLOCK_TAGS + RTF_ROW_TAGS).join("|")})>)\\s+", "");
         String afterOpenBlockSpaces = withoutRightSpaces.replaceAll("(?<=/(?:${(RTF_BLOCK_TAGS).join("|")})>)\\s+", "")
         String afterClosedBlockSpaces = afterOpenBlockSpaces.replaceAll("\\s+(?=</(?:${(RTF_BLOCK_TAGS).join("|")}))", "");
