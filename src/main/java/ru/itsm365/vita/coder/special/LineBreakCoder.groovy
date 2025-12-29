@@ -6,7 +6,7 @@ class LineBreakCoder implements Coder {
     private static final String MD_LINE_SEPARATOR = System.lineSeparator();
     private static final String RTF_LINE_BREAKER_TAG_TOKEN = "(?i)<br *\\/?>";
     private static final String MD_NBSP = " "
-    private static final String MD_LINE_JOINER_TOKEN = "(?<!\\h*>)${MD_LINE_SEPARATOR}(?!${MD_LINE_SEPARATOR}|\\h*[\\*#]+\\h+|\\h*\\||\\h*<)";
+    private static final String MD_LINE_JOINER_TOKEN = "(?<!${MD_LINE_SEPARATOR}|\\h*>)${MD_LINE_SEPARATOR}(?!${MD_LINE_SEPARATOR}|\\h*[\\*#]+\\h+|\\h*\\||\\h*<)";
 
     @Override
     String toRtf(String s) {
