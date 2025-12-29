@@ -6,6 +6,7 @@ import org.junit.Test
 
 class LineBreakCoderTest {
     private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String MD_NBSP = " "
 
     private LineBreakCoder lineBreakCoder;
 
@@ -15,33 +16,50 @@ class LineBreakCoderTest {
     }
 
     @Test
-    void reversTest() {
-        String expected = "dffdgfd${LINE_SEPARATOR}dfgfdgdgffd${LINE_SEPARATOR}dfsdfsdfsd ${LINE_SEPARATOR}sdfsdfsdfdf";
-        String actual = lineBreakCoder.toMd(lineBreakCoder.toRtf(expected));
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    void toMd_ShouldReturnTrue_WhenRun() {
-        String rtfText = "dffdgfd<br/>dfgfdgdgffd<br/>dfsdfsdfsd <br/>sdfsdfsdfdf";
-        String expected = "dffdgfd${LINE_SEPARATOR}dfgfdgdgffd${LINE_SEPARATOR}dfsdfsdfsd ${LINE_SEPARATOR}sdfsdfsdfdf";
+    void toMd() {
+        String rtfText = "Строка 1<br>Строка 2";
+        String expected = "Строка 1${LINE_SEPARATOR}Строка 2";
         String actual = lineBreakCoder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    void toMd_ShouldReturnTrue_WhenTagIsUpperCase() {
-        String rtfText = "dffdgfd<BR/>dfgfdgdgffd<Br/>dfsdfsdfsd <bR/>sdfsdfsdfdf";
-        String expected = "dffdgfd${LINE_SEPARATOR}dfgfdgdgffd${LINE_SEPARATOR}dfsdfsdfsd ${LINE_SEPARATOR}sdfsdfsdfdf";
+    void toRtf_ShouldReturnBr_WhenHaveLineSeparatorInsideListElement() {
+        String mdText = " * Строка 1${LINE_SEPARATOR}Строка 2";
+        String expected = " * Строка 1<br>Строка 2";
+        String actual = lineBreakCoder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnBr_WhenHaveLineSeparatorInsideTableElement() {
+        String mdText = "|Заголовок 1| Заголовок 2|${LINE_SEPARATOR}|Строка 1${LINE_SEPARATOR}Строка 2|Столбец 2|";
+        String expected = "|Заголовок 1| Заголовок 2|${LINE_SEPARATOR}|Строка 1<br>Строка 2|Столбец 2|";
+        String actual = lineBreakCoder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnNbsp_WhenHaveEmptyLine() {
+        String rtfText = "Строка 1${LINE_SEPARATOR}<div><br></div>${LINE_SEPARATOR}Строка 2";
+        String expected = "Строка 1${LINE_SEPARATOR}${LINE_SEPARATOR}${MD_NBSP}${LINE_SEPARATOR}${LINE_SEPARATOR}Строка 2";
         String actual = lineBreakCoder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    void toMd_ShouldReturnTrue_WhenInsideAOtherTag() {
-        String rtfText = "<p>dffdgfd<BR/></p><p>dfgfdgdgffd<Br/></p>dfsdfsdfsd <p><bR/></p>sdfsdfsdfdf";
-        String expected = "<p>dffdgfd${LINE_SEPARATOR}</p><p>dfgfdgdgffd${LINE_SEPARATOR}</p>dfsdfsdfsd <p>${LINE_SEPARATOR}</p>sdfsdfsdfdf";
-        String actual = lineBreakCoder.toMd(rtfText);
+    void toRtf_ShouldReturnNbsp_WhenHaveEmptyLine() {
+        String mdText = "Строка 1${LINE_SEPARATOR}${LINE_SEPARATOR}${MD_NBSP}${LINE_SEPARATOR}${LINE_SEPARATOR}Строка 2";
+        String expected = "Строка 1${LINE_SEPARATOR}<div><br></div>${LINE_SEPARATOR}Строка 2";
+        String actual = lineBreakCoder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnNbsp_WhenHaveTwoEmptyLine() {
+        String mdText = "Строка 1${LINE_SEPARATOR}${LINE_SEPARATOR}${MD_NBSP}${LINE_SEPARATOR}${LINE_SEPARATOR}${MD_NBSP}${LINE_SEPARATOR}${LINE_SEPARATOR}Строка 2";
+        String expected = "Строка 1${LINE_SEPARATOR}<div><br></div><div><br></div>${LINE_SEPARATOR}Строка 2";
+        String actual = lineBreakCoder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 }

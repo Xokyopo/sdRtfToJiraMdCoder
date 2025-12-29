@@ -70,7 +70,7 @@ class RtfToJiraMdCoder implements Coder {
                 ALL_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
-                //LINE_BREAK_CODER,
+                LINE_BREAK_CODER,
                 ROW_CODER,
                 MD_ESCAPE_CODER,
 
@@ -83,9 +83,9 @@ class RtfToJiraMdCoder implements Coder {
                 XML_PRETTIFY_CODER,
                 RTF_NBSP_CODER,
 
+                LINE_BREAK_CODER,
                 MD_ESCAPE_CODER,
                 ROW_CODER,
-                //LINE_BREAK_CODER,
 
                 //Затем обходим все подстрочные элементы
                 ALL_TEST_STYLE_CODER,
