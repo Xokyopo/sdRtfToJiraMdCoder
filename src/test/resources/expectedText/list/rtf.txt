@@ -16,7 +16,7 @@
 	<li>existsByUsername()
 		<ol>
 			<li>Параметры: username string</li>
-			<li>Запрос: COUNT(<img src="https://jira-test.vitaexpress.ru/images/icons/emoticons/star_yellow.png">) &gt; 0</li>
+			<li>Запрос: COUNT( <img src="https://jira-test.vitaexpress.ru/images/icons/emoticons/star_yellow.png"> ) &gt; 0</li>
 			<li>Использование: при регистрации</li>
 			<li>Ответ: boolean</li>
 		</ol>
@@ -25,7 +25,7 @@
 		<ul>
 			<li>Параметры: UserStatus status</li>
 			<li>Группировка: по статусу</li>
-			<li>Агрегация: COUNT(<img src="https://jira-test.vitaexpress.ru/images/icons/emoticons/star_yellow.png">)</li>
+			<li>Агрегация: COUNT( <img src="https://jira-test.vitaexpress.ru/images/icons/emoticons/star_yellow.png"> )</li>
 			<li>Ответ: Long</li>
 		</ul>
 	</li>
