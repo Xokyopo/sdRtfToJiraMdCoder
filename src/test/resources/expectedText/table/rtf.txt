@@ -18,45 +18,31 @@
 		</tr>
 		<tr>
 			<td style="border: 1px solid rgb(0, 0, 0);">Система колеровки</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">есть
-				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">есть<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">Температура основания
-				<br></td>
-			<td style="border: 1px solid rgb(0, 0, 0);">+10 &deg;С
-				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Температура основания<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">+10 &deg;С<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">Min температура эксплуатации
-				<br></td>
-			<td style="border: 1px solid rgb(0, 0, 0);">-50 &deg;С
-				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Min температура эксплуатации<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">-50 &deg;С<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">Max температура эксплуатации
-				<br></td>
-			<td style="border: 1px solid rgb(0, 0, 0);">50 &deg;С
-				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Max температура эксплуатации<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">50 &deg;С<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">Способ нанесения
-				<br></td>
-			<td style="border: 1px solid rgb(0, 0, 0);">кисть/валик/краскораспылитель
-				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Способ нанесения<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">кисть/валик/краскораспылитель<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">Время полного высыхания
-				<br></td>
-			<td style="border: 1px solid rgb(0, 0, 0);">1 ч
-				<br>
-				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Время полного высыхания<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">1 ч<br><br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">Влагостойкость
-				<br></td>
-			<td style="border: 1px solid rgb(0, 0, 0);"><a href="https://www.vseinstrumenti.ru/tag-page/vodostojkie-kraski-dlya-sten-i-potolkov-160681/">да</a>
-				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Влагостойкость<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);"><a href="https://www.vseinstrumenti.ru/tag-page/vodostojkie-kraski-dlya-sten-i-potolkov-160681/">да</a><br></td>
 		</tr>
 	</tbody>
 </table>
