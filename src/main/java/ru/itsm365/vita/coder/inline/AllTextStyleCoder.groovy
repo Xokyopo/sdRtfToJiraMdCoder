@@ -46,7 +46,7 @@ class AllTextStyleCoder implements Coder {
         }
 
         String escapedStartMdTagPattern = "(?:${mdOpenTags.collect { "\\{${it}}" }.join("|")})"
-        String aloneStartMdTagPattern = "((?<=\\s|^|\\|)(?:${mdOpenTags.join("|")})(?!\\s|\\*))"
+        String aloneStartMdTagPattern = "((?<=\\s|^|\\|)(?:${mdOpenTags.join("|")})(?!\\s|\\*+\\h))"
         MD_OPEN_TAGS_PATTERN = Pattern.compile("${escapedStartMdTagPattern}|${aloneStartMdTagPattern}", Pattern.CASE_INSENSITIVE)
     }
 
