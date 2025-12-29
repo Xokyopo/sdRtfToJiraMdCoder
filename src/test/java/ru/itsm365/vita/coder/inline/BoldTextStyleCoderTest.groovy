@@ -216,4 +216,13 @@ class BoldTextStyleCoderTest {
 
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldReturnUnmodifiedText_WhenHaveMarkedList() {
+        String mdText = "*** test";
+        String expected = "*** test";
+        String actual = this.coder.toRtf(mdText);
+
+        Assert.assertEquals(expected, actual);
+    }
 }

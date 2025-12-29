@@ -16,7 +16,7 @@ class AllListCoder implements Coder {
 
     //3. Поиск элементов
     private static final String RTF_OPEN_ITEM_TAG_REGEXP_PATTERN = "<li[^><]*>";
-    private static final String RTF_LIST_IN_ITEM_TAG_REGEXP_PATTERN = "(<[ou]l[^><]*>)|(</[ou]l>)|(</li>)";
+    private static final String RTF_LIST_IN_ITEM_TAG_REGEXP_PATTERN = "(<[ou]l[^><]*>)|(\\s*</[ou]l>)|(\\s*</li>)";
     private static final String MD_ITEM_GROUPS_REGEXP_PATTERN = "(?:\\h*)([\\*\\#]+)(?:\\h)([^\$]*)";
 
     //4. Разделение на маркированный и нумированный.
@@ -183,6 +183,7 @@ class AllListCoder implements Coder {
         Matcher openCloseListTagMather = rtfListTagPattern.matcher(rtfList);
 
         while (openItemTagMather.find(cursor)) {
+            stringBuilder.append(" ");
             stringBuilder.append(listTypeConfig.mdListTagName.repeat(level + 1));
             stringBuilder.append(" ");
 
