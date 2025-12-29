@@ -1,116 +1,62 @@
-<div>
-	<br>
-</div>
-
 <table style="border-collapse: collapse;">
 	<tbody>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-				<div style="text-align: left;">Срок годности (с даты изготовления)</div>
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    18 мес
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);"><div style="text-align: left;">Срок годности (с даты изготовления)</div></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">18 мес</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Тип
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    <a href="https://www.vseinstrumenti.ru/tag-page/akrilovaya-kraska-dlya-sten-i-potolkov-11921/">
-			        акриловая (водно-дисперсионная)
-			    </a>
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Тип</td>
+			<td style="border: 1px solid rgb(0, 0, 0);"><a href="https://www.vseinstrumenti.ru/tag-page/akrilovaya-kraska-dlya-sten-i-potolkov-11921/">акриловая (водно-дисперсионная)</a></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Вид тары
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    <a href="https://www.vseinstrumenti.ru/tag-page/kraska-v-vedre-1691731/">
-			        Ведро
-			    </a>
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Вид тары</td>
+			<td style="border: 1px solid rgb(0, 0, 0);"><a href="https://www.vseinstrumenti.ru/tag-page/kraska-v-vedre-1691731/">Ведро</a></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Базис
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    база 1 (B1/A/AA/BW/KA/VVA/AP/LAP/MRA/PR)
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Базис</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">база 1 (B1/A/AA/BW/KA/VVA/AP/LAP/MRA/PR)</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Система колеровки
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    есть
-				<br>
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Система колеровки</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">есть
+				<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Температура основания
-				<br>
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    +10 &deg;С
-				<br>
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Температура основания
+				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">+10 &deg;С
+				<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Min температура эксплуатации
-				<br>
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    -50 &deg;С
-				<br>
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Min температура эксплуатации
+				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">-50 &deg;С
+				<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Max температура эксплуатации
-				<br>
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    50 &deg;С
-				<br>
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Max температура эксплуатации
+				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">50 &deg;С
+				<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Способ нанесения
-				<br>
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    кисть/валик/краскораспылитель
-				<br>
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Способ нанесения
+				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">кисть/валик/краскораспылитель
+				<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Время полного высыхания
+			<td style="border: 1px solid rgb(0, 0, 0);">Время полного высыхания
+				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);">1 ч
 				<br>
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    1 ч
-				<br>
-				<br>
-			</td>
+				<br></td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    Влагостойкость
-				<br>
-			</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">
-			    <a href="https://www.vseinstrumenti.ru/tag-page/vodostojkie-kraski-dlya-sten-i-potolkov-160681/">
-			        да
-			    </a>
-				<br>
-			</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Влагостойкость
+				<br></td>
+			<td style="border: 1px solid rgb(0, 0, 0);"><a href="https://www.vseinstrumenti.ru/tag-page/vodostojkie-kraski-dlya-sten-i-potolkov-160681/">да</a>
+				<br></td>
 		</tr>
 	</tbody>
 </table>
