@@ -1,0 +1,24 @@
+<table style="width: 100%; border: none; border-collapse: collapse; empty-cells: show; max-width: 100%;" fr-original-style="width: 100%;" fr-original-class="fr-table-with-borders">
+	<tbody>
+		<tr>
+			<td style="width: 50%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 50.0000%;">Заголовок 1<br></td>
+			<td style="width: 50%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 50.0000%;">Заголовок 2<br></td>
+		</tr>
+		<tr>
+			<td style="width: 50%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 50.0000%;">Строка 1<br>Строка 2<br>Строка 3</td>
+			<td style="width: 50%; min-width: 5px; user-select: text; border: 1px solid rgb(221, 221, 221);" fr-original-style="width: 50.0000%;">Столбец A2</td>
+		</tr>
+	</tbody>
+</table>
+<div>Строка 1</div>
+<div>
+	<br>
+</div>
+<div>Строка 2</div>
+<div>
+	<br>
+</div>
+<div>
+	<br>
+</div>
+<div>Строка 3</div>

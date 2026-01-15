@@ -1,0 +1,18 @@
+<table style="border-collapse: collapse;">
+	<tbody>
+		<tr>
+			<td style="border: 1px solid rgb(0, 0, 0);">Заголовок 1</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Заголовок 2</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid rgb(0, 0, 0);">Строка 1<br>Строка 2<br>Строка 3</td>
+			<td style="border: 1px solid rgb(0, 0, 0);">Столбец A2</td>
+		</tr>
+	</tbody>
+</table>
+<div>Строка 1</div>
+<div><br></div>
+<div>Строка 2</div>
+<div><br></div>
+<div><br></div>
+<div>Строка 3</div>
