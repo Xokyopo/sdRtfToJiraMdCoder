@@ -2,10 +2,7 @@ package ru.itsm365.vita.coder
 
 import ru.itsm365.vita.coder.block.AllListCoder
 import ru.itsm365.vita.coder.block.TableCoder
-import ru.itsm365.vita.coder.inline.AllTextStyleCoder
-import ru.itsm365.vita.coder.inline.ImageCoder
-import ru.itsm365.vita.coder.inline.LinkCoder
-import ru.itsm365.vita.coder.inline.SpanCoder
+import ru.itsm365.vita.coder.inline.*
 import ru.itsm365.vita.coder.line.CodeCoder
 import ru.itsm365.vita.coder.line.HeaderCoder
 import ru.itsm365.vita.coder.line.QuoteCoder
@@ -60,6 +57,7 @@ class RtfToJiraMdCoder implements Coder {
                 IMAGE_CODER,
                 LINK_CODER,
                 SPAN_CODER,
+                LINE_BREAK_CODER,
 
                 //Затем обходим все строчные элементы
                 HEADER_CODER,
@@ -70,7 +68,6 @@ class RtfToJiraMdCoder implements Coder {
                 ALL_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
-                LINE_BREAK_CODER,
                 ROW_CODER,
                 MD_ESCAPE_CODER,
 
@@ -83,7 +80,6 @@ class RtfToJiraMdCoder implements Coder {
                 XML_PRETTIFY_CODER,
                 RTF_NBSP_CODER,
 
-                LINE_BREAK_CODER,
                 MD_ESCAPE_CODER,
                 ROW_CODER,
 
@@ -92,6 +88,7 @@ class RtfToJiraMdCoder implements Coder {
                 IMAGE_CODER,
                 LINK_CODER,
                 SPAN_CODER,
+                LINE_BREAK_CODER,
 
                 //Затем обходим все строчные элементы
                 HEADER_CODER,
