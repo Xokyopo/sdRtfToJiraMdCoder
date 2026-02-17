@@ -1,9 +1,11 @@
 <table style="border-collapse: collapse;">
-	<tbody>
+	<thead>
 		<tr>
-			<td style="border: 1px solid rgb(0, 0, 0);">Заголовок 1</td>
-			<td style="border: 1px solid rgb(0, 0, 0);">Заголовок 2</td>
+			<th style="background: rgb(230, 230, 230);border: 1px solid rgb(0, 0, 0);">Заголовок 1</th>
+			<th style="background: rgb(230, 230, 230);border: 1px solid rgb(0, 0, 0);">Заголовок 2</th>
 		</tr>
+	</thead>
+	<tbody>
 		<tr>
 			<td style="border: 1px solid rgb(0, 0, 0);">Строка 1<br>Строка 2<br>Строка 3</td>
 			<td style="border: 1px solid rgb(0, 0, 0);">Столбец A2</td>
