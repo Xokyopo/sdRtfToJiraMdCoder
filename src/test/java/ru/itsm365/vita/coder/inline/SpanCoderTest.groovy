@@ -203,4 +203,24 @@ class SpanCoderTest {
 
         Assert.assertEquals(expected, actual)
     }
+
+    @Test
+    void toRtf_testNestedColorsToRtf() {
+        // Проверка вложенности: Зеленый внутри Красного
+        String mdText = "{color:#FF0000}Красный {color:#00FF00}Зеленый{color} Красный{color}"
+        String expected = '<span style="color: rgb(255, 0, 0);">Красный <span style="color: rgb(0, 255, 0);">Зеленый</span> Красный</span>'
+        String actual = this.coder.toRtf(mdText)
+
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    void toMd_testNestedColorsToMd() {
+        // Проверка обратной вложенности: rgb(0, 255, 0) внутри rgb(255, 0, 0)
+        String rtfText = '<span style="color: rgb(255, 0, 0);">Красный <span style="color: rgb(0, 255, 0);">Зеленый</span> Красный</span>'
+        String expected = "{color:#ff0000}Красный {color:#00ff00}Зеленый{color} Красный{color}"
+        String actual = this.coder.toMd(rtfText)
+
+        Assert.assertEquals(expected, actual)
+    }
 }
