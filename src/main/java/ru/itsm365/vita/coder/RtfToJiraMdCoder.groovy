@@ -104,7 +104,7 @@ class RtfToJiraMdCoder implements Coder {
     }
 
     {
-        QUOTE_CODER.setInlineTexCoder(this);
+        QUOTE_CODER.setInlineTexCoder(new QuoterInlineCoder());
     }
 
     @Override
