@@ -6,11 +6,12 @@ import org.junit.Test
 import ru.itsm365.vita.coder.Coder
 
 public class QuoteCoderTest {
-    private Coder coder;
-    private final String QUOTE_OPENING_TAG = "<blockquote fr-original-style=\"\" style=\"border-color: rgb(153, 153, 153); border-left-width: 2px; border-left-style: solid; margin-left: 0px; padding-left: 5px; color: rgb(153, 153, 153);\">";
-    private final String QUOTE_CLOSING_TAG = "</blockquote>";
+    private static final String LINE_SEPARATOR = "${System.lineSeparator()}";
+    private static final String BLOCKQUOTE_STYLE = QuoteCoder.BLOCKQUOTE_STYLE
+    private static final String QUOTE_OPENING_TAG = "<blockquote style=\"border-color: rgb(153, 153, 153); border-left-width: 2px; border-left-style: solid; margin-left: 0px; padding-left: 5px; color: rgb(153, 153, 153);\">";
+    private static final String QUOTE_CLOSING_TAG = "</blockquote>";
 
-    private final String LINE_SEPARATOR = "${System.lineSeparator()}";
+    private Coder coder;
 
     @Before
     public void setUp() throws Exception {
@@ -130,7 +131,7 @@ public class QuoteCoderTest {
     @Test
     void toRtf_ShouldReturnConvertQuotes_WhenDividedText() {
         String defaultRtfQuoteStyle = [
-                'fr-original-style="" style="border-color: rgb(153, 153, 153); border-left-width: 2px; ',
+                'style="border-color: rgb(153, 153, 153); border-left-width: 2px; ',
                 'border-left-style: solid; margin-left: 0px; padding-left: 5px; color: rgb(153, 153, 153);"'
         ].join("")
         String mdText = "{quote}цитата1{quote}${LINE_SEPARATOR}текст между цитатами${LINE_SEPARATOR}{quote}цитата2{quote}";
@@ -140,5 +141,78 @@ public class QuoteCoderTest {
         ].join("")
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_shouldHandleSimpleQuote() {
+        String mdText = "{quote}Простая цитата{quote}"
+        String expected = "<blockquote style=\"${BLOCKQUOTE_STYLE}\">Простая цитата</blockquote>"
+        String actual = this.coder.toRtf(mdText)
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    void toRtf_shouldHandleQuoteWithColorInside() {
+        // Сочетание цитаты и цвета через inlineTexCoder
+        String mdText = "{quote}Цветной {color:#ff0000}текст{color} в цитате{quote}"
+        String actual = this.coder.toRtf(mdText)
+
+        Assert.assertTrue(actual.startsWith("<blockquote"))
+        Assert.assertTrue(actual.contains("{color:#ff0000}текст{color}"))
+        Assert.assertTrue(actual.endsWith("</blockquote>"))
+    }
+
+    @Test
+    void toRtf_shouldHandleMultipleQuotesInOneText() {
+        // Две независимые цитаты в одном тексте
+        String mdText = "{quote}Раз{quote} и {quote}Два{quote}"
+        String actual = this.coder.toRtf(mdText)
+
+        Assert.assertEquals(2, actual.count("<blockquote"))
+        Assert.assertTrue(actual.contains("Раз</blockquote> и <blockquote"))
+    }
+
+    @Test
+    void toRtf_shouldHandleEmptyQuote() {
+        // Пустая цитата не должна ломать парсер
+        String mdText = "{quote}{quote}"
+        String expected = "<blockquote style=\"${BLOCKQUOTE_STYLE}\"></blockquote>"
+        String actual = this.coder.toRtf(mdText)
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    void toMd_shouldConvertSimpleBlockquote() {
+        String rtfText = "<blockquote>Текст цитаты</blockquote>"
+        String expected = "{quote}Текст цитаты{quote}"
+        String actual = this.coder.toMd(rtfText)
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    void toMd_shouldIgnoreAttributesInBlockquote() {
+        // Проверка, что любые стили/классы в теге blockquote игнорируются
+        String rtfText = "<blockquote class=\"jira-quote\" style=\"color: red;\" data-id=\"123\">Контент</blockquote>"
+        String expected = "{quote}Контент{quote}"
+        String actual = this.coder.toMd(rtfText)
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    void toMd_shouldHandleBlockquoteWithInternalColor() {
+        // Цитата со вложенным цветом при возврате в MD
+        String rtfText = "<blockquote><span style=\"color: rgb(0, 0, 255);\">Синий</span></blockquote>"
+        String expected = "{quote}<span style=\"color: rgb(0, 0, 255);\">Синий</span>{quote}"
+        String actual = this.coder.toMd(rtfText)
+        Assert.assertEquals(expected, actual)
+    }
+
+    @Test
+    void toMd_shouldPreserveTextOutsideQuotes() {
+        // Проверка, что текст до и после цитаты остается нетронутым
+        String rtfText = "Автор сказал: <blockquote>Я приду</blockquote> в полдень."
+        String expected = "Автор сказал: {quote}Я приду{quote} в полдень."
+        String actual = this.coder.toMd(rtfText)
+        Assert.assertEquals(expected, actual)
     }
 }
