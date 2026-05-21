@@ -1,1 +1,1 @@
-<div><span style="color: rgb(184, 49, 47);"><em>курсив</em> <strong style="font-weight: 700;" fr-original-style="">жирный</strong> <u>подчеркнутый</u> <s>зачеркнутый</s> <sub>основание</sub> <sup>степень</sup></span></div>
+<div><span style="color: rgb(184, 49, 47);"><em>курсив</em> <strong>жирный</strong> <u>подчеркнутый</u> <s>зачеркнутый</s> <sub>основание</sub> <sup>степень</sup></span></div>
