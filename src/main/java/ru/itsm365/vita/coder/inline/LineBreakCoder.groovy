@@ -14,7 +14,8 @@ class LineBreakCoder implements Coder {
 
     @Override
     String toRtf(String s) {
-        String mergedTableText = s.replaceAll(MD_SEPARATED_TABLE_LINE_TOKEN, "${RTF_LINE_SEPARATOR}")
+        //Закомментировано так как съедает строки даже не в таблице.
+        String mergedTableText = s//s.replaceAll(MD_SEPARATED_TABLE_LINE_TOKEN, "${RTF_LINE_SEPARATOR}")
         String mergedTableBR = mergedTableText.replaceAll("(?<!${MD_LINE_SEPARATOR})${MD_LINE_SEPARATOR}(?=<br/?>)", "${RTF_LINE_SEPARATOR}")
 
         //Преобразует у таблицы переносы строк.
@@ -53,7 +54,7 @@ class LineBreakCoder implements Coder {
     @Override
     String toMd(String s) {
         String replacedEmptyLine = s.replaceAll("(?<=${MD_LINE_SEPARATOR})${RTF_LINE_SEPARATOR}(?=${MD_LINE_SEPARATOR})", "${MD_LINE_SEPARATOR}${MD_NBSP}${MD_LINE_SEPARATOR}");
-        String fixedDoubleSeparetion = replacedEmptyLine.replaceAll("(?<=${MD_NBSP})(\\r?\\n)+(?=${MD_NBSP})", "${MD_LINE_SEPARATOR}${MD_LINE_SEPARATOR}");
+        String fixedDoubleSeparetion = replacedEmptyLine.replaceAll("(?<=${MD_NBSP})(\\r?\\n)(\\r?\\n)+(?=${MD_NBSP})", "${MD_LINE_SEPARATOR}${MD_LINE_SEPARATOR}");
         String tableLineBreaker = fixedDoubleSeparetion.replaceAll(RTF_FIRST_LINE_BREAKER_TAG_TOKEN, MD_LINE_SEPARATOR)
         return tableLineBreaker.replaceAll(RTF_LINE_BREAKER_TAG_TOKEN, "${MD_NBSP}${MD_LINE_SEPARATOR}")
     }
