@@ -9,14 +9,12 @@ class LineBreakCoder implements Coder {
     private static final String MD_TABLE_CELL_DELIMITER = "|";
     private static final String RTF_FIRST_LINE_BREAKER_TAG_TOKEN = "(?i)(?<!<br/?>)<br *\\/?>";
     private static final String RTF_LINE_BREAKER_TAG_TOKEN = "(?i)<br *\\/?>";
-    private static final String MD_SEPARATED_TABLE_LINE_TOKEN = "${MD_NBSP}${MD_LINE_SEPARATOR}(?!${MD_LINE_SEPARATOR})";
+    private static final String MD_SEPARATED_TABLE_LINE_TOKEN = "(?<=${RTF_LINE_SEPARATOR})${MD_NBSP}(?=${RTF_LINE_SEPARATOR})";
 
 
     @Override
     String toRtf(String s) {
-        //Закомментировано так как съедает строки даже не в таблице.
-        String mergedTableText = s//s.replaceAll(MD_SEPARATED_TABLE_LINE_TOKEN, "${RTF_LINE_SEPARATOR}")
-        String mergedTableBR = mergedTableText.replaceAll("(?<!${MD_LINE_SEPARATOR})${MD_LINE_SEPARATOR}(?=<br/?>)", "${RTF_LINE_SEPARATOR}")
+        String mergedTableBR = s.replaceAll("(?<!${MD_LINE_SEPARATOR})${MD_LINE_SEPARATOR}(?=<br/?>)", "${RTF_LINE_SEPARATOR}")
 
         //Преобразует у таблицы переносы строк.
         StringBuilder joinedTableBreakLine = new StringBuilder();
@@ -48,7 +46,9 @@ class LineBreakCoder implements Coder {
 
         String withEmptyLines = joinedTableBreakLine.replaceAll("(?<=${MD_LINE_SEPARATOR})${MD_NBSP}(?=${MD_LINE_SEPARATOR})", RTF_LINE_SEPARATOR);
         String removedBefore = withEmptyLines.replaceAll("(\\r?\\n)+(?=${RTF_LINE_SEPARATOR})", MD_LINE_SEPARATOR);
-        return removedBefore.replaceAll("(?<=${RTF_LINE_SEPARATOR})(\\r?\\n)+", MD_LINE_SEPARATOR);
+        String removedDoubleLineSeparation = removedBefore.replaceAll("(?<=${RTF_LINE_SEPARATOR})(\\r?\\n)+", MD_LINE_SEPARATOR);
+
+        return removedDoubleLineSeparation.replaceAll(MD_SEPARATED_TABLE_LINE_TOKEN, "");
     }
 
     @Override
