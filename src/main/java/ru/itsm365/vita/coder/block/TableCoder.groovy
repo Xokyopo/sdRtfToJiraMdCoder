@@ -198,9 +198,6 @@ class TableCoder implements Coder {
     }
 
 
-    Integer cells = 0;
-    Integer rows = 0;
-    Boolean isFirst = true;
 
     Boolean checkTable(String rtf) {
         Matcher matcher = patternTable.matcher(rtf);
@@ -256,6 +253,11 @@ class TableCoder implements Coder {
     }
 
     void checkTags(String block, Pattern patternTr, Pattern pattern) {
+
+        Integer cells = 0;
+        Integer rows = 0;
+        Boolean isFirst = true;
+
         Matcher matcherTr = patternTr.matcher(block);
         while (matcherTr.find()) {
             Integer counter = 0;
