@@ -17,10 +17,10 @@ class XmlPrettifyCoder implements Coder {
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String TAB = "\t";
     private static final List<String> RTF_ROW_TAGS = [
-            "div", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "pre", "blockquote", "p", "li", "td", "th"
+            "div", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "pre", "p", "li", "td", "th"
     ];
     private static final List<String> RTF_BLOCK_TAGS = [
-            "table", "ul", "ol", "tbody", "tr", "thead"
+            "table", "ul", "ol", "tbody", "tr", "thead", "blockquote"
     ];
     private static final BR_TAG_NAME = "br";
 
