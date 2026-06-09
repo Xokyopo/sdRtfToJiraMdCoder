@@ -99,7 +99,7 @@ class XmlPrettifyCoder implements Coder {
             // 4. Удаляем пробелы перед закрывающими тегами БЛОКОВ (table, ul, ol и т.д.)
             String afterClosedBlockSpaces = afterOpenBlockSpaces.replaceAll("\\s+(?=</(?:${(RTF_BLOCK_TAGS).join("|")}))", "");
             // Регулярное выражение: ищем последовательность пробелов, за которой следует </td> или </th>
-            String withoutSpacesBeforeCellClose = afterClosedBlockSpaces.replaceAll("\\s+(?=</(?:td|th))", "");
+        String withoutSpacesBeforeCellClose = afterClosedBlockSpaces.replaceAll("\\s+(?=</(?:td|th)>)", "");
             // 6. Удаляем все переносы строк
             String withoutLineSeparator = withoutSpacesBeforeCellClose.replaceAll(LINE_SEPARATOR, "");
             return withoutLineSeparator
