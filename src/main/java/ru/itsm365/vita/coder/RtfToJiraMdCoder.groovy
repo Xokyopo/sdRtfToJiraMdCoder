@@ -106,7 +106,7 @@ class RtfToJiraMdCoder implements Coder {
     {
         //TODO отключено так как все друге кодеры и так трогают все что внутри.
         //Нужно, сделать так что бы такие блоки обрабатывались отдельно от остального.
-        //QUOTE_CODER.setInlineTexCoder(new QuoterInlineCoder());
+        QUOTE_CODER.setInlineTexCoder(new QuoterInlineCoder());
     }
 
     @Override

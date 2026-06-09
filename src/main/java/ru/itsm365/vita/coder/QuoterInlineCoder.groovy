@@ -48,54 +48,54 @@ class QuoterInlineCoder implements Coder {
     static {
         TO_RTF = [
                 //Сначала специальные обработчики
-                RTF_ESCAPE_CODER,
+                //RTF_ESCAPE_CODER,
 
                 //Затем обходим все подстрочные элементы
-                ALL_TEST_STYLE_CODER,
-                IMAGE_CODER,
-                LINK_CODER,
-                SPAN_CODER,
+                //ALL_TEST_STYLE_CODER,
+                //IMAGE_CODER,
+                //LINK_CODER,
+                //SPAN_CODER,
                 LINE_BREAK_CODER,
 
                 //Затем обходим все строчные элементы
-                HEADER_CODER,
+                //HEADER_CODER,
 
                 //Затем обходим все блочные элементы
-                TABLE_CODER,
-                ALL_LIST_CODER,
+                //TABLE_CODER,
+                //ALL_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
                 ROW_CODER,
-                MD_ESCAPE_CODER,
+                //MD_ESCAPE_CODER,
 
-                RTF_NBSP_CODER,
-                XML_PRETTIFY_CODER,
+                //RTF_NBSP_CODER,
+                //XML_PRETTIFY_CODER,
         ]
 
         TO_MD = [
                 //Сначала специальные обработчики
-                XML_PRETTIFY_CODER,
-                RTF_NBSP_CODER,
+                //XML_PRETTIFY_CODER,
+                //RTF_NBSP_CODER,
 
-                MD_ESCAPE_CODER,
+                //MD_ESCAPE_CODER,
                 ROW_CODER,
 
                 //Затем обходим все подстрочные элементы
-                ALL_TEST_STYLE_CODER,
-                IMAGE_CODER,
-                LINK_CODER,
-                SPAN_CODER,
+                //ALL_TEST_STYLE_CODER,
+                //IMAGE_CODER,
+                //LINK_CODER,
+                //SPAN_CODER,
                 LINE_BREAK_CODER,
 
                 //Затем обходим все строчные элементы
-                HEADER_CODER,
+                //HEADER_CODER,
 
                 //Затем обходим все блочные элементы
-                TABLE_CODER,
-                ALL_LIST_CODER,
+                //TABLE_CODER,
+                //ALL_LIST_CODER,
 
                 //В завершение опять специальные обработчики.
-                RTF_ESCAPE_CODER
+                //RTF_ESCAPE_CODER
         ]
     }
 
