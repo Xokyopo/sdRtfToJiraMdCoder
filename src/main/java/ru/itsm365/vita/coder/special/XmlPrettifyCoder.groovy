@@ -58,16 +58,20 @@ class XmlPrettifyCoder implements Coder {
             if (RTF_ROW_TAGS.contains(currentTag.name)) {
                 result.append(minifiedXml.substring(cursor, matcher.start()));
                 if (currentTag.open) {
-                    append(TAB, openTags.size(), result);
+                    if (!openTags.isEmpty() && !RTF_ROW_TAGS.contains(openTags.last().name)) {
+                        append(TAB, openTags.size(), result);
+                    }
                     result.append(minifiedXml.substring(matcher.start(), matcher.end()));
                     openTags.push(currentTag)
                 } else {
                     openTags.pop()
-                    if (result.endsWithAny(LINE_SEPARATOR)) {
+                    if (result.endsWithAny(LINE_SEPARATOR) && (openTags.isEmpty() || !RTF_ROW_TAGS.contains(openTags.last().name))) {
                         append(TAB, openTags.size(), result)
                     }
                     result.append(minifiedXml.substring(matcher.start(), matcher.end()));
-                    result.append(LINE_SEPARATOR)
+                    if (openTags.isEmpty() || !RTF_ROW_TAGS.contains(openTags.last().name)) {
+                        result.append(LINE_SEPARATOR)
+                    }
                 }
                 cursor = matcher.end();
                 continue;
