@@ -14,7 +14,7 @@
 		<tr>
 			<td style="border: 1px solid rgb(0, 0, 0); min-width: 5px; user-select: text;" fr-original-style="border: 1px solid rgb(0, 0, 0);">Вид тары
 			</td>
-			<td style="border: 1px solid rgb(0, 0, 0); min-width: 5px; user-select: text;" fr-original-style="border: 1px solid rgb(0, 0, 0);">&nbsp;<a href="href=%22https%3A//www.vseinstrumenti.ru/tag-page/kraska-v-vedre-1691731">Ведро</a></td>
+			<td style="border: 1px solid rgb(0, 0, 0); min-width: 5px; user-select: text;" fr-original-style="border: 1px solid rgb(0, 0, 0);">&nbsp;<a href="https://www.vseinstrumenti.ru/tag-page/kraska-v-vedre-1691731/">Ведро</a></td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid rgb(0, 0, 0); min-width: 5px; user-select: text;" fr-original-style="border: 1px solid rgb(0, 0, 0);">Базис
