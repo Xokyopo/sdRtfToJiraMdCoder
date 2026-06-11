@@ -28,6 +28,5 @@ h4. Заголовок 4
 {code:java}//Код
 
 printf('Hellow World'){code}
-{quote}Цитата
-{quote}
-💏-какой то смайл
+{quote}Цитата{quote}
+💏\-какой то смайл
