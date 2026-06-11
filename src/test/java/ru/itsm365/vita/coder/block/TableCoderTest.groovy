@@ -119,7 +119,7 @@ class TableCoderTest {
                 "fdfbdfb${System.lineSeparator()}" +
                 "|11|12|${System.lineSeparator()}" +
                 "|21|22|"
-        String expected = "  fdfbdfb${System.lineSeparator()}" + TABLE_START + TBODY_START + "     " + TR_START + TD_START + "11" + TD_END + TD_START + "12" + TD_END + TR_END + "  " + TR_START + TD_START + "21" + TD_END + TD_START + "22" + TD_END + TR_END + TBODY_END + TABLE_END + "${System.lineSeparator()}fdfbdfb${System.lineSeparator()}" + TABLE_START + TBODY_START + TR_START + TD_START + "11" + TD_END + TD_START + "12" + TD_END + TR_END + TR_START + TD_START + "21" + TD_END + TD_START + "22" + TD_END + TR_END + TBODY_END + TABLE_END;
+        String expected = "  fdfbdfb${System.lineSeparator()}" + TABLE_START + TBODY_START + TR_START + TD_START + "11" + TD_END + TD_START + "12" + TD_END + TR_END + TR_START + TD_START + "21" + TD_END + TD_START + "22" + TD_END + TR_END + TBODY_END + TABLE_END + "${System.lineSeparator()}fdfbdfb${System.lineSeparator()}" + TABLE_START + TBODY_START + TR_START + TD_START + "11" + TD_END + TD_START + "12" + TD_END + TR_END + TR_START + TD_START + "21" + TD_END + TD_START + "22" + TD_END + TR_END + TBODY_END + TABLE_END;
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }

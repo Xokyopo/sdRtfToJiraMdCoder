@@ -4,9 +4,10 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import ru.itsm365.vita.coder.model.TestValue
+import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 
 class RtfToJiraMdCoderTableTest {
-
+    private final XmlPrettifyCoder xmlPrettifyCoder = new XmlPrettifyCoder();
     private Coder coder;
 
     @Before
@@ -19,7 +20,7 @@ class RtfToJiraMdCoderTableTest {
         TestValue testValue = new TestValue("/originalText/table/md.txt", "/expectedText/table/rtf.txt");
         String expected = testValue.rtf;
         String actual = this.coder.toRtf(testValue.md);
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals(expected, this.xmlPrettifyCoder.toRtf(actual));
     }
 
     @Test

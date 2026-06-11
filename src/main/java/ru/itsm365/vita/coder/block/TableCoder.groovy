@@ -1,6 +1,5 @@
 package ru.itsm365.vita.coder.block
 
-
 import ru.itsm365.vita.coder.Coder
 
 import java.util.regex.Matcher
@@ -50,20 +49,17 @@ class TableCoder implements Coder {
     final Pattern TH_PATTERN = Pattern.compile(TH_REGEX);
     final Pattern TD_PATTERN = Pattern.compile(TD_REGEX);
 
-    int shift = 0;
-    Boolean hasNewLine = false;
-
     @Override
     String toRtf(String s) {
-        shift = 0;
-        hasNewLine = false;
+        int cursor = 0;
+        boolean hasNewLine = false;
         s = s.replaceAll("(\\\\\\|)", "Џ");
         s = LINK_PATTERN.matcher(s).replaceAll({ it -> it.group(0).replaceAll("[|]", "˦") });
         s = FILE_PATTERN.matcher(s).replaceAll({ it -> it.group(0).replaceAll("[|]", "˦") });
-        List<String> text = new ArrayList<>();
-        List<List<String>> data = new ArrayList<>();
+        List<String> rowCells = new ArrayList<>();
+        List<List<String>> tableRows = new ArrayList<>();
 
-        StringBuilder resultRtf = new StringBuilder(s);
+        StringBuilder resultRtf = new StringBuilder();
 
         int start = Integer.MAX_VALUE;
         int end = 0;
@@ -72,11 +68,9 @@ class TableCoder implements Coder {
 
         boolean hasHeader = false;
         Matcher matcher = ROW_PATTERN.matcher(s);
-        List<String> whitespace = new ArrayList<>()
         while (matcher.find()) {
             String check = matcher.group(0);
-            if (check.trim()) {
-                whitespace.add(check.find("^ *(?=\\|)"))
+            if (!check.isBlank()) {
                 hasNewLine = check.endsWith("${LINE_SEPARATOR}")
                 start = Math.min(matcher.start(), start);
                 end = matcher.end();
@@ -89,62 +83,72 @@ class TableCoder implements Coder {
                 }
                 for (int i = 1; i < items.length; i++) {
                     if (items[i].trim()) {
-                        text.add(items[i]);
+                        rowCells.add(items[i]);
                     }
                 }
                 if (!cells) {
-                    cells = text.size()
+                    cells = rowCells.size()
                 }
-                if (cells == 1 || cells != text.size()) {
+                if (cells == 1 || cells != rowCells.size()) {
                     isBroken = true;
                 }
-                data.add(text);
-                text = new ArrayList<>();
+                tableRows.add(rowCells);
+                rowCells = new ArrayList<>();
             } else {
-                if (!data.isEmpty() && !isBroken) {
-                    toRtf000(resultRtf, start, end, hasHeader, data, whitespace);
+                if (!tableRows.isEmpty() && !isBroken) {
+                    resultRtf.append(s.substring(cursor, start))
+
+                    resultRtf.append(TAG_TABLE_START);
+                    resultRtf.append(createRtfTable(tableRows, hasHeader))
+                    resultRtf.append(TAG_TBODY_END)
+                    resultRtf.append(TAG_TABLE_END);
+                    if (hasNewLine) {
+                        resultRtf.append("${LINE_SEPARATOR}")
+                    }
+
                     start = Integer.MAX_VALUE;
-                    data = new ArrayList<>();
+                    tableRows.clear();
                     hasHeader = false;
-                    whitespace = new ArrayList<>()
+                } else {
+                    resultRtf.append(s.substring(cursor, end));
                 }
+                cursor = end;
             }
         }
+
+        if (cursor < s.length()) {
+            resultRtf.append(s.substring(cursor));
+        }
+
         return resultRtf.toString().replaceAll("[Џ˦]", "|")
     }
 
-    private void toRtf000(StringBuilder originalText, Integer start, Integer end, Boolean isHasHeader, List<List<String>> data, List<String> space) {
-
+    private StringBuilder createRtfTable(ArrayList<List<String>> data, boolean hasHeader) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(TAG_TABLE_START);
+
         int counterBodyRows = 0;
         int counter = 0;
         for (List<String> row : data) {
-            if (isHasHeader) {
+            if (hasHeader) {
                 stringBuilder.append(TAG_THEAD_START);
             } else if (counterBodyRows == 0) {
                 stringBuilder.append(TAG_TBODY_START);
                 counterBodyRows++;
             }
-            stringBuilder.append(space[counter])
+
             stringBuilder.append(TAG_TR_START);
             for (String cell : row) {
-                isHasHeader ? stringBuilder.append(TAG_TH_START) : stringBuilder.append(TAG_TD_START);
+                hasHeader ? stringBuilder.append(TAG_TH_START) : stringBuilder.append(TAG_TD_START);
                 stringBuilder.append(cell);
-                isHasHeader ? stringBuilder.append(TAG_TH_END) : stringBuilder.append(TAG_TD_END);
+                hasHeader ? stringBuilder.append(TAG_TH_END) : stringBuilder.append(TAG_TD_END);
             }
             stringBuilder.append(TAG_TR_END);
-            isHasHeader ? stringBuilder.append(TAG_THEAD_END) : "";
-            isHasHeader = false;
+            hasHeader ? stringBuilder.append(TAG_THEAD_END) : "";
+            hasHeader = false;
             counter++
         }
-        stringBuilder.append(TAG_TBODY_END)
-        stringBuilder.append(TAG_TABLE_END);
-        if (hasNewLine) {
-            stringBuilder.append("${LINE_SEPARATOR}")
-        }
-        originalText.replace(start + shift, end + shift, stringBuilder.toString());
-        shift -= -stringBuilder.length() + (end - start);
+
+        return stringBuilder
     }
 
 
@@ -153,8 +157,6 @@ class TableCoder implements Coder {
         StringBuilder result = new StringBuilder(s);
         Matcher tableMatcher = TABLE_PATTERN.matcher(s);
         int shift = 0;
-        this.hasNewLine = false;
-        this.shift = 0;
 
         while (tableMatcher.find()) {
             int start = tableMatcher.start()
@@ -196,9 +198,6 @@ class TableCoder implements Coder {
     }
 
 
-    Integer cells = 0;
-    Integer rows = 0;
-    Boolean isFirst = true;
 
     Boolean checkTable(String rtf) {
         Matcher matcher = patternTable.matcher(rtf);
@@ -254,6 +253,11 @@ class TableCoder implements Coder {
     }
 
     void checkTags(String block, Pattern patternTr, Pattern pattern) {
+
+        Integer cells = 0;
+        Integer rows = 0;
+        Boolean isFirst = true;
+
         Matcher matcherTr = patternTr.matcher(block);
         while (matcherTr.find()) {
             Integer counter = 0;
