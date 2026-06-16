@@ -171,9 +171,9 @@ class TableCoder implements Coder {
                     createCell(tableContent, whitespace, TH_PATTERN.matcher(row), "||");
                     createCell(tableContent, whitespace, TD_PATTERN.matcher(row), "|");
                 }
-                tableContent.setLength(tableContent.length() - 1)
-                result.replace(start - shift, end - shift, tableContent.toString().substring(0, tableContent.length() - 1))
-                shift += end - start - tableContent.length() + 1
+                tableContent.setLength(tableContent.length() - LINE_SEPARATOR.length())
+                result.replace(start - shift, end - shift, tableContent.toString())
+                shift += end - start - tableContent.length()
             }
         }
         return result
