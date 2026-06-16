@@ -9,6 +9,7 @@ import java.util.regex.Pattern
 
 class AllTextStyleCoder implements Coder {
     private final String LINE_SEPARATOR = System.lineSeparator();
+    private final String MD_NBSP = " "
     private final List<String> REG_EXP_OPERATORS = ["*", "^", "+"]
     private final Map<String, String> RTF_TAG_NANE_BY_MD_TAGS = [
             "*": "strong",
@@ -128,7 +129,10 @@ class AllTextStyleCoder implements Coder {
                     }
                     result.append(tagConverter(rtfTag));
                     if (closeMatcher.start() > openMatcher.end()) {
-                        result.append(toMd(s.substring(openMatcher.end(), closeMatcher.start())));
+                        String textInsideTag = s.substring(openMatcher.end(), closeMatcher.start());
+                        textInsideTag = textInsideTag.replaceAll(/^\s+/) { MD_NBSP * it.length() }
+                                .replaceAll(/\s+$/) { MD_NBSP * it.length() }
+                        result.append(toMd(textInsideTag));
                     }
                     result.append(tagConverter(rtfTag));
                     cursor = closeMatcher.end();
