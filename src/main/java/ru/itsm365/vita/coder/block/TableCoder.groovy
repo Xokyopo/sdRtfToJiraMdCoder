@@ -6,48 +6,48 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class TableCoder implements Coder {
-    final static private String LINE_SEPARATOR = "${System.lineSeparator()}"
+    private final String LINE_SEPARATOR = "${System.lineSeparator()}"
 //    toRtf
-    final String TAG_TABLE_START = "<table style=\"border-collapse: collapse;\">"
-    final String TAG_TABLE_END = "</table>"
-    final String TAG_THEAD_START = "<thead>"
-    final String TAG_THEAD_END = "</thead>"
-    final String TAG_TBODY_START = "<tbody>"
-    final String TAG_TBODY_END = "</tbody>"
-    final String TAG_TR_START = "<tr>"
-    final String TAG_TR_END = "</tr>"
-    final String TAG_TH_START = "<th style=\"background: rgb(230, 230, 230);border: 1px solid rgb(0, 0, 0);\">"
-    final String TAG_TH_END = "</th>"
-    final String TAG_TD_START = "<td style=\"border: 1px solid rgb(0, 0, 0);\">"
-    final String TAG_TD_END = "</td>"
-    final String ROW_REGEX = "(?msi)^ *(?=\\|).+?(?<=\\|)\$(${LINE_SEPARATOR})?| *"
-    final String LINK_REGEX = "\\[.+\\|http(s)*:\\/\\/.+\\]";
-    final String FILE_REGEX = "!.+?(\\|)thumbnail!";
-    final Pattern LINK_PATTERN = Pattern.compile(LINK_REGEX);
-    final Pattern FILE_PATTERN = Pattern.compile(FILE_REGEX);
-    final Pattern ROW_PATTERN = Pattern.compile(ROW_REGEX);
+    private final String TAG_TABLE_START = "<table style=\"border-collapse: collapse;\">"
+    private final String TAG_TABLE_END = "</table>"
+    private final String TAG_THEAD_START = "<thead>"
+    private final String TAG_THEAD_END = "</thead>"
+    private final String TAG_TBODY_START = "<tbody>"
+    private final String TAG_TBODY_END = "</tbody>"
+    private final String TAG_TR_START = "<tr>"
+    private final String TAG_TR_END = "</tr>"
+    private final String TAG_TH_START = "<th style=\"background: rgb(230, 230, 230);border: 1px solid rgb(0, 0, 0);\">"
+    private final String TAG_TH_END = "</th>"
+    private final String TAG_TD_START = "<td style=\"border: 1px solid rgb(0, 0, 0);\">"
+    private final String TAG_TD_END = "</td>"
+    private final String ROW_REGEX = "(?msi)^ *(?=\\|).+?(?<=\\|)\$(${LINE_SEPARATOR})?| *"
+    private final String LINK_REGEX = "\\[.+\\|http(s)*:\\/\\/.+\\]";
+    private final String FILE_REGEX = "!.+?(\\|)thumbnail!";
+    private final Pattern LINK_PATTERN = Pattern.compile(LINK_REGEX);
+    private final Pattern FILE_PATTERN = Pattern.compile(FILE_REGEX);
+    private final Pattern ROW_PATTERN = Pattern.compile(ROW_REGEX);
 
 //    toMd
-    final String tr = "(?s)<tr[^<]*?>.+?</tr[^<]*?>";
-    final String th = "(?s)<th[^<]*?>.+?</th[^<]*?>";
-    final String td = "(?s)<td[^<]*?>.+?</td[^<]*?>";
-    final String theadP = "(?s)<thead[^<]*?>.+</thead[^<]*?>";
-    final String tbodyP = "(?s)<tbody[^<]*?>.+</tbody[^<]*?>";
-    final String tableP = "(?s)<table[^<]*?>.+</table[^<]*?>";
-    final Pattern patternTable = Pattern.compile(tableP, Pattern.CASE_INSENSITIVE);
-    final Pattern patternTHead = Pattern.compile(theadP, Pattern.CASE_INSENSITIVE);
-    final Pattern patternTBody = Pattern.compile(tbodyP, Pattern.CASE_INSENSITIVE);
-    final Pattern patternTr = Pattern.compile(tr, Pattern.CASE_INSENSITIVE);
-    final Pattern patternTh = Pattern.compile(th, Pattern.CASE_INSENSITIVE);
-    final Pattern patternTd = Pattern.compile(td, Pattern.CASE_INSENSITIVE);
-    final String TABLE_REGEX = "(?msi)<table.+?</table>";
-    final String TR_REGEX = "(?msi) *<tr.*?>(.+?)</tr>";
-    final String TH_REGEX = "(?msi)<th.*?>(.+?)</th>";
-    final String TD_REGEX = "(?msi)<td.*?>(.+?)</td>"
-    final Pattern TABLE_PATTERN = Pattern.compile(TABLE_REGEX);
-    final Pattern TR_PATTERN = Pattern.compile(TR_REGEX);
-    final Pattern TH_PATTERN = Pattern.compile(TH_REGEX);
-    final Pattern TD_PATTERN = Pattern.compile(TD_REGEX);
+    private final String tr = "(?s)<tr[^<]*?>.+?</tr[^<]*?>";
+    private final String th = "(?s)<th[^<]*?>.+?</th[^<]*?>";
+    private final String td = "(?s)<td[^<]*?>.+?</td[^<]*?>";
+    private final String theadP = "(?s)<thead[^<]*?>.+</thead[^<]*?>";
+    private final String tbodyP = "(?s)<tbody[^<]*?>.+</tbody[^<]*?>";
+    private final String tableP = "(?s)<table[^<]*?>.+</table[^<]*?>";
+    private final Pattern patternTable = Pattern.compile(tableP, Pattern.CASE_INSENSITIVE);
+    private final Pattern patternTHead = Pattern.compile(theadP, Pattern.CASE_INSENSITIVE);
+    private final Pattern patternTBody = Pattern.compile(tbodyP, Pattern.CASE_INSENSITIVE);
+    private final Pattern patternTr = Pattern.compile(tr, Pattern.CASE_INSENSITIVE);
+    private final Pattern patternTh = Pattern.compile(th, Pattern.CASE_INSENSITIVE);
+    private final Pattern patternTd = Pattern.compile(td, Pattern.CASE_INSENSITIVE);
+    private final String TABLE_REGEX = "(?msi)<table.+?</table>";
+    private final String TR_REGEX = "(?msi) *<tr.*?>(.+?)</tr>";
+    private final String TH_REGEX = "(?msi)<th.*?>(.+?)</th>";
+    private final String TD_REGEX = "(?msi)<td.*?>(.+?)</td>"
+    private final Pattern TABLE_PATTERN = Pattern.compile(TABLE_REGEX);
+    private final Pattern TR_PATTERN = Pattern.compile(TR_REGEX);
+    private final Pattern TH_PATTERN = Pattern.compile(TH_REGEX);
+    private final Pattern TD_PATTERN = Pattern.compile(TD_REGEX);
 
     @Override
     String toRtf(String s) {
@@ -179,7 +179,7 @@ class TableCoder implements Coder {
         return result
     }
 
-    private static StringBuilder createCell(StringBuilder tableContent, String space, Matcher matcher, String ch) {
+    private StringBuilder createCell(StringBuilder tableContent, String space, Matcher matcher, String ch) {
         boolean hasCell = false;
         Boolean isFirstSpace = true;
         while (matcher.find()) {
@@ -198,8 +198,7 @@ class TableCoder implements Coder {
     }
 
 
-
-    Boolean checkTable(String rtf) {
+    private Boolean checkTable(String rtf) {
         Matcher matcher = patternTable.matcher(rtf);
         StringBuilder builder = new StringBuilder();
         try {
@@ -244,7 +243,7 @@ class TableCoder implements Coder {
         }
     }
 
-    static String getBlock(Pattern pattern, String str, String openingTag, String closingTag) {
+    private String getBlock(Pattern pattern, String str, String openingTag, String closingTag) {
         Matcher matcher = pattern.matcher(str);
         if (matcher.find()) {
             return replaceTags(matcher.group(), openingTag, closingTag);
@@ -252,7 +251,7 @@ class TableCoder implements Coder {
         return ""
     }
 
-    void checkTags(String block, Pattern patternTr, Pattern pattern) {
+    private void checkTags(String block, Pattern patternTr, Pattern pattern) {
 
         Integer cells = 0;
         Integer rows = 0;
@@ -277,7 +276,7 @@ class TableCoder implements Coder {
         }
     }
 
-    static String replaceTags(String text, String element1, String element2) {
+    private String replaceTags(String text, String element1, String element2) {
         text = text.replaceAll(element1 + "[^<]*?>", "");
         text = text.replaceAll(element2 + "[^<]*?>", "");
         return text;
