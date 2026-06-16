@@ -12,42 +12,42 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class RtfToJiraMdCoder implements Coder {
-    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private final String LINE_SEPARATOR = System.lineSeparator();
     //Подстрочные кодеры
-    private static final Coder ALL_TEST_STYLE_CODER = new AllTextStyleCoder();
-    private static final Coder IMAGE_CODER = new ImageCoder();
-    private static final Coder LINK_CODER = new LinkCoder();
+    private final Coder ALL_TEST_STYLE_CODER = new AllTextStyleCoder();
+    private final Coder IMAGE_CODER = new ImageCoder();
+    private final Coder LINK_CODER = new LinkCoder();
 
     //Строчные кодеры
-    private static final Coder HEADER_CODER = new HeaderCoder();
-    private static final Coder QUOTE_CODER = new QuoteCoder();
-    private static final Coder CODE_CODER = new CodeCoder();
-    private static final Coder SPAN_CODER = new SpanCoder();
+    private final Coder HEADER_CODER = new HeaderCoder();
+    private final Coder QUOTE_CODER = new QuoteCoder();
+    private final Coder CODE_CODER = new CodeCoder();
+    private final Coder SPAN_CODER = new SpanCoder();
 
     //Блочные кодеры
-    private static final Coder ALL_LIST_CODER = new AllListCoder();
-    private static final Coder TABLE_CODER = new TableCoder();
+    private final Coder ALL_LIST_CODER = new AllListCoder();
+    private final Coder TABLE_CODER = new TableCoder();
 
     //Специальные кодеры
-    private static final Coder LINE_BREAK_CODER = new LineBreakCoder();
-    private static final Coder XML_PRETTIFY_CODER = new XmlPrettifyCoder();
-    private static final Coder ROW_CODER = new RowCoder();
-    private static final Coder RTF_ESCAPE_CODER = new RtfEscapeCoder();
-    private static final Coder MD_ESCAPE_CODER = new MdEscapeCoder();
-    private static final Coder RTF_NBSP_CODER = new NBSPCoder();
+    private final Coder LINE_BREAK_CODER = new LineBreakCoder();
+    private final Coder XML_PRETTIFY_CODER = new XmlPrettifyCoder();
+    private final Coder ROW_CODER = new RowCoder();
+    private final Coder RTF_ESCAPE_CODER = new RtfEscapeCoder();
+    private final Coder MD_ESCAPE_CODER = new MdEscapeCoder();
+    private final Coder RTF_NBSP_CODER = new NBSPCoder();
 
     //Настроенные цепочки дял преобразования.
-    private static final List<Coder> TO_RTF;
-    private static final List<Coder> TO_MD;
+    private final List<Coder> TO_RTF;
+    private final List<Coder> TO_MD;
 
     //Игнорируемые теги
-    private static final Pattern RTF_OPEN_CODE_TAG_PATTERN = Pattern.compile("<pre[^>]*>", Pattern.CASE_INSENSITIVE)
-    private static final Pattern RTF_CLOSE_CODE_TAG_PATTERN = Pattern.compile("</pre>", Pattern.CASE_INSENSITIVE)
+    private final Pattern RTF_OPEN_CODE_TAG_PATTERN = Pattern.compile("<pre[^>]*>", Pattern.CASE_INSENSITIVE)
+    private final Pattern RTF_CLOSE_CODE_TAG_PATTERN = Pattern.compile("</pre>", Pattern.CASE_INSENSITIVE)
 
-    private static final Pattern MD_OPEN_CODE_TAG_PATTERN = Pattern.compile("\\{code[^}]*}", Pattern.CASE_INSENSITIVE)
-    private static final Pattern MD_CLOSE_CODE_TAG_PATTERN = Pattern.compile("\\{code}", Pattern.CASE_INSENSITIVE)
+    private final Pattern MD_OPEN_CODE_TAG_PATTERN = Pattern.compile("\\{code[^}]*}", Pattern.CASE_INSENSITIVE)
+    private final Pattern MD_CLOSE_CODE_TAG_PATTERN = Pattern.compile("\\{code}", Pattern.CASE_INSENSITIVE)
 
-    static {
+    RtfToJiraMdCoder() {
         TO_RTF = [
                 //Сначала специальные обработчики
                 RTF_ESCAPE_CODER,
@@ -101,9 +101,7 @@ class RtfToJiraMdCoder implements Coder {
                 //В завершение опять специальные обработчики.
                 RTF_ESCAPE_CODER
         ]
-    }
 
-    {
         //TODO отключено так как все друге кодеры и так трогают все что внутри.
         //Нужно, сделать так что бы такие блоки обрабатывались отдельно от остального.
         QUOTE_CODER.setInlineTexCoder(ROW_CODER);
