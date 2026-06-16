@@ -8,9 +8,9 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class AllTextStyleCoder implements Coder {
-    private static final String LINE_SEPARATOR = System.lineSeparator();
-    private static final List<String> REG_EXP_OPERATORS = ["*", "^", "+"]
-    private static final Map<String, String> RTF_TAG_NANE_BY_MD_TAGS = [
+    private final String LINE_SEPARATOR = System.lineSeparator();
+    private final List<String> REG_EXP_OPERATORS = ["*", "^", "+"]
+    private final Map<String, String> RTF_TAG_NANE_BY_MD_TAGS = [
             "*": "strong",
             "_": "em",
             "-": "s",
@@ -18,14 +18,14 @@ class AllTextStyleCoder implements Coder {
             "^": "sup",
             "+": "u"
     ];
-    private static final Pattern MD_OPEN_TAGS_PATTERN
-    private static final Map<String, Pattern> MD_CLOSE_TAG_PATTERN_BY_MD_TAGS
-    private static final Map<String, String> MD_TAG_BY_RTF_TAG_NAMES
-    private static final Pattern RTF_OPEN_TAGS_PATTERN
-    private static final Map<String, Pattern> RTF_CLOSE_TAG_PATTERNS_BY_RTF_TAG_NAMES
-    private static final String MD_NEXT_LINE = System.lineSeparator();
+    private final Pattern MD_OPEN_TAGS_PATTERN
+    private final Map<String, Pattern> MD_CLOSE_TAG_PATTERN_BY_MD_TAGS
+    private final Map<String, String> MD_TAG_BY_RTF_TAG_NAMES
+    private final Pattern RTF_OPEN_TAGS_PATTERN
+    private final Map<String, Pattern> RTF_CLOSE_TAG_PATTERNS_BY_RTF_TAG_NAMES
+    private final String MD_NEXT_LINE = System.lineSeparator();
 
-    static {
+    AllTextStyleCoder() {
         MD_TAG_BY_RTF_TAG_NAMES = RTF_TAG_NANE_BY_MD_TAGS.collectEntries { key, value -> [value, key] }
 
         String rtfOpenTagsRegEx = "<(?:${MD_TAG_BY_RTF_TAG_NAMES.collect { it.key }.join("|")})(?= |>)[^><]*>(?=\\s*)"
@@ -147,17 +147,17 @@ class AllTextStyleCoder implements Coder {
         return result.toString();
     }
 
-    private static String convertToMdEscapedTag(RtfTag rtfTag) {
+    private String convertToMdEscapedTag(RtfTag rtfTag) {
         String mdTagName = MD_TAG_BY_RTF_TAG_NAMES.get(rtfTag.name);
         return mdTagName ? "{${mdTagName}}" : rtfTag.tag;
     }
 
-    private static String convertToMdTag(RtfTag rtfTag) {
+    private String convertToMdTag(RtfTag rtfTag) {
         String mdTagName = MD_TAG_BY_RTF_TAG_NAMES.get(rtfTag.name);
         return mdTagName ? "${mdTagName}" : rtfTag.tag;
     }
 
-    private static String convertToRtfTag(MdTag mdTagName, boolean close = false) {
+    private String convertToRtfTag(MdTag mdTagName, boolean close = false) {
         String rtfTagName = RTF_TAG_NANE_BY_MD_TAGS.get(mdTagName.name);
         if (rtfTagName) {
             return close ? "</${rtfTagName}>" : "<${rtfTagName}>"
@@ -165,7 +165,7 @@ class AllTextStyleCoder implements Coder {
         return mdTagName.tag;
     }
 
-    private static boolean startWith(String prefix, String text, int lastIndex) {
+    private boolean startWith(String prefix, String text, int lastIndex) {
         return text.startsWith(prefix, Math.max(lastIndex - prefix.length(), 0));
     }
 
