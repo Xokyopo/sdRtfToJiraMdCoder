@@ -28,10 +28,10 @@ class AllTextStyleCoder implements Coder {
     static {
         MD_TAG_BY_RTF_TAG_NAMES = RTF_TAG_NANE_BY_MD_TAGS.collectEntries { key, value -> [value, key] }
 
-        String rtfOpenTagsRegEx = "<(?:${MD_TAG_BY_RTF_TAG_NAMES.collect { it.key }.join("|")})(?= |>)[^><]*>\\s*"
+        String rtfOpenTagsRegEx = "<(?:${MD_TAG_BY_RTF_TAG_NAMES.collect { it.key }.join("|")})(?= |>)[^><]*>(?=\\s*)"
         RTF_OPEN_TAGS_PATTERN = Pattern.compile(rtfOpenTagsRegEx, Pattern.CASE_INSENSITIVE)
         RTF_CLOSE_TAG_PATTERNS_BY_RTF_TAG_NAMES = MD_TAG_BY_RTF_TAG_NAMES.collectEntries { key, value ->
-            [key, Pattern.compile("\\s*</${key}>", Pattern.CASE_INSENSITIVE)]
+            [key, Pattern.compile("(?<=\\s*)</${key}>", Pattern.CASE_INSENSITIVE)]
         }
 
         MD_CLOSE_TAG_PATTERN_BY_MD_TAGS = [:]
