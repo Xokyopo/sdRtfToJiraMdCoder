@@ -7,9 +7,9 @@ import java.util.regex.Pattern
 
 class SpanCoder implements Coder {
     // Предварительно скомпилированные паттерны для ускорения обработки
-    private static final Pattern JIRA_COLOR_PATTERN = Pattern.compile("(?s)\\{color:(#[0-9a-fA-F]{6})\\}(.*?)\\{color\\}")
-    private static final Pattern RTF_COLOR_SPAN_PATTERN = Pattern.compile("(?s)<span[^>]*?style=[\\\"'][^>]*?color:\\s*(rgb\\(\\d+,\\s*\\d+,\\s*\\d+\\));?[^>]*?[\\\"'][^>]*?>(.*?)<\\/span>")
-    private static final Pattern RTF_CLEAN_SPAN_PATTERN = Pattern.compile("(?s)<span[^>]*?>(.*?)<\\/span>")
+    private final Pattern JIRA_COLOR_PATTERN = Pattern.compile("(?s)\\{color:(#[0-9a-fA-F]{6})\\}(.*?)\\{color\\}")
+    private final Pattern RTF_COLOR_SPAN_PATTERN = Pattern.compile("(?s)<span[^>]*?style=[\\\"'][^>]*?color:\\s*(rgb\\(\\d+,\\s*\\d+,\\s*\\d+\\));?[^>]*?[\\\"'][^>]*?>(.*?)<\\/span>")
+    private final Pattern RTF_CLEAN_SPAN_PATTERN = Pattern.compile("(?s)<span[^>]*?>(.*?)<\\/span>")
 
     @Override
     String toRtf(String text) {
@@ -77,7 +77,7 @@ class SpanCoder implements Coder {
         return currentText
     }
 
-    private static String fromRgbToHex(String rgb) {
+    private String fromRgbToHex(String rgb) {
         // Находим все числа в строке rgb(r, g, b)
         def values = rgb.findAll(/\d+/)*.toInteger()
         int r = values[0]
@@ -90,7 +90,7 @@ class SpanCoder implements Coder {
         return "#" + sprintf('%02x%02x%02x', r, g, b)
     }
 
-    private static String fromHexToRgb(String hexCode) {
+    private String fromHexToRgb(String hexCode) {
         String hex = hexCode.startsWith("#") ? hexCode.substring(1) : hexCode
         int r = Integer.parseInt(hex.substring(0, 2), 16)
         int g = Integer.parseInt(hex.substring(2, 4), 16)
