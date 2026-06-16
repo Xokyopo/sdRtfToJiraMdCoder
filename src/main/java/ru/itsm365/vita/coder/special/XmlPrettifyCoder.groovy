@@ -12,17 +12,17 @@ import java.util.regex.Pattern
  * А так же минифицировать RTF перед преобразваоинем в MD
  */
 class XmlPrettifyCoder implements Coder {
-    private static final String ANY_TAG_REGEXP = "<\\/?[^>]*[^\\/]>";
-    private static final Pattern ANY_TAG_PATTERN = Pattern.compile(ANY_TAG_REGEXP, Pattern.CASE_INSENSITIVE);
-    private static final String LINE_SEPARATOR = System.lineSeparator();
-    private static final String TAB = "\t";
-    private static final List<String> RTF_ROW_TAGS = [
+    private final String ANY_TAG_REGEXP = "<\\/?[^>]*[^\\/]>";
+    private final Pattern ANY_TAG_PATTERN = Pattern.compile(ANY_TAG_REGEXP, Pattern.CASE_INSENSITIVE);
+    private final String LINE_SEPARATOR = System.lineSeparator();
+    private final String TAB = "\t";
+    private final List<String> RTF_ROW_TAGS = [
             "div", "h1", "h2", "h3", "h4", "h5", "h6", "h7", "pre", "p", "li", "td", "th"
     ];
-    private static final List<String> RTF_BLOCK_TAGS = [
+    private final List<String> RTF_BLOCK_TAGS = [
             "table", "ul", "ol", "tbody", "tr", "thead", "blockquote"
     ];
-    private static final BR_TAG_NAME = "br";
+    private final BR_TAG_NAME = "br";
 
     @Override
     String toRtf(String s) {
@@ -109,7 +109,7 @@ class XmlPrettifyCoder implements Coder {
             return withoutLineSeparator
     }
 
-    private static void append(String text, int count, StringBuilder stringBuilder) {
+    private void append(String text, int count, StringBuilder stringBuilder) {
         for (i in 0..<count) {
             stringBuilder.append(text);
         }
