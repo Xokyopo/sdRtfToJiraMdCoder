@@ -6,7 +6,16 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class MdEscapeCoder implements Coder {
-
+    final Map<String, String> mapMdToEscapingMd = [
+            "_": "\\_",
+            "|": "\\|",
+            "#": "\\#",
+            "*": "\\*",
+            "-": "\\-",
+            "~": "\\~",
+            "+": "\\+"
+    ]
+    final Map mapEscapingMdToMd = mapMdToEscapingMd.collectEntries { [it.value, it.key] }
     private String str = mapMdToEscapingMd.keySet().toString().replaceAll("[ ,]", "")
     private String REGEX = "(?<=>)[^<>]*${str}(?=[^<>]*<)"
     Pattern toMdPattern = Pattern.compile(REGEX)
@@ -34,16 +43,4 @@ class MdEscapeCoder implements Coder {
         return s
                 .replaceAll("\\\\${mapEscapingMdToMd.keySet().toString().replaceAll("[ ,]", "")}", { mapEscapingMdToMd.get(it.toString().trim()) ?: it })
     }
-
-    final static Map<String, String> mapMdToEscapingMd = [
-            "_": "\\_",
-            "|": "\\|",
-            "#": "\\#",
-            "*": "\\*",
-            "-": "\\-",
-            "~": "\\~",
-            "+": "\\+"
-    ]
-
-    final static Map mapEscapingMdToMd = mapMdToEscapingMd.collectEntries { [it.value, it.key] }
 }
