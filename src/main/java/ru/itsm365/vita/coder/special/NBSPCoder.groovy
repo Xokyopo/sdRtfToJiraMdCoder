@@ -7,8 +7,8 @@ import ru.itsm365.vita.coder.Coder
  * Вынесен отдельно так как является важной составляющей преобразования в отличии от оставшихся спец символов.
  */
 class NBSPCoder implements Coder {
-    private static final String RTF_NBSP = "&nbsp;"
-    private static final String MD_NBSP = " "
+    private final String RTF_NBSP = "&nbsp;"
+    private final String MD_NBSP = " "
 
     @Override
     String toRtf(String s) {
