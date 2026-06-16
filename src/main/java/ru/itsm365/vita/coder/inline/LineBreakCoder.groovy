@@ -3,13 +3,13 @@ package ru.itsm365.vita.coder.inline
 import ru.itsm365.vita.coder.Coder
 
 class LineBreakCoder implements Coder {
-    private static final String MD_LINE_SEPARATOR = System.lineSeparator();
-    private static final String MD_NBSP = " "
-    private static final String RTF_LINE_SEPARATOR = "<br>";
-    private static final String MD_TABLE_CELL_DELIMITER = "|";
-    private static final String RTF_FIRST_LINE_BREAKER_TAG_TOKEN = "(?i)(?<!<br/?>)<br *\\/?>";
-    private static final String RTF_LINE_BREAKER_TAG_TOKEN = "(?i)<br *\\/?>";
-    private static final String MD_SEPARATED_TABLE_LINE_TOKEN = "(?<=${RTF_LINE_SEPARATOR})${MD_NBSP}(?=${RTF_LINE_SEPARATOR})";
+    private final String MD_LINE_SEPARATOR = System.lineSeparator();
+    private final String MD_NBSP = " "
+    private final String RTF_LINE_SEPARATOR = "<br>";
+    private final String MD_TABLE_CELL_DELIMITER = "|";
+    private final String RTF_FIRST_LINE_BREAKER_TAG_TOKEN = "(?i)(?<!<br/?>)<br *\\/?>";
+    private final String RTF_LINE_BREAKER_TAG_TOKEN = "(?i)<br *\\/?>";
+    private final String MD_SEPARATED_TABLE_LINE_TOKEN = "(?<=${RTF_LINE_SEPARATOR})${MD_NBSP}(?=${RTF_LINE_SEPARATOR})";
 
 
     @Override
