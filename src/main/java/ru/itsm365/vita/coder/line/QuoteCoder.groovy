@@ -8,9 +8,9 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class QuoteCoder implements Coder {
-    private static final Pattern JIRA_QUOTE_PATTERN = Pattern.compile("(?s)\\{quote\\}(.*?)\\{quote\\}")
-    private static final Pattern ANY_TAG_PATTERN = Pattern.compile("(?s)<[^>]+>")
-    public static final String BLOCKQUOTE_STYLE = 'border-color: rgb(153, 153, 153); border-left-width: 2px; border-left-style: solid; margin-left: 0px; padding-left: 5px; color: rgb(153, 153, 153);'
+    private final Pattern JIRA_QUOTE_PATTERN = Pattern.compile("(?s)\\{quote\\}(.*?)\\{quote\\}")
+    private final Pattern ANY_TAG_PATTERN = Pattern.compile("(?s)<[^>]+>")
+    public final String BLOCKQUOTE_STYLE = 'border-color: rgb(153, 153, 153); border-left-width: 2px; border-left-style: solid; margin-left: 0px; padding-left: 5px; color: rgb(153, 153, 153);'
 
     private Coder inlineTexCoder = new VoidCoder()
 
@@ -95,7 +95,7 @@ class QuoteCoder implements Coder {
         return sb.toString()
     }
 
-    void setInlineTexCoder(Coder inlineTexCoder) {
+    private void setInlineTexCoder(Coder inlineTexCoder) {
         this.inlineTexCoder = inlineTexCoder
     }
 }
