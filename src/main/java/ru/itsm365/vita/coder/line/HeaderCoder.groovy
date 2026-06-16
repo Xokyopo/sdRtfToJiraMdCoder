@@ -7,18 +7,18 @@ import java.util.regex.Pattern
 
 
 class HeaderCoder implements Coder {
-    private static final String MD_TAG_NAME = "h";
-    private static final Pattern MD_PATTERN = Pattern.compile("(?m)^(\\t| )*h\\d\\.\\s*.*\$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern MD_HEADER_LEVEL_TOKEN = Pattern.compile("(?<=h)\\d", Pattern.CASE_INSENSITIVE);
-    private static final Pattern MD_HEADER_VALUE_TOKEN = Pattern.compile("(?<=h\\d.).*", Pattern.CASE_INSENSITIVE);
-    private static final int MD_HEADER_LEVEL_MAX = 6;
+    private final String MD_TAG_NAME = "h";
+    private final Pattern MD_PATTERN = Pattern.compile("(?m)^(\\t| )*h\\d\\.\\s*.*\$", Pattern.CASE_INSENSITIVE);
+    private final Pattern MD_HEADER_LEVEL_TOKEN = Pattern.compile("(?<=h)\\d", Pattern.CASE_INSENSITIVE);
+    private final Pattern MD_HEADER_VALUE_TOKEN = Pattern.compile("(?<=h\\d.).*", Pattern.CASE_INSENSITIVE);
+    private final int MD_HEADER_LEVEL_MAX = 6;
 
-    private static final String RTF_TAG_NAME = "h";
-    private static final Pattern CLOSE_RTF_TOKEN = Pattern.compile("</${RTF_TAG_NAME}\\d>", Pattern.CASE_INSENSITIVE);
-    private static final Pattern OPEN_RTF_TOKEN = Pattern.compile("<${RTF_TAG_NAME}\\d(?= |>)[^><]*>", Pattern.CASE_INSENSITIVE);
-    private static final Pattern RTF_HEADER_LEVEL_TOKEN = Pattern.compile("(?<=<${RTF_TAG_NAME})\\d", Pattern.CASE_INSENSITIVE);
-    private static final Pattern RTF_HEADER_VALUE_TOKEN = Pattern.compile("(?<=>).*(?=<)", Pattern.CASE_INSENSITIVE);
-    private static final int RTF_HEADER_LEVEL_MAX = 4;
+    private final String RTF_TAG_NAME = "h";
+    private final Pattern CLOSE_RTF_TOKEN = Pattern.compile("</${RTF_TAG_NAME}\\d>", Pattern.CASE_INSENSITIVE);
+    private final Pattern OPEN_RTF_TOKEN = Pattern.compile("<${RTF_TAG_NAME}\\d(?= |>)[^><]*>", Pattern.CASE_INSENSITIVE);
+    private final Pattern RTF_HEADER_LEVEL_TOKEN = Pattern.compile("(?<=<${RTF_TAG_NAME})\\d", Pattern.CASE_INSENSITIVE);
+    private final Pattern RTF_HEADER_VALUE_TOKEN = Pattern.compile("(?<=>).*(?=<)", Pattern.CASE_INSENSITIVE);
+    private final int RTF_HEADER_LEVEL_MAX = 4;
 
     @Override
     String toRtf(String s) {
@@ -68,7 +68,7 @@ class HeaderCoder implements Coder {
         return result.toString();
     }
 
-    private static String convertRtfToMdHeader(String value) {
+    private String convertRtfToMdHeader(String value) {
         String text = Optional.of(RTF_HEADER_VALUE_TOKEN.matcher(value))
                 .filter { it.find() }
                 .map { it.group()?.trim() }
@@ -81,7 +81,7 @@ class HeaderCoder implements Coder {
         return createMdHeader(Math.min(level, MD_HEADER_LEVEL_MAX), text);
     }
 
-    private static String convertMdToRtfHeader(String value) {
+    private String convertMdToRtfHeader(String value) {
         String text = Optional.of(MD_HEADER_VALUE_TOKEN.matcher(value))
                 .filter { it.find() }
                 .map { it.group()?.trim() }
@@ -94,18 +94,18 @@ class HeaderCoder implements Coder {
         return createRTFHeader(Math.min(level, RTF_HEADER_LEVEL_MAX), text);
     }
 
-    private static int parseLevel(String level) {
+    private int parseLevel(String level) {
         return Optional.of(level)
                 .filter { it.isInteger() }
                 .map { it.toInteger() }
                 .orElse(1);
     }
 
-    private static String createMdHeader(int level, String value) {
+    private String createMdHeader(int level, String value) {
         return "${MD_TAG_NAME}${level}. ${value}";
     }
 
-    private static String createRTFHeader(int level, String value) {
+    private String createRTFHeader(int level, String value) {
         return "<${RTF_TAG_NAME}${level}>${value}</${RTF_TAG_NAME}${level}>";
     }
 }
