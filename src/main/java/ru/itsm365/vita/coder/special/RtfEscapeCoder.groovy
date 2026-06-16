@@ -3,19 +3,7 @@ package ru.itsm365.vita.coder.special
 import ru.itsm365.vita.coder.Coder
 
 class RtfEscapeCoder implements Coder {
-    @Override
-    String toRtf(String s) {
-        return s
-                .replaceAll(mapMdToHtml.keySet().toString().replaceAll("[ ,]", ""), { mapMdToHtml.get(it.toString().trim()) ?: it })
-    }
-
-    @Override
-    String toMd(String s) {
-        return s
-                .replaceAll("&[^ &]+?;", { mapHtmlToMd.get(it.toString().trim()) ?: it })
-    }
-
-    final static Map mapHtmlToMd = [
+    private final Map mapHtmlToMd = [
             "&lt;"      : "<",
             "&gt;"      : ">",
             "&Agrave;"  : "À",
@@ -335,5 +323,17 @@ class RtfEscapeCoder implements Coder {
             "&deg;"     : "°"
     ]
 
-    final static Map mapMdToHtml = mapHtmlToMd.collectEntries { [it.value, it.key] }
+    private final Map mapMdToHtml = mapHtmlToMd.collectEntries { [it.value, it.key] }
+
+    @Override
+    String toRtf(String s) {
+        return s
+                .replaceAll(mapMdToHtml.keySet().toString().replaceAll("[ ,]", ""), { mapMdToHtml.get(it.toString().trim()) ?: it })
+    }
+
+    @Override
+    String toMd(String s) {
+        return s
+                .replaceAll("&[^ &]+?;", { mapHtmlToMd.get(it.toString().trim()) ?: it })
+    }
 }
