@@ -11,16 +11,16 @@ import java.util.regex.Pattern
  * При конвертации из MD поддерживаются как обычные изображения так и миниатюры
  */
 class ImageCoder implements Coder {
-    private static final String MD_REGEXP_PATTERN = "![^!\\s]+!";
-    private static final String MD_IMAGE_DIRECTIVE = "thumbnail";
-    private static final String MD_SRC_REGEXP_TOKEN = '(?<=!)[^!|\\|]+';
-    private static final String MD_TAG = "!";
-    private static final String MD_PART_DELIMITER_TAG = "|";
-    private static final String RTF_TAG_NAME = "img";
-    private static final String RTF_REGEXP_PATTERN = "<img\\s[^><]*>";
-    private static final String RTF_SRC_REGEXP_TOKEN = '(?<=src=\\")[^\\"]+';
-    private static final String SPACE = " ";
-    private static final String MD_NEW_LINE = System.lineSeparator();
+    private final String MD_REGEXP_PATTERN = "![^!\\s]+!";
+    private final String MD_IMAGE_DIRECTIVE = "thumbnail";
+    private final String MD_SRC_REGEXP_TOKEN = '(?<=!)[^!|\\|]+';
+    private final String MD_TAG = "!";
+    private final String MD_PART_DELIMITER_TAG = "|";
+    private final String RTF_TAG_NAME = "img";
+    private final String RTF_REGEXP_PATTERN = "<img\\s[^><]*>";
+    private final String RTF_SRC_REGEXP_TOKEN = '(?<=src=\\")[^\\"]+';
+    private final String SPACE = " ";
+    private final String MD_NEW_LINE = System.lineSeparator();
 
     @Override
     String toRtf(String s) {
@@ -80,7 +80,7 @@ class ImageCoder implements Coder {
         return result.toString();
     }
 
-    private static String convertImageMdToRtf(String mdImage) {
+    private String convertImageMdToRtf(String mdImage) {
         Pattern pattern = Pattern.compile(MD_SRC_REGEXP_TOKEN);
         Matcher matcher = pattern.matcher(mdImage);
 
@@ -91,7 +91,7 @@ class ImageCoder implements Coder {
         return mdImage
     }
 
-    private static String convertImageRtfToMd(String rtfImage) {
+    private String convertImageRtfToMd(String rtfImage) {
         Pattern pattern = Pattern.compile(RTF_SRC_REGEXP_TOKEN, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(rtfImage);
 
@@ -102,11 +102,11 @@ class ImageCoder implements Coder {
         return rtfImage;
     }
 
-    private static String createRtfImage(String src) {
+    private String createRtfImage(String src) {
         return "<${RTF_TAG_NAME} src=\"${src}\">"
     }
 
-    private static String createMdImage(String src) {
+    private String createMdImage(String src) {
         return "${MD_TAG}${src}${MD_PART_DELIMITER_TAG}${MD_IMAGE_DIRECTIVE}${MD_TAG}"
     }
 }
