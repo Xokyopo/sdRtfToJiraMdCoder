@@ -7,16 +7,16 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class LinkCoder implements Coder {
-    private static final String MD_REGEXP_PATTERN = "\\[[^\\|]+\\|?[^\\[\\|]*\\]";
-    private static final String MD_NEXT_LINE = System.lineSeparator();
-    private static final String MD_OPEN_TAG = "[";
-    private static final String MD_CLOSE_TAG = "]";
-    private static final String MD_PART_DELIMITER_TAG = "|";
-    private static final String RTF_TAG_NAME = "a";
-    private static final String RTF_OPEN_LINK_TAG_REGEXP_TOKEN = "<[aA]\\s[^><]*>";
-    private static final String RTF_CLOSE_LINK_TAG_REGEXP_TOKEN = "</[aA]>";
-    private static final String RTF_BOTH_TAG_REGEXP_PATTERN = "(<[aA]\\s[^><]*>)|(</[aA]>)";
-    private static final String RTF_HREF_REGEXP_TOKEN = '(?<=href=\\")[^\\"]+';
+    private final String MD_REGEXP_PATTERN = "\\[[^\\|]+\\|?[^\\[\\|]*\\]";
+    private final String MD_NEXT_LINE = System.lineSeparator();
+    private final String MD_OPEN_TAG = "[";
+    private final String MD_CLOSE_TAG = "]";
+    private final String MD_PART_DELIMITER_TAG = "|";
+    private final String RTF_TAG_NAME = "a";
+    private final String RTF_OPEN_LINK_TAG_REGEXP_TOKEN = "<[aA]\\s[^><]*>";
+    private final String RTF_CLOSE_LINK_TAG_REGEXP_TOKEN = "</[aA]>";
+    private final String RTF_BOTH_TAG_REGEXP_PATTERN = "(<[aA]\\s[^><]*>)|(</[aA]>)";
+    private final String RTF_HREF_REGEXP_TOKEN = '(?<=href=\\")[^\\"]+';
 
     @Override
     String toRtf(String s) {
@@ -87,7 +87,7 @@ class LinkCoder implements Coder {
         return result.toString();
     }
 
-    private static String convertLinkMdToRtf(String link) {
+    private String convertLinkMdToRtf(String link) {
         Integer delimiterIndex = link.indexOf(MD_PART_DELIMITER_TAG);
 
         if (delimiterIndex < 1) {
@@ -100,7 +100,7 @@ class LinkCoder implements Coder {
         return createRtfLink(href, text);
     }
 
-    private static String convertLinkRtfToMd(String link) {
+    private String convertLinkRtfToMd(String link) {
         String text = link.replaceAll(RTF_BOTH_TAG_REGEXP_PATTERN, "");
         String href = "#";
 
@@ -113,11 +113,11 @@ class LinkCoder implements Coder {
         return createMdLink(href, text);
     }
 
-    private static String createRtfLink(String href, String text) {
+    private String createRtfLink(String href, String text) {
         return "<${RTF_TAG_NAME} href=\"${href}\">${text}</${RTF_TAG_NAME}>"
     }
 
-    private static String createMdLink(String href, String text) {
+    private String createMdLink(String href, String text) {
         return "${MD_OPEN_TAG}${text}${MD_PART_DELIMITER_TAG}${href}${MD_CLOSE_TAG}"
     }
 }
