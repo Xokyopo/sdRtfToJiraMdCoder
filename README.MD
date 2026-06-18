@@ -2,6 +2,7 @@
 
 Кодер для преобразования текста из RTF формата Service Desk в Md формат Jira и обратно
 Разрабатывается для задачи по интеграции Jira c СД https://jira.vitaexpress.ru/browse/SREKS-1230
+На тест комментарии приходят в заявку https://aptekivita-test.itsm365.com/sd/operator/#uuid:serviceCall$3081400205
 
 # Реализовано
 
