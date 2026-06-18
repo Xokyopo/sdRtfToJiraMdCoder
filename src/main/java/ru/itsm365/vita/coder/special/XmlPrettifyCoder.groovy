@@ -45,8 +45,10 @@ class XmlPrettifyCoder implements Coder {
                     result.append(minifiedXml.substring(matcher.start(), matcher.end()));
                     openTags.push(currentTag);
                 } else {
-                    openTags.pop();
-                    append(TAB, openTags.size(), result);
+                    if (!openTags.isEmpty()) {
+                        openTags.pop()
+                        append(TAB, openTags.size(), result);
+                    };
                     result.append(minifiedXml.substring(matcher.start(), matcher.end()));
                 }
                 result.append(LINE_SEPARATOR)
