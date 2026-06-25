@@ -109,6 +109,9 @@ class RtfToJiraMdCoder implements Coder {
 
     @Override
     String toRtf(String s) {
+        //Добавил восстановление переносов строк так как в Jira они захардкожены
+        s = s.replaceAll("\r?\n", LINE_SEPARATOR)
+
         StringBuilder result = new StringBuilder();
         Integer cursor = 0;
 
