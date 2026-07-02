@@ -12,12 +12,12 @@ class AllListCoder implements Coder {
 
     //1. Поиск списков.
     private final String RTF_LIST_TAG_REGEXP_PATTERN = "(<[ou]l[^><]*>)|(</[ou]l>)";
-    private final String MD_LIST_REGEXP_PATTERN = "\\h*[\\*\\#]+\\h[^\$]*";
+    private final String MD_LIST_REGEXP_PATTERN = "(?m)^\\h*[*#]+\\h[^\$]*";
 
     //3. Поиск элементов
     private final String RTF_OPEN_ITEM_TAG_REGEXP_PATTERN = "<li[^><]*>";
     private final String RTF_LIST_IN_ITEM_TAG_REGEXP_PATTERN = "(<[ou]l[^><]*>)|(\\s*</[ou]l>)|(\\s*</li>)";
-    private final String MD_ITEM_GROUPS_REGEXP_PATTERN = "(?:\\h*)([\\*\\#]+)(?:\\h)([^\$]*)";
+    private final String MD_ITEM_GROUPS_REGEXP_PATTERN = "(?:\\h*)([*#]+)(?:\\h)([^\$]*)";
 
     //4. Разделение на маркированный и нумированный.
     private final ListTypeConfig MARKED_LIST_CONFIG = new ListTypeConfig("*", "ul");
