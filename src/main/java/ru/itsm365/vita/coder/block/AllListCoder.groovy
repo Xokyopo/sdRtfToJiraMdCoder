@@ -7,6 +7,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class AllListCoder implements Coder {
+
     private final String MD_EMPTY_LINE = System.lineSeparator() * 2;
     private final String MD_NEXT_LINE = System.lineSeparator();
 
@@ -35,27 +36,107 @@ class AllListCoder implements Coder {
 
         for (int i = 0; i < blocks.size(); i++) {
             String block = blocks.get(i);
-            String list = block.find(MD_LIST_REGEXP_PATTERN);
 
-            if (list) {
-                Integer startAt = block.length() - list.length();
-                if (startAt > 0) {
-                    result.append(block.substring(0, startAt));
-                }
+            if (!isTableBlock(block)) {
+                String list = block.find(MD_LIST_REGEXP_PATTERN);
 
-                String b = convertListToRtf(block.substring(startAt, block.length()));
+                if (list) {
+                    Integer startAt = block.length() - list.length();
+                    if (startAt > 0) {
+                        result.append(block.substring(0, startAt));
+                    }
 
-                result.append(b);
+                    result.append(convertListToRtf(block.substring(startAt, block.length())));
 
-                if (block.endsWith(MD_NEXT_LINE)) {
-                    result.append(MD_NEXT_LINE)
+                    if (block.endsWith(MD_NEXT_LINE)) {
+                        result.append(MD_NEXT_LINE)
+                    }
+                } else {
+                    result.append(block);
                 }
             } else {
-                result.append(block);
+                List<String> lines = block.split(MD_NEXT_LINE, -1);
+                int lineIndex = 0;
+
+                while (lineIndex < lines.size()) {
+                    if (lineIndex > 0) {
+                        result.append(MD_NEXT_LINE);
+                    }
+
+                    if (isTableRowLine(lines[lineIndex])) {
+                        StringBuilder row = new StringBuilder(lines[lineIndex]);
+                        int nextLineIndex = lineIndex + 1;
+                        while (nextLineIndex < lines.size() && !row.toString().trim().endsWith("|")) {
+                            row.append(MD_NEXT_LINE).append(lines[nextLineIndex]);
+                            nextLineIndex++;
+                        }
+                        result.append(convertTableRowToRtf(row.toString()));
+                        lineIndex = nextLineIndex;
+                    } else {
+                        StringBuilder chunk = new StringBuilder(lines[lineIndex]);
+                        int nextLineIndex = lineIndex + 1;
+                        while (nextLineIndex < lines.size() && !isTableRowLine(lines[nextLineIndex])) {
+                            chunk.append(MD_NEXT_LINE).append(lines[nextLineIndex]);
+                            nextLineIndex++;
+                        }
+
+                        String chunkText = chunk.toString();
+                        String list = chunkText.find(MD_LIST_REGEXP_PATTERN);
+
+                        if (list) {
+                            Integer startAt = chunkText.length() - list.length();
+                            if (startAt > 0) {
+                                result.append(chunkText.substring(0, startAt));
+                            }
+                            result.append(convertListToRtf(chunkText.substring(startAt)));
+                            if (chunkText.endsWith(MD_NEXT_LINE)) {
+                                result.append(MD_NEXT_LINE);
+                            }
+                        } else {
+                            result.append(chunkText);
+                        }
+
+                        lineIndex = nextLineIndex;
+                    }
+                }
             }
 
             if (i < blocks.size() - 1) {
                 result.append(MD_EMPTY_LINE);
+            }
+        }
+
+        return result.toString();
+    }
+
+    private boolean isTableBlock(String block) {
+        return block.split(MD_NEXT_LINE, -1).any { isTableRowLine(it) };
+    }
+
+    private boolean isTableRowLine(String line) {
+        return line.trim().startsWith("|");
+    }
+
+    private String convertTableRowToRtf(String s) {
+        StringBuilder result = new StringBuilder();
+        String[] parts = s.split("\\|", -1);
+
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 0) {
+                result.append("|");
+            }
+
+            String cell = parts[i];
+            String list = cell.find(MD_LIST_REGEXP_PATTERN);
+
+            if (list) {
+                int startAt = cell.length() - list.length();
+                if (startAt > 0) {
+                    result.append(cell.substring(0, startAt));
+                }
+                result.append(convertListToRtf(cell.substring(startAt)));
+            } else {
+                result.append(cell);
             }
         }
 
@@ -225,6 +306,7 @@ class AllListCoder implements Coder {
     }
 
     static class ListTypeConfig {
+
         final String mdListTagName;
         final String rtfListTagName;
         final String rtfOpenListTag;
@@ -236,5 +318,7 @@ class AllListCoder implements Coder {
             this.rtfOpenListTag = "<${rtfListTagName}>";
             this.rtfCloseListTag = "</${rtfListTagName}>";
         }
+
     }
+
 }

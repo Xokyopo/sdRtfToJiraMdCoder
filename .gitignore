@@ -30,6 +30,7 @@ build/
 
 ### VS Code ###
 .vscode/
+.groovylintrc.json
 
 ### Mac OS ###
 .DS_Store
