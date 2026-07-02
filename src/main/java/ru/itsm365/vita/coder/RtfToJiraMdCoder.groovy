@@ -64,8 +64,8 @@ class RtfToJiraMdCoder implements Coder {
                 QUOTE_CODER,
 
                 //Затем обходим все блочные элементы
-                TABLE_CODER,
                 ALL_LIST_CODER,
+                TABLE_CODER,
 
                 //В завершение опять специальные обработчики.
                 ROW_CODER,
