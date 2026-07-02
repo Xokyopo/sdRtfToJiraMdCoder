@@ -3,18 +3,17 @@ package ru.itsm365.vita.coder.line
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import ru.itsm365.vita.coder.Coder
 
-public class QuoteCoderTest {
+class QuoteCoderTest {
     private static final String LINE_SEPARATOR = "${System.lineSeparator()}";
-    private static final String BLOCKQUOTE_STYLE = QuoteCoder.BLOCKQUOTE_STYLE
+    private static final String BLOCKQUOTE_STYLE = new QuoteCoder().BLOCKQUOTE_STYLE;
     private static final String QUOTE_OPENING_TAG = "<blockquote style=\"border-color: rgb(153, 153, 153); border-left-width: 2px; border-left-style: solid; margin-left: 0px; padding-left: 5px; color: rgb(153, 153, 153);\">";
     private static final String QUOTE_CLOSING_TAG = "</blockquote>";
 
-    private Coder coder;
+    private QuoteCoder coder;
 
     @Before
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         this.coder = new QuoteCoder();
     }
 
