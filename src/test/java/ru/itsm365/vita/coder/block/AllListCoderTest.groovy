@@ -59,4 +59,20 @@ class AllListCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toRtf_ShouldConvertOnlyListInTable_WhenAloneMultiplyInTable() {
+        String mdText = "| # первый элемент|5 * 7|";
+        String expected = "|<ol><li>первый элемент</li></ol>|5 * 7|";
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldConvertOnlyListInTable_WhenAloneMultiplyInTable() {
+        String rtfText = "|<ol><li>первый элемент</li></ol>|5 * 7|";
+        String expected = "| # первый элемент|5 * 7|";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
 }
