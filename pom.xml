@@ -29,10 +29,27 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
             <!-- Плагин для компиляции Groovy -->
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
@@ -49,6 +66,14 @@
                             </includes>
                         </source>
                     </sources>
+                    <testSources>
+                        <testSource>
+                            <directory>${project.basedir}/src/test/java</directory>
+                            <includes>
+                                <include>**/*.groovy</include>
+                            </includes>
+                        </testSource>
+                    </testSources>
                 </configuration>
                 <executions>
                     <execution>
