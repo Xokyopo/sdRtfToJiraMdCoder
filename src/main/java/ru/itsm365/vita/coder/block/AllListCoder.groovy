@@ -155,12 +155,12 @@ class AllListCoder implements Coder {
         while (matcher.find(cursor)) {
             int firstGroupCursor = matcher.start();
 
-            RtfTag openListTag = new RtfTag(matcher.group().toLowerCase());
+            RtfTag openListTag = new RtfTag(matcher.group().toLowerCase(Locale.ROOT));
             if (openListTag.open) {
                 Stack<RtfTag> stack = []
                 stack.push(openListTag)
                 while (!stack.isEmpty() && matcher.find(matcher.end())) {
-                    RtfTag currentListTag = new RtfTag(matcher.group().toLowerCase());
+                    RtfTag currentListTag = new RtfTag(matcher.group().toLowerCase(Locale.ROOT));
                     if (!currentListTag.open) {
                         if (stack.isEmpty()) {
                             break;
