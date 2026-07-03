@@ -96,19 +96,30 @@ class XmlPrettifyCoder implements Coder {
 
     @Override
     String toMd(String s) {
-            // 1. Удаляем пробелы перед открывающими тегами блоков и строк
-            String withoutLeftSpaces = s.replaceAll("\\s+(?=<(?:${(RTF_BLOCK_TAGS + RTF_ROW_TAGS).join("|") + "|${BR_TAG_NAME}"}))", "");
-            // 2. Удаляем пробелы после закрывающих тегов блоков
-            String withoutRightSpaces = withoutLeftSpaces.replaceAll("(?<=/(?:${(RTF_BLOCK_TAGS + RTF_ROW_TAGS).join("|")})>)\\s+", "");
-            // 3. Удаляем пробелы после открывающих тегов блоков
-            String afterOpenBlockSpaces = withoutRightSpaces.replaceAll("(?<=/(?:${(RTF_BLOCK_TAGS).join("|")})>)\\s+", "")
-            // 4. Удаляем пробелы перед закрывающими тегами БЛОКОВ (table, ul, ol и т.д.)
-            String afterClosedBlockSpaces = afterOpenBlockSpaces.replaceAll("\\s+(?=</(?:${(RTF_BLOCK_TAGS).join("|")}))", "");
-            // Регулярное выражение: ищем последовательность пробелов, за которой следует </td> или </th>
-        String withoutSpacesBeforeCellClose = afterClosedBlockSpaces.replaceAll("\\s+(?=</(?:td|th)>)", "");
-            // 6. Удаляем все переносы строк
-            String withoutLineSeparator = withoutSpacesBeforeCellClose.replaceAll(LINE_SEPARATOR, "");
-            return withoutLineSeparator
+        String result = s;
+        // 1. Удаляем пробелы перед открывающими тегами блоков и строк
+        result = result.replaceAll("\\s+(?=<${BR_TAG_NAME})", "")
+        Collection blockAndRow = RTF_BLOCK_TAGS + RTF_ROW_TAGS
+        for (String tag in blockAndRow) {
+            result = result.replaceAll("\\s+(?=<${tag})", "");
+        }
+        // 2. Удаляем пробелы после закрывающих тегов блоков
+        for (String tag in blockAndRow) {
+            result = result.replaceAll("(?<=/${tag}>)\\s+", "");
+        }
+        // 3. Удаляем пробелы после открывающих тегов блоков
+        for (String tag in RTF_BLOCK_TAGS) {
+            result = result.replaceAll("(?<=/${tag}[^>]*>)\\s+", "");
+        }
+        // 4. Удаляем пробелы перед закрывающими тегами БЛОКОВ (table, ul, ol и т.д.)
+        for (String tag in RTF_BLOCK_TAGS) {
+            result = result.replaceAll("\\s+(?<=/${tag})", "");
+        }
+        // Регулярное выражение: ищем последовательность пробелов, за которой следует </td> или </th>
+        result = result.replaceAll("\\s+(?=</td>)", "");
+        result = result.replaceAll("\\s+(?=</th>)", "");
+        // 6. Удаляем все переносы строк
+        return result.replaceAll(LINE_SEPARATOR, "");
     }
 
     private void append(String text, int count, StringBuilder stringBuilder) {
