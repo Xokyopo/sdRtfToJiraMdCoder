@@ -97,28 +97,33 @@ class XmlPrettifyCoder implements Coder {
     @Override
     String toMd(String s) {
         String result = s;
-        // 1. Удаляем пробелы перед открывающими тегами блоков и строк
-        result = result.replaceAll("\\s+(?=<${BR_TAG_NAME})", "")
-        Collection blockAndRow = RTF_BLOCK_TAGS + RTF_ROW_TAGS
-        for (String tag in blockAndRow) {
+        // 1. Удаляем пробелы вокруг открывающими тегов блоков
+        for (String tag in RTF_BLOCK_TAGS) {
+            result = result.replaceAll("\\s*(?=<${tag}[^>]*)\\s*", "");
+        }
+
+        // 2. Удаляем пробелы вокруг закрывающих тегов блоков
+        for (String tag in RTF_BLOCK_TAGS) {
+            result = result.replaceAll("\\s*(?<=</${tag}>)\\s*", "");
+        }
+
+        // 3. Удаляем пробелы перед открывающими тегами строк
+        for (String tag in RTF_ROW_TAGS) {
             result = result.replaceAll("\\s+(?=<${tag})", "");
         }
-        // 2. Удаляем пробелы после закрывающих тегов блоков
-        for (String tag in blockAndRow) {
+        // 4. Удаляем пробелы после закрывающих тегов строк
+        for (String tag in RTF_ROW_TAGS) {
             result = result.replaceAll("(?<=/${tag}>)\\s+", "");
         }
-        // 3. Удаляем пробелы после открывающих тегов блоков
-        for (String tag in RTF_BLOCK_TAGS) {
-            result = result.replaceAll("(?<=/${tag}[^>]*>)\\s+", "");
-        }
-        // 4. Удаляем пробелы перед закрывающими тегами БЛОКОВ (table, ul, ol и т.д.)
-        for (String tag in RTF_BLOCK_TAGS) {
-            result = result.replaceAll("\\s+(?<=/${tag})", "");
-        }
-        // Регулярное выражение: ищем последовательность пробелов, за которой следует </td> или </th>
+
+        // 5. Удаляем пробелы перед </td> или </th>
         result = result.replaceAll("\\s+(?=</td>)", "");
         result = result.replaceAll("\\s+(?=</th>)", "");
-        // 6. Удаляем все переносы строк
+
+        //6. удаляем пробелы перед БР`кой
+        result = result.replaceAll("\\s+(?=<${BR_TAG_NAME})", "")
+
+        // 7. Удаляем все переносы строк
         return result.replaceAll(LINE_SEPARATOR, "");
     }
 
