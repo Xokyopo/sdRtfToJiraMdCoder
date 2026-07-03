@@ -323,17 +323,21 @@ class RtfEscapeCoder implements Coder {
             "&deg;"     : "°"
     ]
 
-    private final Map mapMdToHtml = mapHtmlToMd.collectEntries { [it.value, it.key] }
-
     @Override
     String toRtf(String s) {
-        return s
-                .replaceAll(mapMdToHtml.keySet().toString().replaceAll("[ ,]", ""), { mapMdToHtml.get(it.toString().trim()) ?: it })
+        String result = s;
+        for (Map.Entry<String, String> entry : mapHtmlToMd.entrySet()) {
+            result = result.replaceAll(entry.getValue(), entry.getKey());
+        }
+        return result;
     }
 
     @Override
     String toMd(String s) {
-        return s
-                .replaceAll("&[^ &]+?;", { mapHtmlToMd.get(it.toString().trim()) ?: it })
+        String result = s;
+        for (Map.Entry<String, String> entry : mapHtmlToMd.entrySet()) {
+            result = result.replaceAll(entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 }
