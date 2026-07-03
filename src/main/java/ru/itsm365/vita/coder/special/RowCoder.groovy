@@ -104,7 +104,7 @@ class RowCoder implements Coder {
             if (ESCAPED_RTF_PAIRED_TAGS.contains(rtfTag.name)) {
                 if (rtfTag.open) {
                     openedEscapedTags.push(rtfTag);
-                } else if (openedEscapedTags.last().name == rtfTag.name) {
+                } else if (!openedEscapedTags.isEmpty() && openedEscapedTags.last().name == rtfTag.name) {
                     openedEscapedTags.pop();
                 }
             }
