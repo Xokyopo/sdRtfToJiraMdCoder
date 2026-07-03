@@ -40,7 +40,10 @@ class MdEscapeCoder implements Coder {
 
     @Override
     String toRtf(String s) {
-        return s
-                .replaceAll("\\\\${mapEscapingMdToMd.keySet().toString().replaceAll("[ ,]", "")}", { mapEscapingMdToMd.get(it.toString().trim()) ?: it })
+        String result = s;
+        for (def entry in mapEscapingMdToMd) {
+            result = result.replaceAll("\\\\${entry.key}", entry.value)
+        }
+        return result;
     }
 }
