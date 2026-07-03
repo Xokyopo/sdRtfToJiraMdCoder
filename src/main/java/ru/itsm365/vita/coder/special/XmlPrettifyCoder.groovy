@@ -12,7 +12,7 @@ import java.util.regex.Pattern
  * А так же минифицировать RTF перед преобразваоинем в MD
  */
 class XmlPrettifyCoder implements Coder {
-    private final String ANY_TAG_REGEXP = "<\\/?[^>]*[^\\/]>";
+    private final String ANY_TAG_REGEXP = "<[^>]+>";
     private final Pattern ANY_TAG_PATTERN = Pattern.compile(ANY_TAG_REGEXP, Pattern.CASE_INSENSITIVE);
     private final String LINE_SEPARATOR = System.lineSeparator();
     private final String TAB = "\t";
