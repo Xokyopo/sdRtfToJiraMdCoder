@@ -15,29 +15,87 @@ class SpanCoder implements Coder {
     String toRtf(String text) {
         if (text == null || text.isEmpty()) return text
 
-        String currentText = text
+        final String openTag = "{color:"
+        final String closeTag = "{color}"
+        final int openTagLength = openTag.length()
+        final int closeTagLength = closeTag.length()
 
-        // Обработка вложенности через итерации
-        while (currentText.contains("{color:")) {
-            Matcher matcher = JIRA_COLOR_PATTERN.matcher(currentText)
-            if (!matcher.find()) break
+        Closure<Integer> findColorClose = { String source, int from ->
+            int depth = 0
+            int index = from
 
-            matcher.reset()
-            StringBuilder sb = new StringBuilder()
+            while (index <= source.length() - closeTagLength) {
+                int nextOpen = source.indexOf(openTag, index)
+                int nextClose = source.indexOf(closeTag, index)
+                if (nextClose < 0) {
+                    return -1
+                }
 
-            while (matcher.find()) {
-                String hexColor = matcher.group(1)
-                String content = matcher.group(2)
-                String rgb = fromHexToRgb(hexColor)
+                boolean hasNestedOpen = false
+                if (nextOpen >= 0 && nextOpen < nextClose) {
+                    int braceEnd = source.indexOf('}', nextOpen)
+                    if (braceEnd > nextOpen && braceEnd < nextClose) {
+                        String hexColor = source.substring(nextOpen + openTagLength, braceEnd)
+                        hasNestedOpen = hexColor ==~ /#[0-9a-fA-F]{6}/
+                    }
+                }
 
-                String replacement = "<span style=\"color: ${rgb};\">${content}</span>"
-                matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement))
+                if (hasNestedOpen) {
+                    depth++
+                    index = source.indexOf('}', nextOpen) + 1
+                } else {
+                    if (depth == 0) {
+                        return nextClose
+                    }
+                    depth--
+                    index = nextClose + closeTagLength
+                }
             }
-            matcher.appendTail(sb)
-            currentText = sb.toString()
+
+            return -1
         }
 
-        return currentText
+        StringBuilder result = new StringBuilder()
+        Integer cursor = 0
+
+        while (cursor < text.length()) {
+            int openIndex = text.indexOf(openTag, cursor)
+            if (openIndex < 0) {
+                result.append(text.substring(cursor))
+                break
+            }
+
+            result.append(text.substring(cursor, openIndex))
+
+            int hexStart = openIndex + openTagLength
+            int hexEnd = text.indexOf('}', hexStart)
+            if (hexEnd < 0) {
+                result.append(text.substring(openIndex))
+                break
+            }
+
+            String hexColor = text.substring(hexStart, hexEnd)
+            if (!(hexColor ==~ /#[0-9a-fA-F]{6}/)) {
+                result.append(text.substring(openIndex, hexEnd + 1))
+                cursor = hexEnd + 1
+                continue
+            }
+
+            int contentStart = hexEnd + 1
+            int closeIndex = findColorClose(text, contentStart)
+            if (closeIndex < 0) {
+                result.append(text.substring(openIndex))
+                break
+            }
+
+            result.append("<span style=\"color: ${fromHexToRgb(hexColor)};\">")
+            result.append(toRtf(text.substring(contentStart, closeIndex)))
+            result.append("</span>")
+
+            cursor = closeIndex + closeTagLength
+        }
+
+        return result.toString()
     }
 
     @Override
