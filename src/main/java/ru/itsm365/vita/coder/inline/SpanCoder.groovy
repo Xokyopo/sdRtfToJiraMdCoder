@@ -28,7 +28,7 @@ class SpanCoder implements Coder {
 
             String hexColor = matcher.group(1)
             if (hexColor != null) {
-                result.append('<span style="color:').append(fromHexToRgb(hexColor)).append(';">')
+                result.append('<span style="color: ').append(fromHexToRgb(hexColor)).append(';">')
                 openTags.addLast(hexColor)
             } else {
                 result.append("</span>")
