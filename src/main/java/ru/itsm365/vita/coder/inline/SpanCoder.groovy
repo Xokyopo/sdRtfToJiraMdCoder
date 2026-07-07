@@ -6,8 +6,9 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class SpanCoder implements Coder {
+
     // Предварительно скомпилированные паттерны для ускорения обработки
-    private final Pattern JIRA_COLOR_PATTERN = Pattern.compile("(?s)\\{color:(#[0-9a-fA-F]{6})\\}(.*?)\\{color\\}")
+    private final Pattern JIRA_COLOR_TAG_PATTERN = Pattern.compile("\\{color:(#[0-9a-fA-F]{6})\\}|\\{color\\}")
     private final Pattern RTF_COLOR_SPAN_PATTERN = Pattern.compile("(?s)<span[^>]*?style=[\\\"'][^>]*?color:\\s*(rgb\\(\\d+,\\s*\\d+,\\s*\\d+\\));?[^>]*?[\\\"'][^>]*?>(.*?)<\\/span>")
     private final Pattern RTF_CLEAN_SPAN_PATTERN = Pattern.compile("(?s)<span[^>]*?>(.*?)<\\/span>")
 
@@ -15,84 +16,37 @@ class SpanCoder implements Coder {
     String toRtf(String text) {
         if (text == null || text.isEmpty()) return text
 
-        final String openTag = "{color:"
-        final String closeTag = "{color}"
-        final int openTagLength = openTag.length()
-        final int closeTagLength = closeTag.length()
-
-        Closure<Integer> findColorClose = { String source, int from ->
-            int depth = 0
-            int index = from
-
-            while (index <= source.length() - closeTagLength) {
-                int nextOpen = source.indexOf(openTag, index)
-                int nextClose = source.indexOf(closeTag, index)
-                if (nextClose < 0) {
-                    return -1
-                }
-
-                boolean hasNestedOpen = false
-                if (nextOpen >= 0 && nextOpen < nextClose) {
-                    int braceEnd = source.indexOf('}', nextOpen)
-                    if (braceEnd > nextOpen && braceEnd < nextClose) {
-                        String hexColor = source.substring(nextOpen + openTagLength, braceEnd)
-                        hasNestedOpen = hexColor ==~ /#[0-9a-fA-F]{6}/
-                    }
-                }
-
-                if (hasNestedOpen) {
-                    depth++
-                    index = source.indexOf('}', nextOpen) + 1
-                } else {
-                    if (depth == 0) {
-                        return nextClose
-                    }
-                    depth--
-                    index = nextClose + closeTagLength
-                }
-            }
-
-            return -1
-        }
-
         StringBuilder result = new StringBuilder()
+        Deque<String> openTags = new ArrayDeque<>()
+        Matcher matcher = JIRA_COLOR_TAG_PATTERN.matcher(text)
         Integer cursor = 0
 
-        while (cursor < text.length()) {
-            int openIndex = text.indexOf(openTag, cursor)
-            if (openIndex < 0) {
-                result.append(text.substring(cursor))
-                break
+        while (matcher.find(cursor)) {
+            if (cursor < matcher.start()) {
+                result.append(text.substring(cursor, matcher.start()))
             }
 
-            result.append(text.substring(cursor, openIndex))
-
-            int hexStart = openIndex + openTagLength
-            int hexEnd = text.indexOf('}', hexStart)
-            if (hexEnd < 0) {
-                result.append(text.substring(openIndex))
-                break
+            String hexColor = matcher.group(1)
+            if (hexColor != null) {
+                result.append('<span style="color:').append(fromHexToRgb(hexColor)).append(';">')
+                openTags.addLast(hexColor)
+            } else {
+                result.append("</span>")
+                if (!openTags.isEmpty()) {
+                    openTags.removeLast()
+                }
             }
 
-            String hexColor = text.substring(hexStart, hexEnd)
-            if (!(hexColor ==~ /#[0-9a-fA-F]{6}/)) {
-                result.append(text.substring(openIndex, hexEnd + 1))
-                cursor = hexEnd + 1
-                continue
-            }
+            cursor = matcher.end()
+        }
 
-            int contentStart = hexEnd + 1
-            int closeIndex = findColorClose(text, contentStart)
-            if (closeIndex < 0) {
-                result.append(text.substring(openIndex))
-                break
-            }
+        if (cursor < text.length()) {
+            result.append(text.substring(cursor))
+        }
 
-            result.append("<span style=\"color: ${fromHexToRgb(hexColor)};\">")
-            result.append(toRtf(text.substring(contentStart, closeIndex)))
+        while (!openTags.isEmpty()) {
             result.append("</span>")
-
-            cursor = closeIndex + closeTagLength
+            openTags.removeLast()
         }
 
         return result.toString()
@@ -155,5 +109,6 @@ class SpanCoder implements Coder {
         int b = Integer.parseInt(hex.substring(4, 6), 16)
         return "rgb($r, $g, $b)"
     }
+
 }
 
