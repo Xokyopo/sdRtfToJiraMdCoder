@@ -14,7 +14,7 @@ import java.util.regex.Pattern
 class RtfToJiraMdCoder implements Coder {
     private final String LINE_SEPARATOR = System.lineSeparator();
     //Подстрочные кодеры
-    private final Coder ALL_TEST_STYLE_CODER = new AllTextStyleCoder();
+    private final Coder ALL_TEXT_STYLE_CODER = new AllTextStyleCoder();
     private final Coder IMAGE_CODER = new ImageCoder();
     private final Coder LINK_CODER = new LinkCoder();
 
@@ -53,7 +53,7 @@ class RtfToJiraMdCoder implements Coder {
                 RTF_ESCAPE_CODER,
 
                 //Затем обходим все подстрочные элементы
-                ALL_TEST_STYLE_CODER,
+                ALL_TEXT_STYLE_CODER,
                 IMAGE_CODER,
                 LINK_CODER,
                 SPAN_CODER,
@@ -84,7 +84,7 @@ class RtfToJiraMdCoder implements Coder {
                 ROW_CODER,
 
                 //Затем обходим все подстрочные элементы
-                ALL_TEST_STYLE_CODER,
+                ALL_TEXT_STYLE_CODER,
                 IMAGE_CODER,
                 LINK_CODER,
                 SPAN_CODER,
