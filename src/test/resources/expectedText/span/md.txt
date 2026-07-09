@@ -1,0 +1,6 @@
+# {color:#eb6b56}Красный{color}
+ # {color:#2969b0}Синий{color}
+ # {color:#000000}Чёрный{color}
+ # {color:#7c706b}Серый{color}
+ # {color:#61bd6d}Зелёный{color}
+ # {color:#000000}Ч{color}{color:#61bd6d}З{color}{color:#eb6b56}К{color}{color:#7c706b}С{color}{color:#2969b0}С{color}
