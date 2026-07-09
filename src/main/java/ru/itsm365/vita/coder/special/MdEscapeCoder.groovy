@@ -6,43 +6,64 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class MdEscapeCoder implements Coder {
-    final Map<String, String> mapMdToEscapingMd = [
-            "_": "\\_",
-            "|": "\\|",
-            "#": "\\#",
-            "*": "\\*",
-            "-": "\\-",
-            "~": "\\~",
-            "+": "\\+"
+    final Map<String, String> rtfByEscapingMdTags = [
+            "\\\\\\|": "|",
+            "\\\\\\+": "+",
+            "\\\\\\*": "*",
+            "\\\\_"  : "_",
+            "\\\\#"  : "#",
+            "\\\\-"  : "-",
+            "\\\\~"  : "~"
     ]
-    final Map mapEscapingMdToMd = mapMdToEscapingMd.collectEntries { [it.value, it.key] }
-    private String str = mapMdToEscapingMd.keySet().toString().replaceAll("[ ,]", "")
-    private String REGEX = "(?<=>)[^<>]*${str}(?=[^<>]*<)"
-    Pattern toMdPattern = Pattern.compile(REGEX)
+    final Map<String, String> escapedMdByRtfTags = [
+            "\\|": "\\\\|",
+            "\\*": "\\\\*",
+            "\\+": "\\\\+",
+            "_"  : "\\\\_",
+            "#"  : "\\\\#",
+            "-"  : "\\\\-",
+            "~"  : "\\\\~",
+
+    ]
+    private String TEG_TOKEN = "<[^>]*>"
+    private Pattern RTF_TAG_PATTERN = Pattern.compile(TEG_TOKEN)
 
     @Override
     String toMd(String s) {
-        StringBuilder example = new StringBuilder(s);
-        Matcher toMdMather = toMdPattern.matcher(s)
-        int shifter = 0;
-        while (toMdMather.find()) {
-            String line = toMdMather.group()
-            int start = toMdMather.start()
-            int end = toMdMather.end()
-            int counter = end - start
-            String result = line.replaceAll(str, { mapMdToEscapingMd.get(it.toString().trim()) ?: it })
-            int resultCount = result.size();
-            example.replace(start + shifter, end + shifter, result)
-            shifter += resultCount - counter
+        StringBuilder result = new StringBuilder();
+        Matcher toMdMather = RTF_TAG_PATTERN.matcher(s)
+        int cursor = 0;
+        while (toMdMather.find(cursor)) {
+            if (cursor < toMdMather.start()) {
+                String current = s.substring(cursor, toMdMather.start());
+                for (def entry in escapedMdByRtfTags) {
+                    current = current.replaceAll(entry.key, entry.value)
+                }
+                result.append(current);
+            }
+
+            result.append(s.substring(toMdMather.start(), toMdMather.end()))
+            cursor = toMdMather.end()
         }
-        return example.toString()
+
+        if (cursor < s.length()) {
+            String current = s.substring(cursor);
+            for (def entry in escapedMdByRtfTags) {
+                current = current.replaceAll(entry.key, entry.value)
+            }
+            result.append(current);
+        }
+
+        return result.toString()
     }
 
     @Override
     String toRtf(String s) {
         String result = s;
-        for (def entry in mapEscapingMdToMd) {
-            result = result.replaceAll("\\\\${entry.key}", entry.value)
+        println(result)
+        println()
+        for (def entry in rtfByEscapingMdTags) {
+            result = result.replaceAll(entry.key, entry.value)
         }
         return result;
     }

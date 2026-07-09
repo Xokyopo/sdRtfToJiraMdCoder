@@ -86,6 +86,14 @@ class MdEscapeCoderTest {
     }
 
     @Test
+    void toRtf_ShouldReturnEscapedTilda_WhenHaveMultiply() {
+        String rtfText = '\\*'
+        String expected = '*'
+        String actual = this.coder.toRtf(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
     void toRtf_ShouldReturnEscapedLowLine_WhenHaveLowLine() {
         String rtfText = '\\_'
         String expected = '_'
