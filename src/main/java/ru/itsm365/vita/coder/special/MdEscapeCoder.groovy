@@ -25,30 +25,36 @@ class MdEscapeCoder implements Coder {
             "~"  : "\\\\~",
 
     ]
-    private String REGEX = "(?<=>)[^<>]*[|*+\\-_#~](?=[^<>]*<)"
-    Pattern toMdPattern = Pattern.compile(REGEX)
+    private String TEG_TOKEN = "<[^>]*>"
+    private Pattern RTF_TAG_PATTERN = Pattern.compile(TEG_TOKEN)
 
     @Override
     String toMd(String s) {
-        StringBuilder example = new StringBuilder(s);
-        Matcher toMdMather = toMdPattern.matcher(s)
-        int shifter = 0;
-        while (toMdMather.find()) {
-            String line = toMdMather.group()
-            int start = toMdMather.start()
-            int end = toMdMather.end()
-            int counter = end - start
-
-            String result = line;
-            for (def entry in escapedMdByRtfTags) {
-                result = result.replaceAll(entry.key, entry.value)
+        StringBuilder result = new StringBuilder();
+        Matcher toMdMather = RTF_TAG_PATTERN.matcher(s)
+        int cursor = 0;
+        while (toMdMather.find(cursor)) {
+            if (cursor < toMdMather.start()) {
+                String current = s.substring(cursor, toMdMather.start());
+                for (def entry in escapedMdByRtfTags) {
+                    current = current.replaceAll(entry.key, entry.value)
+                }
+                result.append(current);
             }
 
-            int resultCount = result.size();
-            example.replace(start + shifter, end + shifter, result)
-            shifter += resultCount - counter
+            result.append(s.substring(toMdMather.start(), toMdMather.end()))
+            cursor = toMdMather.end()
         }
-        return example.toString()
+
+        if (cursor < s.length()) {
+            String current = s.substring(cursor);
+            for (def entry in escapedMdByRtfTags) {
+                current = current.replaceAll(entry.key, entry.value)
+            }
+            result.append(current);
+        }
+
+        return result.toString()
     }
 
     @Override
