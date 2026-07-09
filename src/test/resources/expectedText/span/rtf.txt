@@ -1,0 +1,8 @@
+<ol>
+	<li><span style="color: rgb(235, 107, 86);">Красный</span></li>
+	<li><span style="color: rgb(41, 105, 176);">Синий</span></li>
+	<li><span style="color: rgb(0, 0, 0);">Чёрный</span></li>
+	<li><span style="color: rgb(124, 112, 107);">Серый</span></li>
+	<li><span style="color: rgb(97, 189, 109);">Зелёный</span></li>
+	<li><span style="color: rgb(0, 0, 0);">Ч</span><span style="color: rgb(97, 189, 109);">З</span><span style="color: rgb(235, 107, 86);">К</span><span style="color: rgb(124, 112, 107);">С</span><span style="color: rgb(41, 105, 176);">С</span></li>
+</ol>
