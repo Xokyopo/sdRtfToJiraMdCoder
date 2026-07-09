@@ -4,11 +4,8 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import ru.itsm365.vita.coder.model.TestValue
-import ru.itsm365.vita.coder.special.XmlPrettifyCoder
 
 class RtfToJiraMdCoderTest {
-    private final XmlPrettifyCoder xmlPrettifyCoder = new XmlPrettifyCoder();
-    private final TestValue simpleText = new TestValue("/simpleText/md.txt", "/simpleText/rtf.txt");
 
     private Coder coder;
 
@@ -31,30 +28,5 @@ class RtfToJiraMdCoderTest {
         String expectedMdText = testValue.md;
         String actualMdTest = this.coder.toMd(testValue.rtf);
         Assert.assertEquals(expectedMdText, actualMdTest);
-    }
-
-    //Полный реверс не достижим
-//    @Test
-//    void reverse_rtf_simpleText() {
-//        String expectedRtfText = xmlPrettifyCoder.toRtf(this.simpleText.rtf.txt);
-//        String actualRtfTest = this.coder.toRtf(this.coder.toMd(expectedRtfText));
-//        Assert.assertEquals(expectedRtfText, actualRtfTest);
-//    }
-//
-//    @Test
-//    void reverse_md_simpleText() {
-//        String expectedMdText = this.simpleText.md.txt;
-//        String actualMdTest = this.coder.toMd(this.coder.toRtf(expectedMdText));
-//        Assert.assertEquals(expectedMdText, actualMdTest);
-//    }
-
-    @Test
-    void testToRtf() {
-        println(this.coder.toRtf(this.simpleText.md));
-    }
-
-    @Test
-    void testToMd() {
-        println(this.coder.toMd(this.simpleText.rtf));
     }
 }
