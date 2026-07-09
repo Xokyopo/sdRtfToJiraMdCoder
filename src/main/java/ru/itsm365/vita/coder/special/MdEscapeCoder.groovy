@@ -6,18 +6,26 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class MdEscapeCoder implements Coder {
-    final Map<String, String> mapMdToEscapingMd = [
-            "_": "\\_",
-            "|": "\\|",
-            "#": "\\#",
-            "*": "\\*",
-            "-": "\\-",
-            "~": "\\~",
-            "+": "\\+"
+    final Map<String, String> rtfByEscapingMdTags = [
+            "\\\\\\|": "|",
+            "\\\\\\+": "+",
+            "\\\\\\*": "*",
+            "\\\\_"  : "_",
+            "\\\\#"  : "#",
+            "\\\\-"  : "-",
+            "\\\\~"  : "~"
     ]
-    final Map mapEscapingMdToMd = mapMdToEscapingMd.collectEntries { [it.value, it.key] }
-    private String str = mapMdToEscapingMd.keySet().toString().replaceAll("[ ,]", "")
-    private String REGEX = "(?<=>)[^<>]*${str}(?=[^<>]*<)"
+    final Map<String, String> escapedMdByRtfTags = [
+            "\\|": "\\\\|",
+            "\\*": "\\\\*",
+            "\\+": "\\\\+",
+            "_"  : "\\\\_",
+            "#"  : "\\\\#",
+            "-"  : "\\\\-",
+            "~"  : "\\\\~",
+
+    ]
+    private String REGEX = "(?<=>)[^<>]*[|*+\\-_#~](?=[^<>]*<)"
     Pattern toMdPattern = Pattern.compile(REGEX)
 
     @Override
@@ -30,7 +38,12 @@ class MdEscapeCoder implements Coder {
             int start = toMdMather.start()
             int end = toMdMather.end()
             int counter = end - start
-            String result = line.replaceAll(str, { mapMdToEscapingMd.get(it.toString().trim()) ?: it })
+
+            String result = line;
+            for (def entry in escapedMdByRtfTags) {
+                result = result.replaceAll(entry.key, entry.value)
+            }
+
             int resultCount = result.size();
             example.replace(start + shifter, end + shifter, result)
             shifter += resultCount - counter
@@ -41,8 +54,10 @@ class MdEscapeCoder implements Coder {
     @Override
     String toRtf(String s) {
         String result = s;
-        for (def entry in mapEscapingMdToMd) {
-            result = result.replaceAll("\\\\${entry.key}", entry.value)
+        println(result)
+        println()
+        for (def entry in rtfByEscapingMdTags) {
+            result = result.replaceAll(entry.key, entry.value)
         }
         return result;
     }
