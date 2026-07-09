@@ -60,8 +60,6 @@ class MdEscapeCoder implements Coder {
     @Override
     String toRtf(String s) {
         String result = s;
-        println(result)
-        println()
         for (def entry in rtfByEscapingMdTags) {
             result = result.replaceAll(entry.key, entry.value)
         }
