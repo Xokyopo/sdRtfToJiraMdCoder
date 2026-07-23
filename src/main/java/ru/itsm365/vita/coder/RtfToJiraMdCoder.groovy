@@ -12,6 +12,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class RtfToJiraMdCoder implements Coder {
+    public final String version = "2";
     private final String LINE_SEPARATOR = System.lineSeparator();
     //Подстрочные кодеры
     private final Coder ALL_TEXT_STYLE_CODER = new AllTextStyleCoder();
