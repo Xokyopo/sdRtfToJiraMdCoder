@@ -1,8 +1,8 @@
-package ru.itsm365.vita.coder.inline;
+package ru.itsm365.vita.coder.inline
 
-import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class AllTextStyleCoderTest {
 
@@ -22,4 +22,13 @@ class AllTextStyleCoderTest {
         String actual = this.coder.toMd(rtfText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toMd_ShouldConvertTagAlis_WhenHaveAliasesTags() {
+        String rtfText = "<b>Привет</b> <i>мир</i> <del>в</del> <strike>jira</strike> <ins>и</ins> <u>везде</u>";
+        String expected = "*Привет* _мир_ -в- -jira- +и+ +везде+";
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
 }

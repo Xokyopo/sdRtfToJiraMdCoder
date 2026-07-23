@@ -19,16 +19,26 @@ class AllTextStyleCoder implements Coder {
             "^": "sup",
             "+": "u"
     ];
+    private final Map<String, String> MD_TAG_BY_RTF_TAG_NAMES = [
+            "strong": "*",
+            "b"     : "*",
+            "em"    : "_",
+            "i"     : "_",
+            "s"     : "-",
+            "del"   : "-",
+            "strike": "-",
+            "sub"   : "~",
+            "sup"   : "^",
+            "u"     : "+",
+            "ins"   : "+"
+    ]
     private final Pattern MD_OPEN_TAGS_PATTERN
     private final Map<String, Pattern> MD_CLOSE_TAG_PATTERN_BY_MD_TAGS
-    private final Map<String, String> MD_TAG_BY_RTF_TAG_NAMES
     private final Pattern RTF_OPEN_TAGS_PATTERN
     private final Map<String, Pattern> RTF_CLOSE_TAG_PATTERNS_BY_RTF_TAG_NAMES
     private final String MD_NEXT_LINE = System.lineSeparator();
 
     AllTextStyleCoder() {
-        MD_TAG_BY_RTF_TAG_NAMES = RTF_TAG_NANE_BY_MD_TAGS.collectEntries { key, value -> [value, key] }
-
         String rtfOpenTagsRegEx = "<(?:${MD_TAG_BY_RTF_TAG_NAMES.collect { it.key }.join("|")})(?= |>)[^><]*>(?=\\s*)"
         RTF_OPEN_TAGS_PATTERN = Pattern.compile(rtfOpenTagsRegEx, Pattern.CASE_INSENSITIVE)
         RTF_CLOSE_TAG_PATTERNS_BY_RTF_TAG_NAMES = MD_TAG_BY_RTF_TAG_NAMES.collectEntries { key, value ->
