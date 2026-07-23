@@ -77,7 +77,7 @@ class SdToJiraCoder {
   }
 
   String toRtf(String text) {
-    if (this.coder) {
+    if (text && this.coder) {
       return this.coder.toRtf(text)
     }
 
@@ -85,7 +85,7 @@ class SdToJiraCoder {
   }
 
   String toMd(String text) {
-    if (this.coder) {
+    if (text && this.coder) {
       return this.coder.toMd(text)
     }
 
