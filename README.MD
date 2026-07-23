@@ -54,3 +54,42 @@
 
 - Нужно реализовать LineSeparatorConfig что бы настроить корректные переносы строк дял обоих систем, сейчас исправление
   захардкожено в методе toRtf.
+
+## Как использовать в своем коде безопасно
+
+Добавляете этот класс в свой код, и вызываете когда он вам нужен.
+> ВАЖНО: Никогда не храните его в статической переменной, по этой же причине лучше не хранить его как атрибут класса.
+> Не бойтесь создавать копию когда вам нужно.
+
+```groovy
+class SdToJiraCoder {
+  def coder
+
+  SdToJiraCoder() {
+    try {
+      String className = "ru.itsm365.vita.coder.RtfToJiraMdCoder"
+      // 1. Находим и принудительно инициализируем класс через загрузчик текущего потока NSD
+      Class<?> targetClass = this.getClass().getClassLoader().loadClass(className)
+      // 2. Создаем экземпляр класса через конструктор по умолчанию
+      this.coder = targetClass.getDeclaredConstructor().newInstance()
+    } catch (Exception ignore) {
+    }
+  }
+
+  String toRtf(String text) {
+    if (this.coder) {
+      return this.coder.toRtf(text)
+    }
+
+    return text
+  }
+
+  String toMd(String text) {
+    if (this.coder) {
+      return this.coder.toMd(text)
+    }
+
+    return text
+  }
+}
+```
