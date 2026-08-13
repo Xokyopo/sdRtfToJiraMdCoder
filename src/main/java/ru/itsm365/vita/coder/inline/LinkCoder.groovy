@@ -7,7 +7,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class LinkCoder implements Coder {
-    private final String MD_REGEXP_PATTERN = "\\[[^\\|]+\\|?[^\\[\\|]*\\]";
+    private final String MD_REGEXP_PATTERN = "(?!\\\\)\\[[^\\|]+\\|?[^\\[\\|]*(?!\\\\)\\]";
     private final String MD_NEXT_LINE = System.lineSeparator();
     private final String MD_OPEN_TAG = "[";
     private final String MD_CLOSE_TAG = "]";

@@ -3,10 +3,9 @@ package ru.itsm365.vita.coder.special
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import ru.itsm365.vita.coder.Coder
 
 class MdEscapeCoderTest {
-    private Coder coder;
+    private MdEscapeCoder coder;
 
     @Before
     void setUp() throws Exception {
@@ -122,6 +121,38 @@ class MdEscapeCoderTest {
         String rtfText = '<tr style="color: #fff">'
         String expected = rtfText
         String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnEscapedLowLine_WhenHaveLBracket() {
+        String rtfText = '['
+        String expected = '\\['
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnEscapedPlus_WhenHaveLBracket() {
+        String mdText = '\\['
+        String expected = '['
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnEscapedLowLine_WhenHaveRBracket() {
+        String rtfText = ']'
+        String expected = '\\]'
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnEscapedPlus_WhenRBracket() {
+        String mdText = '\\]'
+        String expected = ']'
+        String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
 }

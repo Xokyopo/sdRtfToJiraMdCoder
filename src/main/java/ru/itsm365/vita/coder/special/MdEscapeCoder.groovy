@@ -13,7 +13,9 @@ class MdEscapeCoder implements Coder {
             "\\\\_"  : "_",
             "\\\\#"  : "#",
             "\\\\-"  : "-",
-            "\\\\~"  : "~"
+            "\\\\~"  : "~",
+            "\\\\\\[": "[",
+            "\\\\\\]": "]"
     ]
     final Map<String, String> escapedMdByRtfTags = [
             "\\|": "\\\\|",
@@ -23,6 +25,8 @@ class MdEscapeCoder implements Coder {
             "#"  : "\\\\#",
             "-"  : "\\\\-",
             "~"  : "\\\\~",
+            "\\[": "\\\\[",
+            "\\]": "\\\\]"
 
     ]
     private String TEG_TOKEN = "<[^>]*>"
