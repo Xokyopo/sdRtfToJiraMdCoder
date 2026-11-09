@@ -155,4 +155,36 @@ class MdEscapeCoderTest {
         String actual = this.coder.toRtf(mdText);
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    void toMd_ShouldReturnEscapedLowLine_WhenHaveLeftBrace() {
+        String rtfText = '{'
+        String expected = '\\{'
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toMd_ShouldReturnEscapedLowLine_WhenHaveRightBrace() {
+        String rtfText = '}'
+        String expected = '\\}'
+        String actual = this.coder.toMd(rtfText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnEscapedPlus_WhenRightBrace() {
+        String mdText = '\\}'
+        String expected = '}'
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    void toRtf_ShouldReturnEscapedPlus_WhenLeftBrace() {
+        String mdText = '\\{'
+        String expected = '{'
+        String actual = this.coder.toRtf(mdText);
+        Assert.assertEquals(expected, actual);
+    }
 }

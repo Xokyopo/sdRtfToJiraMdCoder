@@ -39,8 +39,8 @@ class AllEscapeCodersTest {
 
     @Test
     void toRtf() {
-        String mdText = '⊗♦ 151651 \\#\\|\\*\\+♥ 1651 dvs ⌊'
-        String expected = '&otimes;&diams; 151651 #|*+&hearts; 1651 dvs &lfloor;'
+        String mdText = '⊗♦ 151651 \\{\\}\\#\\|\\*\\+♥ 1651 dvs ⌊'
+        String expected = '&otimes;&diams; 151651 {}#|*+&hearts; 1651 dvs &lfloor;'
         String actual = this.mdEscapeCoder.toRtf(this.rtfEscapeCoder.toRtf(mdText));
         Assert.assertEquals(expected, actual);
     }
@@ -55,8 +55,8 @@ class AllEscapeCodersTest {
 
     @Test
     void toMdOne() {
-        String rtfText = '>&otimes;&diams;151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;<sdfgsdg+-*+>&otimes;&diams;151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;<sdfgsdg+-*+>&otimes;&diams;151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;<sdfgsdg+-*+>'
-        String expected = '>⊗♦151651 \\#\\#\\#\\+\\+\\+  sdsdfsd \\* \\- \\_ \\~ \\|♥ 1651 dvs ⌊<sdfgsdg+-*+>⊗♦151651 \\#\\#\\#\\+\\+\\+  sdsdfsd \\* \\- \\_ \\~ \\|♥ 1651 dvs ⌊<sdfgsdg+-*+>⊗♦151651 \\#\\#\\#\\+\\+\\+  sdsdfsd \\* \\- \\_ \\~ \\|♥ 1651 dvs ⌊<sdfgsdg+-*+>'
+        String rtfText = '>&otimes;&diams;151651 ###+++}{  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;<sdfgsdg+-*+>&otimes;&diams;151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;<sdfgsdg+-*+>&otimes;&diams;151651 ###+++  sdsdfsd * - _ ~ |&hearts; 1651 dvs &lfloor;<sdfgsdg+-*+>'
+        String expected = '>⊗♦151651 \\#\\#\\#\\+\\+\\+\\}\\{  sdsdfsd \\* \\- \\_ \\~ \\|♥ 1651 dvs ⌊<sdfgsdg+-*+>⊗♦151651 \\#\\#\\#\\+\\+\\+  sdsdfsd \\* \\- \\_ \\~ \\|♥ 1651 dvs ⌊<sdfgsdg+-*+>⊗♦151651 \\#\\#\\#\\+\\+\\+  sdsdfsd \\* \\- \\_ \\~ \\|♥ 1651 dvs ⌊<sdfgsdg+-*+>'
         String actual = this.mdEscapeCoder.toMd(this.rtfEscapeCoder.toMd(rtfText));
         Assert.assertEquals(expected, actual);
     }
